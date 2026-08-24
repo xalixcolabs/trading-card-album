@@ -2,9 +2,8 @@
   <div class="px-5 pt-6">
     <!-- Perfil -->
     <div class="flex items-center gap-3">
-      <div
-        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-raise text-lg font-bold text-accent ring-1 ring-edge">
-        {{ initial }}
+      <div class="h-12 w-12 shrink-0 overflow-hidden rounded-2xl ring-1 ring-edge">
+        <UserAvatar :name="profile?.name" :picture="profile?.picture" size-class="text-lg" />
       </div>
       <div class="min-w-0 flex-1">
         <p class="truncate text-[15px] font-semibold text-ink">{{ profile?.name || 'Coleccionista' }}</p>
@@ -90,11 +89,6 @@ const joining = ref(false)
 
 const { data: profile } = useApiData(() => getApiV1AuthMe(), 'profile')
 const { data: albums, pending, refresh: refreshAlbums } = useApiData(() => getApiV1Album(), 'albums')
-
-const initial = computed(() => {
-  const name = profile.value?.name?.trim()
-  return name ? name.charAt(0).toUpperCase() : '?'
-})
 
 watch(profile, (value) => {
   if (value) useProfile(value)

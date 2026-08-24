@@ -22,9 +22,8 @@
         <div v-for="contact in contacts" :key="contact.user_id"
           class="overflow-hidden rounded-2xl bg-raise ring-1 ring-edge transition-transform active:scale-[0.99]">
           <div class="flex items-center gap-3 p-4">
-            <div
-              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-panel text-lg font-bold text-accent ring-1 ring-edge">
-              {{ initialOf(contact.name) }}
+            <div class="h-12 w-12 shrink-0 overflow-hidden rounded-2xl ring-1 ring-edge">
+              <UserAvatar :name="contact.name" :picture="contact.picture" size-class="text-lg" />
             </div>
             <div class="min-w-0 flex-1">
               <p class="truncate text-[15px] font-semibold text-ink">{{ contact.name || 'Desarrollador' }}</p>
@@ -79,10 +78,6 @@ import { getApiV1Contact } from '~/services/contact/contact'
 
 const scannerOpen = ref(false)
 const { data: contacts, pending, refresh: refreshContacts } = useApiData(() => getApiV1Contact(), 'contacts')
-
-function initialOf(name?: string) {
-  return (name || '?').trim().charAt(0).toUpperCase()
-}
 
 function dateOf(unix?: number) {
   if (!unix) return '—'

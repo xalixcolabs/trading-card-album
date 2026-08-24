@@ -15,6 +15,7 @@ interface Profile {
     web: string,
     description: string,
     is_admin: number,
+    picture: string,
     created_at: number,
     update_at: number,
 }

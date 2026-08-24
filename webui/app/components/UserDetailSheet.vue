@@ -6,9 +6,8 @@
 
     <div v-else-if="detail" class="pt-3">
       <div class="flex items-center gap-3">
-        <div
-          class="flex h-12 w-12 items-center justify-center rounded-2xl bg-raise text-lg font-bold text-accent ring-1 ring-edge">
-          {{ initialOf(detail.user?.name) }}
+        <div class="h-12 w-12 overflow-hidden rounded-2xl ring-1 ring-edge">
+          <UserAvatar :name="detail.user?.name" :picture="detail.user?.picture" size-class="text-lg" />
         </div>
         <div class="min-w-0 flex-1">
           <p class="truncate text-[15px] font-semibold text-ink">{{ detail.user?.name || 'Sin nombre' }}</p>
@@ -77,8 +76,4 @@ watch(() => props.userId, async (id) => {
     loading.value = false
   }
 }, { immediate: true })
-
-function initialOf(name?: string) {
-  return (name || '?').charAt(0).toUpperCase()
-}
 </script>

@@ -12,9 +12,8 @@
 
     <!-- Avatar -->
     <div class="mt-6 flex flex-col items-center">
-      <div
-        class="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-raise text-3xl font-bold text-accent ring-1 ring-edge">
-        {{ initial }}
+      <div class="h-20 w-20 overflow-hidden rounded-[1.75rem] ring-1 ring-edge">
+        <UserAvatar :name="name" :picture="profile?.picture" size-class="text-3xl" />
       </div>
       <p class="mt-3 text-sm text-mist">Estos datos se muestran a quien escanea tu tarjeta.</p>
     </div>
@@ -109,8 +108,6 @@ watch(profile, (value) => {
   web.value = value.web ?? ''
   description.value = value.description ?? ''
 }, { immediate: true })
-
-const initial = computed(() => (name.value || '?').charAt(0).toUpperCase())
 
 async function handleSubmit() {
   if (!name.value.trim()) {

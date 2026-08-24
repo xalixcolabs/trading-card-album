@@ -12,6 +12,7 @@ export interface ContactDtoContact {
   github?: string;
   linkedin?: string;
   name?: string;
+  picture?: string;
   scanned_at?: number;
   user_id?: string;
   web?: string;

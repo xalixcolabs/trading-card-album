@@ -25,9 +25,8 @@
     <div v-else class="mt-5 flex flex-col gap-3">
       <div v-for="user in users" :key="user.id"
         class="flex items-center gap-3 rounded-2xl bg-raise p-4 ring-1 ring-edge">
-        <div
-          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-panel text-base font-bold text-accent ring-1 ring-edge">
-          {{ initialOf(user.name) }}
+        <div class="h-10 w-10 shrink-0 overflow-hidden rounded-xl ring-1 ring-edge">
+          <UserAvatar :name="user.name" :picture="user.picture" size-class="text-base" />
         </div>
         <div class="min-w-0 flex-1">
           <p class="truncate text-[15px] font-semibold text-ink">{{ user.name || 'Sin nombre' }}</p>
@@ -67,10 +66,6 @@ const detailUserId = ref('')
 
 const { data: users, pending, refresh } = useApiData(() => getApiV1AdminUsers(search.value ? { email: search.value } : undefined), 'admin-users')
 const profile = useProfile()
-
-function initialOf(name?: string) {
-  return (name || '?').charAt(0).toUpperCase()
-}
 
 function isSelf(user: AdminDtoUser) {
   return user.id === profile.value?.id
