@@ -1,4 +1,4 @@
-.PHONY: build dev dev-backend dev-frontend test db-migrate gen-sql gen-swagger gen
+.PHONY: build dev dev-backend dev-frontend test docker db-migrate gen-sql gen-swagger gen
 
 # ==============================================================================
 # ENTORNO DE DESARROLLO
@@ -32,6 +32,10 @@ build-backend:
 
 build-frontend:
 	@cd webui && npm run generate
+
+docker:
+	@echo "🐳 Construyendo imagen Docker..."
+	@docker build -t trading-card-album:latest .
 
 # ==============================================================================
 # TESTS

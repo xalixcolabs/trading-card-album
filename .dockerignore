@@ -1,0 +1,31 @@
+# Git / entorno
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+
+# Artefactos de build
+build/
+database/*.sqlite3
+*.sqlite3
+
+# Assets servidos por nginx (no se embeben en el binario)
+cards/
+
+# Frontend: dependencias y artefactos
+webui/node_modules
+webui/.nuxt
+webui/.output
+webui/dist
+
+# Herramientas de agente
+.agents/
+skills-lock.json
+
+# Documentación local
+AGENTS.md
+CODE_OF_CONDUCT.md
+README.md
+CONTRIBUTING.md
+LICENSE
