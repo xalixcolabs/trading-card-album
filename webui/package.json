@@ -1,0 +1,29 @@
+{
+  "name": "webui",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "HTTPS=true orval && nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.1",
+    "izitoast": "^1.4.0",
+    "nanoid": "^5.1.14",
+    "nuxt": "^4.4.8",
+    "nuxt-toast": "^1.4.0",
+    "orval": "^8.19.0",
+    "pouchdb": "^9.0.0",
+    "tailwindcss": "^4.3.1",
+    "vue": "^3.5.35",
+    "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "daisyui": "^5.5.23",
+    "nuxt-qrcode": "^0.4.10"
+  }
+}
