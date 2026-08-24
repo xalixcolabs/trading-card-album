@@ -87,6 +87,41 @@ export const postApiV1Album = async (albumDtoCreateAlbumRequest: AlbumDtoCreateA
 );}
 
 
+export type getApiV1AlbumIdResponse200 = {
+  data: AlbumModelAlbum
+  status: 200
+}
+
+export type getApiV1AlbumIdResponseSuccess = (getApiV1AlbumIdResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiV1AlbumIdResponse = (getApiV1AlbumIdResponseSuccess)
+
+export const getGetApiV1AlbumIdUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/album/${id}`
+}
+
+/**
+ * Get album by id
+ */
+export const getApiV1AlbumId = async (id: string, options?: RequestInit): Promise<getApiV1AlbumIdResponse> => {
+
+  return customFetch<getApiV1AlbumIdResponse>(getGetApiV1AlbumIdUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
 export type getApiV1AlbumIdAssignedCardResponse200 = {
   data: CardModelCard
   status: 200

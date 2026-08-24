@@ -35,8 +35,7 @@
 
       <!-- Shelf -->
       <div v-else-if="albums && albums.length" class="no-scrollbar -mx-5 mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2">
-        <NuxtLink v-for="album in albums" :key="album.id"
-          :to="{ path: `/album/${album.id}`, query: { title: album.title, total: album.totalCards } }"
+        <NuxtLink v-for="album in albums" :key="album.id" :to="`/album/${album.id}`"
           class="w-36 shrink-0 snap-start">
           <div
             class="group relative aspect-2/3 w-full overflow-hidden rounded-card bg-raise ring-1 ring-edge transition-all duration-300 hover:ring-accent/50 active:scale-[0.97]">

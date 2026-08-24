@@ -36,30 +36,34 @@
       </p>
     </section>
 
-    <!-- Colección -->
+    <!-- Álbum completo -->
     <section class="mt-8">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold tracking-tight text-ink">Tu colección</h2>
         <span class="font-mono text-xs font-semibold text-mist tabular">{{ collectionCount }}/{{ totalCards }}</span>
       </div>
 
-      <div v-if="collectionPending" class="mt-4 grid grid-cols-2 gap-4">
+      <div v-if="albumPending" class="mt-4 grid grid-cols-2 gap-4">
         <div v-for="i in 4" :key="i" class="aspect-2/3 w-full animate-pulse rounded-card bg-raise ring-1 ring-edge"></div>
       </div>
 
-      <div v-else-if="cards && cards.length" class="mt-4 grid grid-cols-2 gap-4">
-        <Card v-for="card in cards" :key="card.id" :card="card" />
+      <div v-else-if="albumCards.length" class="mt-4 grid grid-cols-2 gap-4">
+        <Card v-for="card in albumCards" :key="card.id" :card="card" :locked="!collectedIds.has(card.id)" />
       </div>
 
       <div v-else class="mt-4 overflow-hidden rounded-3xl border border-dashed border-edge bg-raise/60 p-6 text-center">
         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-          <PhScan :size="26" weight="duotone" />
+          <PhStack :size="26" weight="duotone" />
         </div>
-        <h2 class="mt-4 text-lg font-bold text-ink">Colección vacía</h2>
+        <h2 class="mt-4 text-lg font-bold text-ink">Sin tarjetas aún</h2>
         <p class="mx-auto mt-1 max-w-[34ch] text-sm leading-relaxed text-mist">
-          Escanea el QR de otros desarrolladores para sumar sus tarjetas a tu colección.
+          Este álbum todavía no tiene tarjetas registradas.
         </p>
       </div>
+
+      <p v-if="collectionCount === 0 && albumCards.length" class="mt-5 text-center text-sm text-mist">
+        Escanea el QR de otros desarrolladores para desbloquear tarjetas y completar tu álbum.
+      </p>
     </section>
 
     <!-- Dock de acciones -->
@@ -85,8 +89,8 @@
 </template>
 
 <script setup lang="ts">
-import { PhArrowLeft, PhQrCode, PhScan } from '@phosphor-icons/vue'
-import { getApiV1AlbumIdAssignedCard, getApiV1AlbumIdCard } from '~/services/album/album'
+import { PhArrowLeft, PhQrCode, PhScan, PhStack } from '@phosphor-icons/vue'
+import { getApiV1AlbumId, getApiV1AlbumIdAssignedCard, getApiV1AlbumIdCard } from '~/services/album/album'
 import { getApiV1AuthMe } from '~/services/auth/auth'
 
 const route = useRoute()
@@ -96,21 +100,21 @@ const albumId = route.params.id as string
 const scanOpen = ref(false)
 const qrOpen = ref(false)
 
-const albumTitle = computed(() => route.query.title as string || 'Álbum')
-const totalCards = computed(() => {
-  const total = Number(route.query.total ?? 0)
-  return Number.isFinite(total) && total > 0 ? total : 0
-})
-
 const { data: profile } = useApiData(() => getApiV1AuthMe(), 'profile')
+const { data: album, pending: albumPending } = useApiData(() => getApiV1AlbumId(albumId), `album-${albumId}`)
 const { data: assignedCard, pending: assignedPending } = useApiData(
   () => getApiV1AlbumIdAssignedCard(albumId), `assigned-${albumId}`,
 )
-const { data: cards, pending: collectionPending, refresh: refreshCollection } = useApiData(
+const { data: collected, refresh: refreshCollection } = useApiData(
   () => getApiV1AlbumIdCard(albumId), `collection-${albumId}`,
 )
 
-const collectionCount = computed(() => cards.value?.length ?? 0)
+const albumTitle = computed(() => album.value?.title || 'Álbum')
+const albumCards = computed(() => album.value?.cards ?? [])
+const totalCards = computed(() => albumCards.value.length || album.value?.total_cards || 0)
+
+const collectedIds = computed(() => new Set((collected.value ?? []).map(card => card.id)))
+const collectionCount = computed(() => collectedIds.value.size)
 const progressPct = computed(() => {
   if (!totalCards.value) return 0
   return Math.min(100, Math.round((collectionCount.value / totalCards.value) * 100))
@@ -123,5 +127,6 @@ watch(profile, (value) => {
 const onCardAdded = async () => {
   await refreshCollection()
   await refreshNuxtData('assigned-' + albumId)
+  await refreshNuxtData('collection-' + albumId)
 }
 </script>
