@@ -17,6 +17,12 @@
         <span class="text-[10px] font-semibold tracking-wide">Contactos</span>
       </NuxtLink>
 
+      <button type="button" @click="$emit('add')"
+        class="-mt-7 flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-ink shadow-glow ring-4 ring-panel transition-transform active:scale-90"
+        aria-label="Agregar álbum">
+        <PhPlus :size="26" weight="bold" />
+      </button>
+
       <NuxtLink to="/profile"
         class="flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5 transition-transform active:scale-95"
         :class="active === 'profile' ? 'text-ink' : 'text-faint'">
@@ -28,9 +34,13 @@
 </template>
 
 <script setup lang="ts">
-import { PhHouse, PhUser, PhUsers } from '@phosphor-icons/vue'
+import { PhHouse, PhPlus, PhUser, PhUsers } from '@phosphor-icons/vue'
 
 defineProps<{
   active: 'home' | 'contacts' | 'profile'
+}>()
+
+defineEmits<{
+  (e: 'add'): void
 }>()
 </script>
