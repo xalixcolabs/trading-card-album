@@ -20,7 +20,7 @@ func CheckJwtCoockie(c fiber.Ctx) error {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 	if err != nil {
-		log.Printf("[CheckJwtCoockie] " + err.Error())
+		log.Printf("[CheckJwtCoockie] %s", err)
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"message": "Sesion invalida",
 		})
@@ -32,14 +32,14 @@ func CheckJwtCoockie(c fiber.Ctx) error {
 	}
 	id, err := token.Claims.GetSubject()
 	if err != nil {
-		log.Printf("[CheckJwtCoockie GetSubject] " + err.Error())
+		log.Printf("[CheckJwtCoockie GetSubject] %s", err)
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"message": "Sesion invalida",
 		})
 	}
 	user, err := user_application.GetUserById(id)
 	if err != nil {
-		log.Printf("[CheckJwtCoockie GetUserById] " + err.Error())
+		log.Printf("[CheckJwtCoockie GetUserById] %s", err)
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"message": "Sesion invalida",
 		})
