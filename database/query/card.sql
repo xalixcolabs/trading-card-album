@@ -27,3 +27,6 @@ RETURNING *;
 -- name: DeleteCard :exec
 DELETE FROM card
 WHERE id = ?;
+-- name: DeleteCardsByAlbumId :exec
+DELETE FROM card
+WHERE album_id = ?;

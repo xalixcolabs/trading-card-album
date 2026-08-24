@@ -29,6 +29,16 @@ func (q *Queries) CreateCardPoolRow(ctx context.Context, arg CreateCardPoolRowPa
 	return i, err
 }
 
+const deleteCardPoolByAlbumId = `-- name: DeleteCardPoolByAlbumId :exec
+DELETE FROM card_pool
+WHERE album_id = ?
+`
+
+func (q *Queries) DeleteCardPoolByAlbumId(ctx context.Context, albumID string) error {
+	_, err := q.db.ExecContext(ctx, deleteCardPoolByAlbumId, albumID)
+	return err
+}
+
 const getRandomAvailableCard = `-- name: GetRandomAvailableCard :one
 SELECT card_id 
 FROM card_pool 

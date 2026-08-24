@@ -38,9 +38,78 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create an album with its cards",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/album_dto.CreateAlbumRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/album_model.Album"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/admin/albums/{id}": {
+            "put": {
+                "description": "Update album title",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.UpdateAlbumRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.Album"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete an album",
                 "consumes": [
@@ -94,9 +163,78 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create a card in an album",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.CreateCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/admin/cards/{id}": {
+            "put": {
+                "description": "Update a card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Card ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.UpdateCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete a card",
                 "consumes": [
@@ -151,7 +289,7 @@ const docTemplate = `{
         },
         "/api/v1/admin/users": {
             "get": {
-                "description": "List all users",
+                "description": "List users, optionally filtered by email",
                 "consumes": [
                     "application/json"
                 ],
@@ -161,6 +299,14 @@ const docTemplate = `{
                 "tags": [
                     "Admin"
                 ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by email",
+                        "name": "email",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -169,6 +315,37 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/admin_dto.User"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/users/{id}": {
+            "get": {
+                "description": "Get user detail with albums and cards",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.UserDetail"
                         }
                     }
                 }
@@ -643,6 +820,26 @@ const docTemplate = `{
                 }
             }
         },
+        "admin_dto.CreateCardRequest": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                }
+            }
+        },
         "admin_dto.Message": {
             "type": "object",
             "properties": {
@@ -671,6 +868,31 @@ const docTemplate = `{
                 },
                 "users": {
                     "type": "integer"
+                }
+            }
+        },
+        "admin_dto.UpdateAlbumRequest": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "admin_dto.UpdateCardRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
                 }
             }
         },
@@ -714,6 +936,26 @@ const docTemplate = `{
                 },
                 "web": {
                     "type": "string"
+                }
+            }
+        },
+        "admin_dto.UserDetail": {
+            "type": "object",
+            "properties": {
+                "albums": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_dto.Album"
+                    }
+                },
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/card_model.Card"
+                    }
+                },
+                "user": {
+                    "$ref": "#/definitions/admin_dto.User"
                 }
             }
         },

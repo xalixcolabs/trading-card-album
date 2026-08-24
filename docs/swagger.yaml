@@ -12,6 +12,19 @@ definitions:
       total_cards:
         type: integer
     type: object
+  admin_dto.CreateCardRequest:
+    properties:
+      album_id:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
+    type: object
   admin_dto.Message:
     properties:
       message:
@@ -31,6 +44,22 @@ definitions:
         type: integer
       users:
         type: integer
+    type: object
+  admin_dto.UpdateAlbumRequest:
+    properties:
+      title:
+        type: string
+    type: object
+  admin_dto.UpdateCardRequest:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
     type: object
   admin_dto.UpdateUserRoleRequest:
     properties:
@@ -59,6 +88,19 @@ definitions:
         type: integer
       web:
         type: string
+    type: object
+  admin_dto.UserDetail:
+    properties:
+      albums:
+        items:
+          $ref: '#/definitions/admin_dto.Album'
+        type: array
+      cards:
+        items:
+          $ref: '#/definitions/card_model.Card'
+        type: array
+      user:
+        $ref: '#/definitions/admin_dto.User'
     type: object
   album_dto.CreateAlbumCardRequest:
     properties:
@@ -257,6 +299,26 @@ paths:
             type: array
       tags:
       - Admin
+    post:
+      consumes:
+      - application/json
+      description: Create an album with its cards
+      parameters:
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/album_dto.CreateAlbumRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/album_model.Album'
+      tags:
+      - Admin
   /api/v1/admin/albums/{id}:
     delete:
       consumes:
@@ -277,6 +339,31 @@ paths:
             $ref: '#/definitions/admin_dto.Message'
       tags:
       - Admin
+    put:
+      consumes:
+      - application/json
+      description: Update album title
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin_dto.UpdateAlbumRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_dto.Album'
+      tags:
+      - Admin
   /api/v1/admin/cards:
     get:
       consumes:
@@ -291,6 +378,26 @@ paths:
             items:
               $ref: '#/definitions/card_model.Card'
             type: array
+      tags:
+      - Admin
+    post:
+      consumes:
+      - application/json
+      description: Create a card in an album
+      parameters:
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin_dto.CreateCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/card_model.Card'
       tags:
       - Admin
   /api/v1/admin/cards/{id}:
@@ -313,6 +420,31 @@ paths:
             $ref: '#/definitions/admin_dto.Message'
       tags:
       - Admin
+    put:
+      consumes:
+      - application/json
+      description: Update a card
+      parameters:
+      - description: Card ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin_dto.UpdateCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/card_model.Card'
+      tags:
+      - Admin
   /api/v1/admin/overview:
     get:
       consumes:
@@ -331,7 +463,12 @@ paths:
     get:
       consumes:
       - application/json
-      description: List all users
+      description: List users, optionally filtered by email
+      parameters:
+      - description: Filter by email
+        in: query
+        name: email
+        type: string
       produces:
       - application/json
       responses:
@@ -341,6 +478,26 @@ paths:
             items:
               $ref: '#/definitions/admin_dto.User'
             type: array
+      tags:
+      - Admin
+  /api/v1/admin/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user detail with albums and cards
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_dto.UserDetail'
       tags:
       - Admin
   /api/v1/admin/users/{id}/role:

@@ -23,3 +23,6 @@ INSERT INTO card_pool(
 ) VALUES (
     ?, ?
 ) RETURNING *;
+-- name: DeleteCardPoolByAlbumId :exec
+DELETE FROM card_pool
+WHERE album_id = ?;

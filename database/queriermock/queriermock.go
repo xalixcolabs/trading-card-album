@@ -12,32 +12,40 @@ import (
 type Querier struct {
 	GetAlbumFn                     func(ctx context.Context, id string) (sqlc.Album, error)
 	CreateAlbumFn                  func(ctx context.Context, arg sqlc.CreateAlbumParams) (sqlc.Album, error)
+	UpdateAlbumFn                  func(ctx context.Context, arg sqlc.UpdateAlbumParams) (sqlc.Album, error)
 	ListAlbumsByUserIdFn           func(ctx context.Context, userID string) ([]sqlc.Album, error)
 	ListAlbumsWithStatsFn          func(ctx context.Context) ([]sqlc.ListAlbumsWithStatsRow, error)
 	DeleteAlbumFn                  func(ctx context.Context, id string) error
 	GetOverviewStatsFn             func(ctx context.Context) (sqlc.GetOverviewStatsRow, error)
 	GetCardFn                      func(ctx context.Context, id string) (sqlc.Card, error)
 	CreateCardFn                   func(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error)
+	UpdateCardFn                   func(ctx context.Context, arg sqlc.UpdateCardParams) (sqlc.Card, error)
 	ListCardsFn                    func(ctx context.Context) ([]sqlc.Card, error)
 	GetCardByAlbumParticipantFn    func(ctx context.Context, arg sqlc.GetCardByAlbumParticipantParams) (sqlc.Card, error)
 	DeleteCardFn                   func(ctx context.Context, id string) error
+	DeleteCardsByAlbumIdFn         func(ctx context.Context, albumID string) error
 	GetUserFn                      func(ctx context.Context, id string) (sqlc.User, error)
 	CreateUserFn                   func(ctx context.Context, arg sqlc.CreateUserParams) (sqlc.User, error)
 	UpdateUserFn                   func(ctx context.Context, arg sqlc.UpdateUserParams) (sqlc.User, error)
 	UpdateUserIsAdminFn            func(ctx context.Context, arg sqlc.UpdateUserIsAdminParams) (sqlc.User, error)
 	ListUsersFn                    func(ctx context.Context) ([]sqlc.User, error)
+	SearchUsersByEmailFn           func(ctx context.Context, email string) ([]sqlc.User, error)
 CreateContactFn             func(ctx context.Context, arg sqlc.CreateContactParams) (sqlc.Contact, error)
 	ListContactsFn              func(ctx context.Context, userID string) ([]sqlc.ListContactsRow, error)
 	CreateAlbumParticipantFn       func(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	GetAlbumParticipantFn          func(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	UpdateAlbumParticipantSecretFn func(ctx context.Context, arg sqlc.UpdateAlbumParticipantSecretParams) (sqlc.AlbumParticipant, error)
+	DeleteAlbumParticipantsByAlbumIdFn func(ctx context.Context, albumID string) error
 	CreateCardPoolRowFn            func(ctx context.Context, arg sqlc.CreateCardPoolRowParams) (sqlc.CardPool, error)
 	GetRandomAvailableCardFn       func(ctx context.Context, albumID string) (string, error)
 	ResetCardPoolFn                func(ctx context.Context, albumID string) (sqlc.CardPool, error)
 	MarkCardAsDrawnFn              func(ctx context.Context, arg sqlc.MarkCardAsDrawnParams) (sqlc.CardPool, error)
+	DeleteCardPoolByAlbumIdFn      func(ctx context.Context, albumID string) error
 	CollectCardFn                  func(ctx context.Context, arg sqlc.CollectCardParams) error
 	GetUserCollectionFn            func(ctx context.Context, arg sqlc.GetUserCollectionParams) ([]sqlc.Card, error)
 	CardInCollectionFn             func(ctx context.Context, arg sqlc.CardInCollectionParams) (bool, error)
+	ListCollectedCardsByUserFn     func(ctx context.Context, userID string) ([]sqlc.Card, error)
+	DeleteUserCollectionByAlbumIdFn func(ctx context.Context, albumID string) error
 }
 
 func (m *Querier) GetAlbum(ctx context.Context, id string) (sqlc.Album, error) {
@@ -75,6 +83,13 @@ func (m *Querier) CreateAlbum(ctx context.Context, arg sqlc.CreateAlbumParams) (
 	return sqlc.Album{}, nil
 }
 
+func (m *Querier) UpdateAlbum(ctx context.Context, arg sqlc.UpdateAlbumParams) (sqlc.Album, error) {
+	if m.UpdateAlbumFn != nil {
+		return m.UpdateAlbumFn(ctx, arg)
+	}
+	return sqlc.Album{}, nil
+}
+
 func (m *Querier) ListAlbumsByUserId(ctx context.Context, userID string) ([]sqlc.Album, error) {
 	if m.ListAlbumsByUserIdFn != nil {
 		return m.ListAlbumsByUserIdFn(ctx, userID)
@@ -106,6 +121,13 @@ func (m *Querier) DeleteCard(ctx context.Context, id string) error {
 func (m *Querier) CreateCard(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error) {
 	if m.CreateCardFn != nil {
 		return m.CreateCardFn(ctx, arg)
+	}
+	return sqlc.Card{}, nil
+}
+
+func (m *Querier) UpdateCard(ctx context.Context, arg sqlc.UpdateCardParams) (sqlc.Card, error) {
+	if m.UpdateCardFn != nil {
+		return m.UpdateCardFn(ctx, arg)
 	}
 	return sqlc.Card{}, nil
 }
@@ -148,6 +170,13 @@ func (m *Querier) UpdateUserIsAdmin(ctx context.Context, arg sqlc.UpdateUserIsAd
 func (m *Querier) ListUsers(ctx context.Context) ([]sqlc.User, error) {
 	if m.ListUsersFn != nil {
 		return m.ListUsersFn(ctx)
+	}
+	return nil, nil
+}
+
+func (m *Querier) SearchUsersByEmail(ctx context.Context, email string) ([]sqlc.User, error) {
+	if m.SearchUsersByEmailFn != nil {
+		return m.SearchUsersByEmailFn(ctx, email)
 	}
 	return nil, nil
 }
@@ -234,4 +263,39 @@ func (m *Querier) CardInCollection(ctx context.Context, arg sqlc.CardInCollectio
 		return m.CardInCollectionFn(ctx, arg)
 	}
 	return false, nil
+}
+
+func (m *Querier) ListCollectedCardsByUser(ctx context.Context, userID string) ([]sqlc.Card, error) {
+	if m.ListCollectedCardsByUserFn != nil {
+		return m.ListCollectedCardsByUserFn(ctx, userID)
+	}
+	return nil, nil
+}
+
+func (m *Querier) DeleteCardsByAlbumId(ctx context.Context, albumID string) error {
+	if m.DeleteCardsByAlbumIdFn != nil {
+		return m.DeleteCardsByAlbumIdFn(ctx, albumID)
+	}
+	return nil
+}
+
+func (m *Querier) DeleteCardPoolByAlbumId(ctx context.Context, albumID string) error {
+	if m.DeleteCardPoolByAlbumIdFn != nil {
+		return m.DeleteCardPoolByAlbumIdFn(ctx, albumID)
+	}
+	return nil
+}
+
+func (m *Querier) DeleteAlbumParticipantsByAlbumId(ctx context.Context, albumID string) error {
+	if m.DeleteAlbumParticipantsByAlbumIdFn != nil {
+		return m.DeleteAlbumParticipantsByAlbumIdFn(ctx, albumID)
+	}
+	return nil
+}
+
+func (m *Querier) DeleteUserCollectionByAlbumId(ctx context.Context, albumID string) error {
+	if m.DeleteUserCollectionByAlbumIdFn != nil {
+		return m.DeleteUserCollectionByAlbumIdFn(ctx, albumID)
+	}
+	return nil
 }

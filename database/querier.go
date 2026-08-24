@@ -12,6 +12,7 @@ import (
 type Querier interface {
 	GetAlbum(ctx context.Context, id string) (sqlc.Album, error)
 	CreateAlbum(ctx context.Context, arg sqlc.CreateAlbumParams) (sqlc.Album, error)
+	UpdateAlbum(ctx context.Context, arg sqlc.UpdateAlbumParams) (sqlc.Album, error)
 	ListAlbumsByUserId(ctx context.Context, userID string) ([]sqlc.Album, error)
 	ListAlbumsWithStats(ctx context.Context) ([]sqlc.ListAlbumsWithStatsRow, error)
 	DeleteAlbum(ctx context.Context, id string) error
@@ -19,15 +20,18 @@ type Querier interface {
 
 	GetCard(ctx context.Context, id string) (sqlc.Card, error)
 	CreateCard(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error)
+	UpdateCard(ctx context.Context, arg sqlc.UpdateCardParams) (sqlc.Card, error)
 	ListCards(ctx context.Context) ([]sqlc.Card, error)
 	GetCardByAlbumParticipant(ctx context.Context, arg sqlc.GetCardByAlbumParticipantParams) (sqlc.Card, error)
 	DeleteCard(ctx context.Context, id string) error
+	DeleteCardsByAlbumId(ctx context.Context, albumID string) error
 
 	GetUser(ctx context.Context, id string) (sqlc.User, error)
 	CreateUser(ctx context.Context, arg sqlc.CreateUserParams) (sqlc.User, error)
 	UpdateUser(ctx context.Context, arg sqlc.UpdateUserParams) (sqlc.User, error)
 	UpdateUserIsAdmin(ctx context.Context, arg sqlc.UpdateUserIsAdminParams) (sqlc.User, error)
 	ListUsers(ctx context.Context) ([]sqlc.User, error)
+	SearchUsersByEmail(ctx context.Context, email string) ([]sqlc.User, error)
 
 	CreateContact(ctx context.Context, arg sqlc.CreateContactParams) (sqlc.Contact, error)
 	ListContacts(ctx context.Context, userID string) ([]sqlc.ListContactsRow, error)
@@ -35,15 +39,19 @@ type Querier interface {
 	CreateAlbumParticipant(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	GetAlbumParticipant(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	UpdateAlbumParticipantSecret(ctx context.Context, arg sqlc.UpdateAlbumParticipantSecretParams) (sqlc.AlbumParticipant, error)
+	DeleteAlbumParticipantsByAlbumId(ctx context.Context, albumID string) error
 
 	CreateCardPoolRow(ctx context.Context, arg sqlc.CreateCardPoolRowParams) (sqlc.CardPool, error)
 	GetRandomAvailableCard(ctx context.Context, albumID string) (string, error)
 	ResetCardPool(ctx context.Context, albumID string) (sqlc.CardPool, error)
 	MarkCardAsDrawn(ctx context.Context, arg sqlc.MarkCardAsDrawnParams) (sqlc.CardPool, error)
+	DeleteCardPoolByAlbumId(ctx context.Context, albumID string) error
 
 	CollectCard(ctx context.Context, arg sqlc.CollectCardParams) error
 	GetUserCollection(ctx context.Context, arg sqlc.GetUserCollectionParams) ([]sqlc.Card, error)
 	CardInCollection(ctx context.Context, arg sqlc.CardInCollectionParams) (bool, error)
+	ListCollectedCardsByUser(ctx context.Context, userID string) ([]sqlc.Card, error)
+	DeleteUserCollectionByAlbumId(ctx context.Context, albumID string) error
 }
 
 // DefaultQuerier devuelve la implementación real de Querier usando la conexión

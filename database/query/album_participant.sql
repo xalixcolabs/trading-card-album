@@ -26,3 +26,7 @@ UPDATE album_participant
 SET secret = ?
 WHERE album_id = ? AND user_id = ?
 RETURNING *;
+
+-- name: DeleteAlbumParticipantsByAlbumId :exec
+DELETE FROM album_participant
+WHERE album_id = ?;

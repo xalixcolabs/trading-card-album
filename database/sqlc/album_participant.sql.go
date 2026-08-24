@@ -44,6 +44,16 @@ func (q *Queries) CreateAlbumParticipant(ctx context.Context, arg CreateAlbumPar
 	return i, err
 }
 
+const deleteAlbumParticipantsByAlbumId = `-- name: DeleteAlbumParticipantsByAlbumId :exec
+DELETE FROM album_participant
+WHERE album_id = ?
+`
+
+func (q *Queries) DeleteAlbumParticipantsByAlbumId(ctx context.Context, albumID string) error {
+	_, err := q.db.ExecContext(ctx, deleteAlbumParticipantsByAlbumId, albumID)
+	return err
+}
+
 const getAlbumParticipant = `-- name: GetAlbumParticipant :one
 SELECT album_id, user_id, assigned_card_id, joined_at, secret FROM album_participant
 WHERE album_id = ? AND user_id = ? LIMIT 1

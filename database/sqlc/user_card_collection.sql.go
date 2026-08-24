@@ -51,6 +51,16 @@ func (q *Queries) CollectCard(ctx context.Context, arg CollectCardParams) error 
 	return err
 }
 
+const deleteUserCollectionByAlbumId = `-- name: DeleteUserCollectionByAlbumId :exec
+DELETE FROM user_card_collection
+WHERE album_id = ?
+`
+
+func (q *Queries) DeleteUserCollectionByAlbumId(ctx context.Context, albumID string) error {
+	_, err := q.db.ExecContext(ctx, deleteUserCollectionByAlbumId, albumID)
+	return err
+}
+
 const getUserCollection = `-- name: GetUserCollection :many
 SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.created_at, c.updated_at
 FROM user_card_collection ucc
@@ -66,6 +76,46 @@ type GetUserCollectionParams struct {
 
 func (q *Queries) GetUserCollection(ctx context.Context, arg GetUserCollectionParams) ([]Card, error) {
 	rows, err := q.db.QueryContext(ctx, getUserCollection, arg.UserID, arg.AlbumID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Card
+	for rows.Next() {
+		var i Card
+		if err := rows.Scan(
+			&i.ID,
+			&i.AlbumID,
+			&i.Number,
+			&i.Name,
+			&i.Description,
+			&i.ImageUrl,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listCollectedCardsByUser = `-- name: ListCollectedCardsByUser :many
+SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.created_at, c.updated_at
+FROM user_card_collection ucc
+JOIN card c ON ucc.card_id = c.id
+WHERE ucc.user_id = ?
+ORDER BY c.album_id, c.number
+`
+
+func (q *Queries) ListCollectedCardsByUser(ctx context.Context, userID string) ([]Card, error) {
+	rows, err := q.db.QueryContext(ctx, listCollectedCardsByUser, userID)
 	if err != nil {
 		return nil, err
 	}

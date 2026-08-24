@@ -63,6 +63,16 @@ func (q *Queries) DeleteCard(ctx context.Context, id string) error {
 	return err
 }
 
+const deleteCardsByAlbumId = `-- name: DeleteCardsByAlbumId :exec
+DELETE FROM card
+WHERE album_id = ?
+`
+
+func (q *Queries) DeleteCardsByAlbumId(ctx context.Context, albumID string) error {
+	_, err := q.db.ExecContext(ctx, deleteCardsByAlbumId, albumID)
+	return err
+}
+
 const getCard = `-- name: GetCard :one
 SELECT id, album_id, number, name, description, image_url, created_at, updated_at FROM card
 WHERE id = ? LIMIT 1

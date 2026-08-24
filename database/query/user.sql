@@ -10,6 +10,11 @@ WHERE email = ? LIMIT 1;
 SELECT * FROM user
 ORDER BY name;
 
+-- name: SearchUsersByEmail :many
+SELECT * FROM user
+WHERE email LIKE ?
+ORDER BY name;
+
 -- name: CreateUser :one
 INSERT INTO user (
   id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at
