@@ -364,6 +364,28 @@ paths:
             $ref: '#/definitions/admin_dto.Album'
       tags:
       - Admin
+  /api/v1/admin/albums/{id}/cards:
+    get:
+      consumes:
+      - application/json
+      description: Get cards of an album
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/card_model.Card'
+            type: array
+      tags:
+      - Admin
   /api/v1/admin/cards:
     get:
       consumes:

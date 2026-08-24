@@ -24,6 +24,15 @@ func ListCards(q database.Querier) ([]card_model.Card, error) {
 	return card_model.NewCardSliceFromSqlcCardSlice(cards), nil
 }
 
+func ListCardsByAlbum(q database.Querier, albumId string) ([]card_model.Card, error) {
+	ctx := context.Background()
+	cards, err := q.ListCardsByAlbumId(ctx, albumId)
+	if err != nil {
+		return nil, err
+	}
+	return card_model.NewCardSliceFromSqlcCardSlice(cards), nil
+}
+
 func DeleteCard(q database.Querier, cardId string) error {
 	ctx := context.Background()
 	return q.DeleteCard(ctx, cardId)

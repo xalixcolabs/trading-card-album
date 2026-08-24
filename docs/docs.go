@@ -140,6 +140,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/admin/albums/{id}/cards": {
+            "get": {
+                "description": "Get cards of an album",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/card_model.Card"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/admin/cards": {
             "get": {
                 "description": "List all cards",

@@ -25,6 +25,7 @@ func RegisterAdminResource(app *fiber.App) {
 	apiV1.Post("/albums", createAlbum)
 	apiV1.Put("/albums/:id", updateAlbum)
 	apiV1.Delete("/albums/:id", deleteAlbum)
+	apiV1.Get("/albums/:id/cards", getAlbumCards)
 	apiV1.Get("/users", getUsers)
 	apiV1.Get("/users/:id", getUserDetail)
 	apiV1.Put("/users/:id/role", updateUserRole)
@@ -64,6 +65,24 @@ func getAlbums(c fiber.Ctx) error {
 		})
 	}
 	return c.JSON(albums)
+}
+
+// @Description	Get cards of an album
+// @Tags		Admin
+// @Accept		json
+// @Produce		json
+// @Param		id   path  string  true  "Album ID"
+// @Success		200  {array}   card_model.Card
+// @Router /api/v1/admin/albums/{id}/cards [get]
+func getAlbumCards(c fiber.Ctx) error {
+	id := c.Params("id")
+	cards, err := admin_application.ListCardsByAlbum(database.DefaultQuerier(), id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Error al listar tarjetas",
+		})
+	}
+	return c.JSON(cards)
 }
 
 // @Description	Create an album with its cards

@@ -22,6 +22,7 @@ type Querier interface {
 	CreateCard(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error)
 	UpdateCard(ctx context.Context, arg sqlc.UpdateCardParams) (sqlc.Card, error)
 	ListCards(ctx context.Context) ([]sqlc.Card, error)
+	ListCardsByAlbumId(ctx context.Context, albumID string) ([]sqlc.Card, error)
 	GetCardByAlbumParticipant(ctx context.Context, arg sqlc.GetCardByAlbumParticipantParams) (sqlc.Card, error)
 	DeleteCard(ctx context.Context, id string) error
 	DeleteCardsByAlbumId(ctx context.Context, albumID string) error
