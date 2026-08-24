@@ -1,8 +1,8 @@
-# 🏅 Trading Card Album
+# Trading Card Album
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
 
-Colecciona, intercambia y comparte tarjetas del DevFest.
+Colecciona, intercambia y comparte tarjetas.
 
 Cada participante recibe una tarjeta asignada aleatoriamente y puede compartirla vía **QR**: al escanear el QR de otro participante se registra un contacto y se desbloquea su tarjeta en tu colección. Todo se sirve desde un único ejecutable.
 
@@ -32,4 +32,4 @@ Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
-Hecho con ❤️ por el **GDG Guadalajara** para el **DevFest 2026**.
+Hecho con ❤️ por el **GDG Guadalajara**.
