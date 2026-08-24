@@ -9,6 +9,26 @@ import (
 	"context"
 )
 
+const cardInCollection = `-- name: CardInCollection :one
+SELECT EXISTS(
+    SELECT 1 FROM user_card_collection
+    WHERE user_id = ? AND album_id = ? AND card_id = ?
+) AS owned
+`
+
+type CardInCollectionParams struct {
+	UserID  string
+	AlbumID string
+	CardID  string
+}
+
+func (q *Queries) CardInCollection(ctx context.Context, arg CardInCollectionParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, cardInCollection, arg.UserID, arg.AlbumID, arg.CardID)
+	var owned bool
+	err := row.Scan(&owned)
+	return owned, err
+}
+
 const collectCard = `-- name: CollectCard :exec
 INSERT OR IGNORE INTO user_card_collection (user_id, album_id, card_id, unlocked_at)
 VALUES (?, ?, ?, ?)

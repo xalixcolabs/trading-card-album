@@ -40,13 +40,23 @@ func RegisterCard(user user_model.User, request album_dto.RegisterCardRequest) (
 	if albumParticipant.Secret != request.Secret {
 		return card_model.Card{}, errors.New("Esta QR ya ha sido escaneado")
 	}
-	if err = queries.CollectCard(ctx, sqlc.CollectCardParams{
-		UserID:     user.ID,
-		AlbumID:    album.ID,
-		CardID:     albumParticipant.AssignedCardID,
-		UnlockedAt: time.Now().Unix(),
-	}); err != nil {
+	owned, err := queries.CardInCollection(ctx, sqlc.CardInCollectionParams{
+		UserID:  user.ID,
+		AlbumID: album.ID,
+		CardID:  albumParticipant.AssignedCardID,
+	})
+	if err != nil {
 		return card_model.Card{}, err
+	}
+	if !owned {
+		if err = queries.CollectCard(ctx, sqlc.CollectCardParams{
+			UserID:     user.ID,
+			AlbumID:    album.ID,
+			CardID:     albumParticipant.AssignedCardID,
+			UnlockedAt: time.Now().Unix(),
+		}); err != nil {
+			return card_model.Card{}, err
+		}
 	}
 	secret, _ := gonanoid.New()
 	_, err = queries.UpdateAlbumParticipantSecret(ctx, sqlc.UpdateAlbumParticipantSecretParams{
