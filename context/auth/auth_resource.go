@@ -67,7 +67,7 @@ func callback(c fiber.Ctx) error {
 	}
 	admins := os.Getenv("TCA_ADMINS")
 	isAdmin := strings.Contains(admins, response.Email)
-	user, err := user_application.CreateUser(database.DefaultQuerier(), response.Email, isAdmin)
+	user, err := user_application.CreateUser(database.DefaultQuerier(), response.Email, isAdmin, response.Picture)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": err.Error()})
 	}

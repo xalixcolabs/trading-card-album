@@ -55,6 +55,7 @@ type User struct {
 	Web         string
 	Description string
 	IsAdmin     int64
+	Picture     string
 	CreatedAt   int64
 	UpdatedAt   int64
 }

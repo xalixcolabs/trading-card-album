@@ -84,6 +84,8 @@ definitions:
         type: string
       name:
         type: string
+      picture:
+        type: string
       updated_at:
         type: integer
       web:
@@ -219,6 +221,8 @@ definitions:
         type: string
       name:
         type: string
+      picture:
+        type: string
       scanned_at:
         type: integer
       user_id:
@@ -271,6 +275,8 @@ definitions:
       linkedin:
         type: string
       name:
+        type: string
+      picture:
         type: string
       update_at:
         type: integer

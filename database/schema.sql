@@ -8,6 +8,7 @@ CREATE TABLE user(
     web TEXT NOT NULL,
     description TEXT NOT NULL,
     is_admin INTEGER NOT NULL DEFAULT 0,
+    picture TEXT NOT NULL DEFAULT '',
     created_at INTEGER NOT NULL,
     updated_at INTEGER NOT NULL
 );
@@ -78,4 +79,5 @@ INSERT INTO "schema_migrations" (version) VALUES
   ('20260620025456'),
   ('20260620030252'),
   ('20260624144904'),
-  ('20260624163100');
+  ('20260624163100'),
+  ('20260824120000');

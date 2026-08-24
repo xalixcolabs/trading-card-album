@@ -24,6 +24,7 @@ func ListContacts(q database.Querier, user user_model.User) ([]contact_dto.Conta
 			Linkedin:    row.Linkedin,
 			Web:         row.Web,
 			Description: row.Description,
+			Picture:     row.Picture,
 			ScannedAt:   row.ScannedAt,
 		})
 	}

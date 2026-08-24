@@ -957,6 +957,9 @@
                 "name": {
                     "type": "string"
                 },
+                "picture": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "integer"
                 },
@@ -1165,6 +1168,9 @@
                 "name": {
                     "type": "string"
                 },
+                "picture": {
+                    "type": "string"
+                },
                 "scanned_at": {
                     "type": "integer"
                 },
@@ -1243,6 +1249,9 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "picture": {
                     "type": "string"
                 },
                 "update_at": {

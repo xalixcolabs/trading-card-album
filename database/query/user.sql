@@ -17,9 +17,9 @@ ORDER BY name;
 
 -- name: CreateUser :one
 INSERT INTO user (
-  id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at
+  id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) ON CONFLICT(email) DO UPDATE SET
     updated_at = excluded.updated_at
 RETURNING *;

@@ -32,7 +32,7 @@ func (q *Queries) CreateContact(ctx context.Context, arg CreateContactParams) (C
 
 const listContacts = `-- name: ListContacts :many
 SELECT u.id, u.name, u.email, u.github, u.linkedin, u.web, u.description,
-       u.is_admin, u.created_at, u.updated_at, c.scanned_at
+       u.is_admin, u.picture, u.created_at, u.updated_at, c.scanned_at
 FROM contact c
 JOIN user u ON u.id = c.met_user_id
 WHERE c.user_id = ?
@@ -48,6 +48,7 @@ type ListContactsRow struct {
 	Web         string
 	Description string
 	IsAdmin     int64
+	Picture     string
 	CreatedAt   int64
 	UpdatedAt   int64
 	ScannedAt   int64
@@ -71,6 +72,7 @@ func (q *Queries) ListContacts(ctx context.Context, userID string) ([]ListContac
 			&i.Web,
 			&i.Description,
 			&i.IsAdmin,
+			&i.Picture,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.ScannedAt,

@@ -23,7 +23,7 @@ func TestCreateUserSetsAdminFlag(t *testing.T) {
 		},
 	}
 
-	user, err := user_application.CreateUser(mock, "admin@example.com", true)
+	user, err := user_application.CreateUser(mock, "admin@example.com", true, "https://pic.example/1.png")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -44,7 +44,7 @@ func TestCreateUserNonAdminFlag(t *testing.T) {
 			return sqlc.User{ID: arg.ID, Email: arg.Email, IsAdmin: arg.IsAdmin}, nil
 		},
 	}
-	user, err := user_application.CreateUser(mock, "user@example.com", false)
+	user, err := user_application.CreateUser(mock, "user@example.com", false, "https://pic.example/2.png")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -59,7 +59,7 @@ func TestCreateUserReturnsError(t *testing.T) {
 			return sqlc.User{}, errors.New("db error")
 		},
 	}
-	_, err := user_application.CreateUser(mock, "user@example.com", false)
+	_, err := user_application.CreateUser(mock, "user@example.com", false, "https://pic.example/2.png")
 	if err == nil || err.Error() != "db error" {
 		t.Errorf("expected db error, got %v", err)
 	}

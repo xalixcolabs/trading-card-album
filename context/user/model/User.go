@@ -11,6 +11,7 @@ type User struct {
 	Web         string `json:"web"`
 	Description string `json:"description"`
 	IsAdmin     int64  `json:"is_admin"`
+	Picture     string `json:"picture"`
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"update_at"`
 }
@@ -25,6 +26,7 @@ func NewUserFromSqlcUser(user sqlc.User) User {
 		Web:         user.Web,
 		Description: user.Description,
 		IsAdmin:     user.IsAdmin,
+		Picture:     user.Picture,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
 	}

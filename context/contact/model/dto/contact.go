@@ -8,5 +8,6 @@ type Contact struct {
 	Linkedin    string `json:"linkedin"`
 	Web         string `json:"web"`
 	Description string `json:"description"`
+	Picture     string `json:"picture"`
 	ScannedAt   int64  `json:"scanned_at"`
 }

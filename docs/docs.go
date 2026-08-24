@@ -965,6 +965,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "picture": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "integer"
                 },
@@ -1173,6 +1176,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "picture": {
+                    "type": "string"
+                },
                 "scanned_at": {
                     "type": "integer"
                 },
@@ -1251,6 +1257,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "picture": {
                     "type": "string"
                 },
                 "update_at": {

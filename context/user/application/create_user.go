@@ -9,7 +9,7 @@ import (
 	"github.com/matoous/go-nanoid/v2"
 )
 
-func CreateUser(q database.Querier, email string, isAdmin bool) (sqlc.User, error) {
+func CreateUser(q database.Querier, email string, isAdmin bool, picture string) (sqlc.User, error) {
 	ctx := context.Background()
 	id, _ := gonanoid.New()
 	isAdmin_ := 0
@@ -25,6 +25,7 @@ func CreateUser(q database.Querier, email string, isAdmin bool) (sqlc.User, erro
 		Web:         "",
 		IsAdmin:     int64(isAdmin_),
 		Description: "",
+		Picture:     picture,
 
 		CreatedAt: time.Now().Unix(),
 		UpdatedAt: time.Now().Unix(),

@@ -9,6 +9,7 @@ type User struct {
 	Web         string `json:"web"`
 	Description string `json:"description"`
 	IsAdmin     int64  `json:"is_admin"`
+	Picture     string `json:"picture"`
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"updated_at"`
 }

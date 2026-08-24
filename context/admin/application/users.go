@@ -84,6 +84,7 @@ func mapUser(user sqlc.User) admin_dto.User {
 		Web:         user.Web,
 		Description: user.Description,
 		IsAdmin:     user.IsAdmin,
+		Picture:     user.Picture,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
 	}

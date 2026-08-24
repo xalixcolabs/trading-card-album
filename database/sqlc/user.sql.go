@@ -11,12 +11,12 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO user (
-  id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at
+  id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) ON CONFLICT(email) DO UPDATE SET
     updated_at = excluded.updated_at
-RETURNING id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at
+RETURNING id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -28,6 +28,7 @@ type CreateUserParams struct {
 	Web         string
 	Description string
 	IsAdmin     int64
+	Picture     string
 	CreatedAt   int64
 	UpdatedAt   int64
 }
@@ -42,6 +43,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.Web,
 		arg.Description,
 		arg.IsAdmin,
+		arg.Picture,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
@@ -55,6 +57,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Web,
 		&i.Description,
 		&i.IsAdmin,
+		&i.Picture,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -62,7 +65,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at FROM user
+SELECT id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at FROM user
 WHERE id = ? LIMIT 1
 `
 
@@ -78,6 +81,7 @@ func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
 		&i.Web,
 		&i.Description,
 		&i.IsAdmin,
+		&i.Picture,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -85,7 +89,7 @@ func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at FROM user
+SELECT id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at FROM user
 WHERE email = ? LIMIT 1
 `
 
@@ -101,6 +105,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Web,
 		&i.Description,
 		&i.IsAdmin,
+		&i.Picture,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -108,7 +113,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at FROM user
+SELECT id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at FROM user
 ORDER BY name
 `
 
@@ -130,6 +135,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Web,
 			&i.Description,
 			&i.IsAdmin,
+			&i.Picture,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -147,7 +153,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 }
 
 const searchUsersByEmail = `-- name: SearchUsersByEmail :many
-SELECT id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at FROM user
+SELECT id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at FROM user
 WHERE email LIKE ?
 ORDER BY name
 `
@@ -170,6 +176,7 @@ func (q *Queries) SearchUsersByEmail(ctx context.Context, email string) ([]User,
 			&i.Web,
 			&i.Description,
 			&i.IsAdmin,
+			&i.Picture,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -196,7 +203,7 @@ web = ?,
 description = ?,
 updated_at = ?
 WHERE id = ?
-RETURNING id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at
+RETURNING id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at
 `
 
 type UpdateUserParams struct {
@@ -231,6 +238,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Web,
 		&i.Description,
 		&i.IsAdmin,
+		&i.Picture,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -242,7 +250,7 @@ UPDATE user
 SET is_admin = ?,
 updated_at = ?
 WHERE id = ?
-RETURNING id, name, email, github, linkedin, web, description, is_admin, created_at, updated_at
+RETURNING id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at
 `
 
 type UpdateUserIsAdminParams struct {
@@ -263,6 +271,7 @@ func (q *Queries) UpdateUserIsAdmin(ctx context.Context, arg UpdateUserIsAdminPa
 		&i.Web,
 		&i.Description,
 		&i.IsAdmin,
+		&i.Picture,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
