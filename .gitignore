@@ -9,5 +9,9 @@ build/
 *.sqlite3
 database/*.sqlite3
 
+# Herramientas de agente (skills)
+.agents/
+skills-lock.json
+
 # Sistema operativo / editores
 .DS_Store
