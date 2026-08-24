@@ -64,14 +64,9 @@ func registerFrontend(app *fiber.App, frontend embed.FS) {
 		log.Fatal(err)
 	}
 
-	app.Use("/*", func(c fiber.Ctx) error {
-		// Solo se sirven assets en GET/HEAD.
-		if c.Method() != fiber.MethodGet && c.Method() != fiber.MethodHead {
-			return c.Next()
-		}
-
+	// Solo se capturan GET/HEAD; el resto lo resuelven las rutas de API.
+	app.Get("/*", func(c fiber.Ctx) error {
 		requestPath := c.Path()
-		// Las rutas de API y swagger las resuelven sus propios handlers.
 		if requestPath == "/api" || strings.HasPrefix(requestPath, "/api/") ||
 			requestPath == "/swagger" || strings.HasPrefix(requestPath, "/swagger/") {
 			return c.Next()
