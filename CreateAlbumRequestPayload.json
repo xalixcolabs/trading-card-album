@@ -1,0 +1,125 @@
+{
+  "cards": [
+    {
+        "name": "El Androide Rebelde (Android)",
+        "number": "01",
+        "description": "Corre en millones de dispositivos, pero sigue sin entender por qué se rompió el Layout.",
+        "image_url": "http://localhost:8081/pq0DYz5RBRyvhtRAMm1GF.webp"
+    },
+    {
+        "name": "El Colibrí Veloz (Flutter)",
+        "number": "02",
+        "description": "Un solo código para gobernarlos a todos. Multiplataforma pura.",
+        "image_url": "http://localhost:8081/ItwFbFhgDuSvW4UQ3RqYv.webp"
+    },
+    {
+        "name": "La Flama Sagrada (Firebase)",
+        "number": "03",
+        "description": "Te da un backend en 5 minutos... hasta que llega la factura de Cloud Firestore.",
+        "image_url": "http://localhost:8081/VCM_vtkIS4uwOxE6SQNDX.webp"
+    },
+    {
+        "name": "El Navegante de Timón (Kubernetes)",
+        "number": "04",
+        "description": "Nadie sabe jugar bien con él al principio, pero mantiene tu barco a flote.",
+        "image_url": "http://localhost:8081/BoNSC3bS-LoVJ0_PLDS0x.webp"
+    },
+    {
+        "name": "El Arquitecto de la Nube (Google Cloud)",
+        "number": "05",
+        "description": "Tiene el poder de encender un cluster entero con un click... y el miedo de olvidar apagarlo.",
+        "image_url": "http://localhost:8081/AFqz_IlBSZaGjRDDvdSiV.webp"
+    },
+    {
+        "name": "El Angular de la Vieja Escuela (Angular)",
+        "number": "06",
+        "description": "Estructurado, robusto y el favorito de los proyectos corporativos serios.",
+        "image_url": "http://localhost:8081/mKB9b-1VmCRZOXopssYjX.webp"
+    },
+    {
+        "name": "El Cerebro de Silicio (TensorFlow)",
+        "number": "07",
+        "description": "Entrenado con millones de datos solo para adivinar si tu foto es un perro o un muffin.",
+        "image_url": "http://localhost:8081/1JBEZ3ngl8MLxTwMMAGKR.webp"
+    },
+    {
+        "name": "El Guardián del Faro (Lighthouse)",
+        "number": "08",
+        "description": "El terror del SEO y el mejor amigo del rendimiento web.",
+        "image_url": "http://localhost:8081/Ec5bdRW7BB6A1WglzbyPF.webp"
+    },
+    {
+        "name": "La Gopher Trabajadora (Go)",
+        "number": "09",
+        "description": "Concurrente, rápida y minimalista. No necesita recolector de basura pretencioso.",
+        "image_url": "http://localhost:8081/Ba_gxBxqT1it3siKyyMOZ.webp"
+    },
+    {
+        "name": "El Cangrejo de Acero (Rust)",
+        "number": "10",
+        "description": "Seguridad en memoria garantizada. Si compila, funciona (después de pelear 3 horas con el Borrow ",
+        "image_url": "http://localhost:8081/jkr1bhGNgR3iuPvkgfz71.webp"
+    },
+    {
+        "name": "El Pingüino Emperador (Linux/Tux)",
+        "number": "11",
+        "description": "Vive en el 90% de los servidores del mundo. No intentes un `sudo rm -rf` en su presencia.",
+        "image_url": "http://localhost:8081/KsDQtEc89wNEBHsAfFTfx.webp"
+    },
+    {
+        "name": "El Pulpo Git (Git)",
+        "number": "12",
+        "description": "Especialista en resolver conflictos... excepto cuando hay un Merge Conflict en la rama `main`.",
+        "image_url": "http://localhost:8081/Jmk3mOkA7sLO3P-azNlex.webp"
+    },
+    {
+        "name": "El Camaleón de la Web (WebAssembly)",
+        "number": "13",
+        "description": "Lleva el poder de C++, Rust y Zig al navegador. El binario universal.",
+        "image_url": "http://localhost:8081/TYjgcs1SECjBmRDURiflO.webp"
+    },
+    {
+        "name": "El Sombrero del Mago (Python)",
+        "number": "14",
+        "description": "Tan legible que parece inglés. El rey indiscutible de la Inteligencia Artificial.",
+        "image_url": "http://localhost:8081/zvPgftPV-s06Ct3H6zfuz.webp"
+    },
+    {
+        "name": "La Taza Infinita (Café)",
+        "number": "15",
+        "description": "El combustible oficial del GDG. Convierte cafeína en algoritmos y bugs en soluciones.",
+        "image_url": "http://localhost:8081/u2yD2mOgz5Fi5fT8-HDXW.webp"
+    },
+    {
+        "name": "El Domador de Patos (Rubber Duck Debugging)",
+        "number": "16",
+        "description": "Sabe más de programación que la mitad de tu equipo. Escucha tus problemas sin juzgar.",
+        "image_url": "http://localhost:8081/34tqPUPRL7CTZOfvSuNv6.webp"
+    },
+    {
+        "name": "El Fantasma del Legacy (Legacy code)",
+        "number": "17",
+        "description": "Nadie sabe cómo funciona, nadie quiere tocarlo, pero sostiene toda la economía de la empresa.",
+        "image_url": "http://localhost:8081/pNRXGyHo44b8Fg1FKfYVb.webp"
+    },
+    {
+        "name": "El Tipeador Veloz (Vim Master)",
+        "number": "18",
+        "description": "Entrar es fácil... el verdadero reto de ingeniería es lograr salir del editor.",
+        "image_url": "http://localhost:8081/Xm3Toro_I19P-wq_Qx80J.webp"
+    },
+    {
+        "name": "El Lector del Futuro (AI Prompt Engineer)",
+        "number": "19",
+        "description": "Habla con las máquinas sin saber programar, pero reza para que la IA no alucine.",
+        "image_url": "http://localhost:8081/EeAFksiwsaH-nAfEToWUn.webp"
+    },
+    {
+        "name": "El Destructor de Producción (Junior Dev)",
+        "number": "20",
+        "description": "Pura valentía e inocencia. Capaz de tumbar los servidores justo antes del fin de semana.",
+        "image_url": "http://localhost:8081/oeA2AIUBk1RFjn-Z7Wjsj.webp"
+    }
+],
+  "title": "DevFest 2026"
+}
