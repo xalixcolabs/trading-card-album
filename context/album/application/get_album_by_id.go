@@ -29,9 +29,14 @@ func GetAlbumById(q database.Querier, user user_model.User, albumId string) (alb
 	if err != nil {
 		return album_model.Album{}, err
 	}
-	cards, err := q.ListCardsByAlbumId(ctx, album.ID)
+	// Solo se exponen las tarjetas recolectadas por el usuario; el resto
+	// permanece oculto para no romper la sorpresa.
+	collected, err := q.GetUserCollection(ctx, sqlc.GetUserCollectionParams{
+		UserID:  user.ID,
+		AlbumID: album.ID,
+	})
 	if err != nil {
 		return album_model.Album{}, err
 	}
-	return album_model.NewAlbumFromSqlcAlbum(album, card_model.NewCardSliceFromSqlcCardSlice(cards)), nil
+	return album_model.NewAlbumFromSqlcAlbum(album, card_model.NewCardSliceFromSqlcCardSlice(collected)), nil
 }

@@ -6,11 +6,6 @@ WHERE id = ? LIMIT 1;
 SELECT * FROM card
 ORDER BY number;
 
--- name: ListCardsByAlbumId :many
-SELECT * FROM card
-WHERE album_id = ?
-ORDER BY number;
-
 -- name: CreateCard :one
 INSERT INTO card (
   id, album_id, number, name, description, image_url, created_at, updated_at
