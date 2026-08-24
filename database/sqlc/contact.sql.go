@@ -29,3 +29,61 @@ func (q *Queries) CreateContact(ctx context.Context, arg CreateContactParams) (C
 	err := row.Scan(&i.UserID, &i.MetUserID, &i.ScannedAt)
 	return i, err
 }
+
+const listContacts = `-- name: ListContacts :many
+SELECT u.id, u.name, u.email, u.github, u.linkedin, u.web, u.description,
+       u.is_admin, u.created_at, u.updated_at, c.scanned_at
+FROM contact c
+JOIN user u ON u.id = c.met_user_id
+WHERE c.user_id = ?
+ORDER BY c.scanned_at DESC
+`
+
+type ListContactsRow struct {
+	ID          string
+	Name        string
+	Email       string
+	Github      string
+	Linkedin    string
+	Web         string
+	Description string
+	IsAdmin     int64
+	CreatedAt   int64
+	UpdatedAt   int64
+	ScannedAt   int64
+}
+
+func (q *Queries) ListContacts(ctx context.Context, userID string) ([]ListContactsRow, error) {
+	rows, err := q.db.QueryContext(ctx, listContacts, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListContactsRow
+	for rows.Next() {
+		var i ListContactsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Email,
+			&i.Github,
+			&i.Linkedin,
+			&i.Web,
+			&i.Description,
+			&i.IsAdmin,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.ScannedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

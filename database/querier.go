@@ -23,6 +23,7 @@ type Querier interface {
 	UpdateUser(ctx context.Context, arg sqlc.UpdateUserParams) (sqlc.User, error)
 
 	CreateContact(ctx context.Context, arg sqlc.CreateContactParams) (sqlc.Contact, error)
+	ListContacts(ctx context.Context, userID string) ([]sqlc.ListContactsRow, error)
 
 	CreateAlbumParticipant(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	GetAlbumParticipant(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error)

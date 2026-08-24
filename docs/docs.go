@@ -295,6 +295,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/contact": {
+            "get": {
+                "description": "List contacts of the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contact"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/contact_dto.Contact"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user/{id}": {
             "put": {
                 "description": "Update user by ID",
@@ -496,6 +521,35 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "integer"
+                }
+            }
+        },
+        "contact_dto.Contact": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "github": {
+                    "type": "string"
+                },
+                "linkedin": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "scanned_at": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "web": {
+                    "type": "string"
                 }
             }
         },

@@ -19,7 +19,8 @@ type Querier struct {
 	GetUserFn                      func(ctx context.Context, id string) (sqlc.User, error)
 	CreateUserFn                   func(ctx context.Context, arg sqlc.CreateUserParams) (sqlc.User, error)
 	UpdateUserFn                   func(ctx context.Context, arg sqlc.UpdateUserParams) (sqlc.User, error)
-	CreateContactFn                func(ctx context.Context, arg sqlc.CreateContactParams) (sqlc.Contact, error)
+CreateContactFn             func(ctx context.Context, arg sqlc.CreateContactParams) (sqlc.Contact, error)
+	ListContactsFn              func(ctx context.Context, userID string) ([]sqlc.ListContactsRow, error)
 	CreateAlbumParticipantFn       func(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	GetAlbumParticipantFn          func(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	UpdateAlbumParticipantSecretFn func(ctx context.Context, arg sqlc.UpdateAlbumParticipantSecretParams) (sqlc.AlbumParticipant, error)
@@ -100,6 +101,13 @@ func (m *Querier) CreateContact(ctx context.Context, arg sqlc.CreateContactParam
 		return m.CreateContactFn(ctx, arg)
 	}
 	return sqlc.Contact{}, nil
+}
+
+func (m *Querier) ListContacts(ctx context.Context, userID string) ([]sqlc.ListContactsRow, error) {
+	if m.ListContactsFn != nil {
+		return m.ListContactsFn(ctx, userID)
+	}
+	return nil, nil
 }
 
 func (m *Querier) CreateAlbumParticipant(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error) {

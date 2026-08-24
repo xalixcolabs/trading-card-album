@@ -9,6 +9,7 @@ import (
 	"com.xalixcolabs.trading-card-album/context/album"
 	"com.xalixcolabs.trading-card-album/context/album_participant"
 	"com.xalixcolabs.trading-card-album/context/auth"
+	"com.xalixcolabs.trading-card-album/context/contact"
 	"com.xalixcolabs.trading-card-album/context/user"
 	"com.xalixcolabs.trading-card-album/database"
 	_ "com.xalixcolabs.trading-card-album/docs"
@@ -60,4 +61,5 @@ func registerApiResources(app *fiber.App) {
 	user_resource.RegisterUserResource(app)
 	album_resource.RegisterAlbumResource(app)
 	album_participant_resource.RegisterAlbumParticipantResource(app)
+	contact_resource.RegisterContactResource(app)
 }

@@ -4,3 +4,11 @@ INSERT OR IGNORE INTO contact (
 ) VALUES (
     ?, ? ,?
 ) RETURNING *;
+
+-- name: ListContacts :many
+SELECT u.id, u.name, u.email, u.github, u.linkedin, u.web, u.description,
+       u.is_admin, u.created_at, u.updated_at, c.scanned_at
+FROM contact c
+JOIN user u ON u.id = c.met_user_id
+WHERE c.user_id = ?
+ORDER BY c.scanned_at DESC;
