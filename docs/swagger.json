@@ -7,6 +7,205 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/v1/admin/albums": {
+            "get": {
+                "description": "List all albums with stats",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin_dto.Album"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/albums/{id}": {
+            "delete": {
+                "description": "Delete an album",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.Message"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/cards": {
+            "get": {
+                "description": "List all cards",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/card_model.Card"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/cards/{id}": {
+            "delete": {
+                "description": "Delete a card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Card ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.Message"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/overview": {
+            "get": {
+                "description": "Get platform overview metrics",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.Overview"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/users": {
+            "get": {
+                "description": "List all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin_dto.User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/users/{id}/role": {
+            "put": {
+                "description": "Update user admin role",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.UpdateUserRoleRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.User"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/album": {
             "get": {
                 "description": "Get albums by user",
@@ -416,6 +615,100 @@
         }
     },
     "definitions": {
+        "admin_dto.Album": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "participant_count": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "total_cards": {
+                    "type": "integer"
+                }
+            }
+        },
+        "admin_dto.Message": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "admin_dto.Overview": {
+            "type": "object",
+            "properties": {
+                "albums": {
+                    "type": "integer"
+                },
+                "cards": {
+                    "type": "integer"
+                },
+                "collected": {
+                    "type": "integer"
+                },
+                "contacts": {
+                    "type": "integer"
+                },
+                "participants": {
+                    "type": "integer"
+                },
+                "users": {
+                    "type": "integer"
+                }
+            }
+        },
+        "admin_dto.UpdateUserRoleRequest": {
+            "type": "object",
+            "properties": {
+                "is_admin": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "admin_dto.User": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "github": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_admin": {
+                    "type": "integer"
+                },
+                "linkedin": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "web": {
+                    "type": "string"
+                }
+            }
+        },
         "album_dto.CreateAlbumCardRequest": {
             "type": "object",
             "properties": {
@@ -666,6 +959,9 @@
                 },
                 "id": {
                     "type": "string"
+                },
+                "is_admin": {
+                    "type": "integer"
                 },
                 "linkedin": {
                     "type": "string"

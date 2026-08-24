@@ -10,6 +10,7 @@ import (
 
 	"com.xalixcolabs.trading-card-album/context/album"
 	"com.xalixcolabs.trading-card-album/context/album_participant"
+	"com.xalixcolabs.trading-card-album/context/admin"
 	"com.xalixcolabs.trading-card-album/context/auth"
 	"com.xalixcolabs.trading-card-album/context/contact"
 	"com.xalixcolabs.trading-card-album/context/user"
@@ -50,6 +51,7 @@ func registerApiResources(app *fiber.App) {
 	album_resource.RegisterAlbumResource(app)
 	album_participant_resource.RegisterAlbumParticipantResource(app)
 	contact_resource.RegisterContactResource(app)
+	admin_resource.RegisterAdminResource(app)
 }
 
 // registerFrontend sirve el frontend embebido (SPA de Nuxt). Si el path no

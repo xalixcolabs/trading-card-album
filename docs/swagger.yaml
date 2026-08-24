@@ -1,4 +1,65 @@
 definitions:
+  admin_dto.Album:
+    properties:
+      created_at:
+        type: integer
+      id:
+        type: string
+      participant_count:
+        type: integer
+      title:
+        type: string
+      total_cards:
+        type: integer
+    type: object
+  admin_dto.Message:
+    properties:
+      message:
+        type: string
+    type: object
+  admin_dto.Overview:
+    properties:
+      albums:
+        type: integer
+      cards:
+        type: integer
+      collected:
+        type: integer
+      contacts:
+        type: integer
+      participants:
+        type: integer
+      users:
+        type: integer
+    type: object
+  admin_dto.UpdateUserRoleRequest:
+    properties:
+      is_admin:
+        type: boolean
+    type: object
+  admin_dto.User:
+    properties:
+      created_at:
+        type: integer
+      description:
+        type: string
+      email:
+        type: string
+      github:
+        type: string
+      id:
+        type: string
+      is_admin:
+        type: integer
+      linkedin:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: integer
+      web:
+        type: string
+    type: object
   album_dto.CreateAlbumCardRequest:
     properties:
       description:
@@ -163,6 +224,8 @@ definitions:
         type: string
       id:
         type: string
+      is_admin:
+        type: integer
       linkedin:
         type: string
       name:
@@ -178,6 +241,134 @@ info:
   title: Trading Card Album API
   version: "1.0"
 paths:
+  /api/v1/admin/albums:
+    get:
+      consumes:
+      - application/json
+      description: List all albums with stats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin_dto.Album'
+            type: array
+      tags:
+      - Admin
+  /api/v1/admin/albums/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an album
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_dto.Message'
+      tags:
+      - Admin
+  /api/v1/admin/cards:
+    get:
+      consumes:
+      - application/json
+      description: List all cards
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/card_model.Card'
+            type: array
+      tags:
+      - Admin
+  /api/v1/admin/cards/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a card
+      parameters:
+      - description: Card ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_dto.Message'
+      tags:
+      - Admin
+  /api/v1/admin/overview:
+    get:
+      consumes:
+      - application/json
+      description: Get platform overview metrics
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_dto.Overview'
+      tags:
+      - Admin
+  /api/v1/admin/users:
+    get:
+      consumes:
+      - application/json
+      description: List all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin_dto.User'
+            type: array
+      tags:
+      - Admin
+  /api/v1/admin/users/{id}/role:
+    put:
+      consumes:
+      - application/json
+      description: Update user admin role
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin_dto.UpdateUserRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_dto.User'
+      tags:
+      - Admin
   /api/v1/album:
     get:
       consumes:
