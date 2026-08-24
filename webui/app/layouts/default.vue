@@ -8,26 +8,26 @@
       <div :class="showTabBar ? 'h-28' : ''"></div>
     </div>
 
-    <TabBar v-if="showTabBar" :active="tabActive" @add="addOpen = true" />
-    <AddAlbumSheet :is-open="addOpen" @close="addOpen = false" @created="onAlbumCreated" />
+    <TabBar v-if="showTabBar" :active="tabActive" @join="joinOpen = true" />
+    <JoinAlbumSheet :is-open="joinOpen" @close="joinOpen = false" @joined="onJoined" />
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
-const addOpen = ref(false)
+const joinOpen = ref(false)
 
 const showTabBar = computed(() => {
   return !route.path.startsWith('/album') && route.path !== '/login'
 })
 
-const tabActive = computed<'home' | 'contacts' | 'profile'>(() => {
-  if (route.path.startsWith('/profile')) return 'profile'
+const tabActive = computed<'home' | 'contacts'>(() => {
   if (route.path.startsWith('/contactos')) return 'contacts'
   return 'home'
 })
 
-const onAlbumCreated = async () => {
+const onJoined = async (albumId: string) => {
   await refreshNuxtData('albums')
+  await navigateTo(`/album/${albumId}`)
 }
 </script>
