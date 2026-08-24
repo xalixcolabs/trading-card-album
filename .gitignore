@@ -1,0 +1,13 @@
+# Secretos y variables de entorno
+.env
+.env.*
+
+# Artefactos de build
+build/
+
+# Base de datos local
+*.sqlite3
+database/*.sqlite3
+
+# Sistema operativo / editores
+.DS_Store
