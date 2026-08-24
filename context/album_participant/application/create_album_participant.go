@@ -22,6 +22,22 @@ func CreateAlbumParticipant(q database.Querier, user user_model.User, request al
 	if errors.Is(err, sql.ErrNoRows) {
 		return album_participant_model.AlbumParticipant{}, fmt.Errorf("Album no encontrado")
 	}
+	if err != nil {
+		return album_participant_model.AlbumParticipant{}, err
+	}
+
+	// Si el usuario ya es participante, no se asigna otra tarjeta.
+	existing, err := q.GetAlbumParticipant(ctx, sqlc.GetAlbumParticipantParams{
+		AlbumID: album.ID,
+		UserID:  user.ID,
+	})
+	if err == nil {
+		return album_participant_model.NewAlbumParticipantFromSqlcAlbumParticipant(existing), nil
+	}
+	if !errors.Is(err, sql.ErrNoRows) {
+		return album_participant_model.AlbumParticipant{}, err
+	}
+
 	secret, _ := gonanoid.New()
 	cardId, err := card_pool_application.AssignCard(q, album.ID)
 	if err != nil {
@@ -34,6 +50,9 @@ func CreateAlbumParticipant(q database.Querier, user user_model.User, request al
 		Secret:         secret,
 		JoinedAt:       time.Now().Unix(),
 	})
+	if err != nil {
+		return album_participant_model.AlbumParticipant{}, err
+	}
 	if err = q.CollectCard(ctx, sqlc.CollectCardParams{
 		UserID:     user.ID,
 		AlbumID:    album.ID,
@@ -42,6 +61,5 @@ func CreateAlbumParticipant(q database.Querier, user user_model.User, request al
 	}); err != nil {
 		return album_participant_model.AlbumParticipant{}, err
 	}
-	return album_participant_model.NewAlbumParticipantFromSqlcAlbumParticipant(albumParticipant),
-		err
+	return album_participant_model.NewAlbumParticipantFromSqlcAlbumParticipant(albumParticipant), nil
 }

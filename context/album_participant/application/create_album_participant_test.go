@@ -18,6 +18,9 @@ func TestCreateAlbumParticipantAssignsCardAndCollects(t *testing.T) {
 		GetAlbumFn: func(ctx context.Context, id string) (sqlc.Album, error) {
 			return sqlc.Album{ID: "album-1", Title: "Album", TotalCards: 3}, nil
 		},
+		GetAlbumParticipantFn: func(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error) {
+			return sqlc.AlbumParticipant{}, sql.ErrNoRows
+		},
 		GetRandomAvailableCardFn: func(ctx context.Context, albumID string) (string, error) {
 			return "card-9", nil
 		},
@@ -84,6 +87,9 @@ func TestCreateAlbumParticipantReturnsErrorWhenAssignCardFails(t *testing.T) {
 		GetAlbumFn: func(ctx context.Context, id string) (sqlc.Album, error) {
 			return sqlc.Album{ID: "album-1"}, nil
 		},
+		GetAlbumParticipantFn: func(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error) {
+			return sqlc.AlbumParticipant{}, sql.ErrNoRows
+		},
 		GetRandomAvailableCardFn: func(ctx context.Context, albumID string) (string, error) {
 			return "", errors.New("pool error")
 		},
@@ -93,5 +99,46 @@ func TestCreateAlbumParticipantReturnsErrorWhenAssignCardFails(t *testing.T) {
 	)
 	if err == nil || err.Error() != "error al buscar tarjeta: pool error" {
 		t.Errorf("expected pool error, got %v", err)
+	}
+}
+
+func TestCreateAlbumParticipantReturnsExistingWhenAlreadyParticipant(t *testing.T) {
+	existing := sqlc.AlbumParticipant{
+		AlbumID:        "album-1",
+		UserID:         "user-1",
+		AssignedCardID: "card-3",
+		JoinedAt:       100,
+		Secret:         "existing-secret",
+	}
+
+	mock := &queriermock.Querier{
+		GetAlbumFn: func(ctx context.Context, id string) (sqlc.Album, error) {
+			return sqlc.Album{ID: "album-1", Title: "Album", TotalCards: 3}, nil
+		},
+		GetAlbumParticipantFn: func(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error) {
+			return existing, nil
+		},
+	}
+
+	cardAssigned := false
+	mock.GetRandomAvailableCardFn = func(ctx context.Context, albumID string) (string, error) {
+		cardAssigned = true
+		return "card-9", nil
+	}
+
+	participant, err := album_participant_application.CreateAlbumParticipant(
+		mock, user_model.User{ID: "user-1"}, dto.CreateAlbumParticipantRequest{AlbumId: "album-1"},
+	)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if participant.AssignedCardID != "card-3" {
+		t.Errorf("expected existing assigned card card-3, got %s", participant.AssignedCardID)
+	}
+	if participant.Secret != "existing-secret" {
+		t.Errorf("expected existing secret, got %s", participant.Secret)
+	}
+	if cardAssigned {
+		t.Error("expected NO card to be assigned when the user is already a participant")
 	}
 }
