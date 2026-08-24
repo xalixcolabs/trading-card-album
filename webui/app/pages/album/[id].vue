@@ -47,8 +47,15 @@
         <div v-for="i in 4" :key="i" class="aspect-2/3 w-full animate-pulse rounded-card bg-raise ring-1 ring-edge"></div>
       </div>
 
-      <div v-else-if="albumCards.length" class="mt-4 grid grid-cols-2 gap-4">
-        <Card v-for="card in albumCards" :key="card.id" :card="card" :locked="!collectedIds.has(card.id)" />
+      <div v-else-if="slots.length" class="mt-4 grid grid-cols-2 gap-4">
+        <template v-for="(card, index) in slots" :key="index">
+          <Card v-if="card" :card="card" />
+          <div v-else
+            class="relative flex aspect-2/3 w-full flex-col items-center justify-center gap-2 rounded-card bg-raise/50 border border-dashed border-edge">
+            <span class="text-4xl font-bold text-accent/70">?</span>
+            <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-faint">Por descubrir</span>
+          </div>
+        </template>
       </div>
 
       <div v-else class="mt-4 overflow-hidden rounded-3xl border border-dashed border-edge bg-raise/60 p-6 text-center">
@@ -61,7 +68,7 @@
         </p>
       </div>
 
-      <p v-if="collectionCount === 0 && albumCards.length" class="mt-5 text-center text-sm text-mist">
+      <p v-if="collectionCount === 0 && slots.length" class="mt-5 text-center text-sm text-mist">
         Escanea el QR de otros desarrolladores para desbloquear tarjetas y completar tu álbum.
       </p>
     </section>
@@ -90,8 +97,9 @@
 
 <script setup lang="ts">
 import { PhArrowLeft, PhQrCode, PhScan, PhStack } from '@phosphor-icons/vue'
-import { getApiV1AlbumId, getApiV1AlbumIdAssignedCard, getApiV1AlbumIdCard } from '~/services/album/album'
+import { getApiV1AlbumId, getApiV1AlbumIdAssignedCard } from '~/services/album/album'
 import { getApiV1AuthMe } from '~/services/auth/auth'
+import type { CardModelCard } from '~/models'
 
 const route = useRoute()
 const router = useRouter()
@@ -101,20 +109,32 @@ const scanOpen = ref(false)
 const qrOpen = ref(false)
 
 const { data: profile } = useApiData(() => getApiV1AuthMe(), 'profile')
-const { data: album, pending: albumPending } = useApiData(() => getApiV1AlbumId(albumId), `album-${albumId}`)
+const { data: album, pending: albumPending, refresh: refreshAlbum } = useApiData(() => getApiV1AlbumId(albumId), `album-${albumId}`)
 const { data: assignedCard, pending: assignedPending } = useApiData(
   () => getApiV1AlbumIdAssignedCard(albumId), `assigned-${albumId}`,
 )
-const { data: collected, refresh: refreshCollection } = useApiData(
-  () => getApiV1AlbumIdCard(albumId), `collection-${albumId}`,
-)
 
 const albumTitle = computed(() => album.value?.title || 'Álbum')
-const albumCards = computed(() => album.value?.cards ?? [])
-const totalCards = computed(() => albumCards.value.length || album.value?.total_cards || 0)
+const collected = computed(() => album.value?.cards ?? [])
+const totalCards = computed(() => album.value?.total_cards || collected.value.length)
+const collectionCount = computed(() => collected.value.length)
 
-const collectedIds = computed(() => new Set((collected.value ?? []).map(card => card.id)))
-const collectionCount = computed(() => collectedIds.value.size)
+const slots = computed<(CardModelCard | null)[]>(() => {
+  const total = totalCards.value
+  const list: (CardModelCard | null)[] = new Array(total).fill(null)
+  const sorted = [...collected.value].sort((a, b) => Number(a.number) - Number(b.number))
+  for (const card of sorted) {
+    const index = Number(card.number) - 1
+    if (Number.isFinite(index) && index >= 0 && index < total) {
+      list[index] = card
+    } else {
+      const empty = list.findIndex(slot => slot === null)
+      if (empty !== -1) list[empty] = card
+    }
+  }
+  return list
+})
+
 const progressPct = computed(() => {
   if (!totalCards.value) return 0
   return Math.min(100, Math.round((collectionCount.value / totalCards.value) * 100))
@@ -125,8 +145,7 @@ watch(profile, (value) => {
 }, { immediate: true })
 
 const onCardAdded = async () => {
-  await refreshCollection()
+  await refreshAlbum()
   await refreshNuxtData('assigned-' + albumId)
-  await refreshNuxtData('collection-' + albumId)
 }
 </script>

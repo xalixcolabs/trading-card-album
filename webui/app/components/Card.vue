@@ -2,10 +2,9 @@
   <div>
     <button type="button" @click="isOpen = true"
       class="group relative block aspect-2/3 w-full cursor-pointer overflow-hidden rounded-card bg-raise text-left ring-1 ring-edge transition-all duration-300 hover:ring-accent/40 active:scale-[0.97]"
-      :aria-label="locked ? `Tarjeta bloqueada: ${card.name}` : card.name">
+      :aria-label="card.name">
       <img :src="card.image_url" :alt="card.name" loading="lazy"
-        class="h-full w-full select-none object-cover transition-transform duration-500 group-hover:scale-105"
-        :class="locked ? 'opacity-40 grayscale-[0.7]' : ''" />
+        class="h-full w-full select-none object-cover transition-transform duration-500 group-hover:scale-105" />
 
       <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
 
@@ -13,14 +12,6 @@
         class="absolute bottom-2 left-2 right-2 flex items-center justify-between rounded-lg border border-white/10 bg-black/45 px-2 py-1.5 backdrop-blur-sm">
         <span class="font-mono text-[10px] font-bold text-accent tabular">#{{ card.number }}</span>
         <span class="truncate pl-2 text-xs font-semibold text-white">{{ card.name }}</span>
-      </div>
-
-      <div v-if="locked"
-        class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/30">
-        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-accent ring-1 ring-white/20">
-          <PhLock :size="18" weight="fill" />
-        </span>
-        <span class="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80">Bloqueada</span>
       </div>
     </button>
 
@@ -46,11 +37,7 @@
           </div>
         </div>
 
-        <p v-if="locked" class="mx-auto mt-5 flex max-w-[34ch] items-center justify-center gap-2 text-sm leading-relaxed text-mist">
-          <PhLock :size="15" />
-          Escanea el QR de otro desarrollador para desbloquear esta carta.
-        </p>
-        <p v-else class="mx-auto mt-5 max-w-[34ch] text-sm leading-relaxed text-mist">
+        <p class="mx-auto mt-5 max-w-[34ch] text-sm leading-relaxed text-mist">
           {{ card.description || 'Una carta misteriosa por descubrir.' }}
         </p>
       </div>
@@ -59,8 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import { PhLock } from '@phosphor-icons/vue'
-
 defineProps<{
   card: {
     id: string
@@ -72,7 +57,6 @@ defineProps<{
     created_at: number
     updated_at: number
   }
-  locked?: boolean
 }>()
 
 const isOpen = ref(false)
