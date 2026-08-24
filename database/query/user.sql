@@ -30,3 +30,10 @@ description = ?,
 updated_at = ?
 WHERE id = ?
 RETURNING *;
+
+-- name: UpdateUserIsAdmin :one
+UPDATE user
+SET is_admin = ?,
+updated_at = ?
+WHERE id = ?
+RETURNING *;

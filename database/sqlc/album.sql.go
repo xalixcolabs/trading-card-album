@@ -41,6 +41,16 @@ func (q *Queries) CreateAlbum(ctx context.Context, arg CreateAlbumParams) (Album
 	return i, err
 }
 
+const deleteAlbum = `-- name: DeleteAlbum :exec
+DELETE FROM album
+WHERE id = ?
+`
+
+func (q *Queries) DeleteAlbum(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, deleteAlbum, id)
+	return err
+}
+
 const getAlbum = `-- name: GetAlbum :one
 SELECT id, title, total_cards, created_at FROM album
 WHERE id = ? LIMIT 1
@@ -113,6 +123,51 @@ func (q *Queries) ListAlbumsByUserId(ctx context.Context, userID string) ([]Albu
 			&i.Title,
 			&i.TotalCards,
 			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listAlbumsWithStats = `-- name: ListAlbumsWithStats :many
+SELECT a.id, a.title, a.total_cards, a.created_at, COUNT(ap.user_id) AS participant_count
+FROM album a
+LEFT JOIN album_participant ap ON ap.album_id = a.id
+GROUP BY a.id
+ORDER BY a.created_at DESC
+`
+
+type ListAlbumsWithStatsRow struct {
+	ID               string
+	Title            string
+	TotalCards       int64
+	CreatedAt        int64
+	ParticipantCount int64
+}
+
+func (q *Queries) ListAlbumsWithStats(ctx context.Context) ([]ListAlbumsWithStatsRow, error) {
+	rows, err := q.db.QueryContext(ctx, listAlbumsWithStats)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListAlbumsWithStatsRow
+	for rows.Next() {
+		var i ListAlbumsWithStatsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.TotalCards,
+			&i.CreatedAt,
+			&i.ParticipantCount,
 		); err != nil {
 			return nil, err
 		}

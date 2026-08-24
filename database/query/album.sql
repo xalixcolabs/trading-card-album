@@ -26,3 +26,14 @@ SET title = ?,
 total_cards = ?
 WHERE id = ?
 RETURNING *;
+
+-- name: ListAlbumsWithStats :many
+SELECT a.id, a.title, a.total_cards, a.created_at, COUNT(ap.user_id) AS participant_count
+FROM album a
+LEFT JOIN album_participant ap ON ap.album_id = a.id
+GROUP BY a.id
+ORDER BY a.created_at DESC;
+
+-- name: DeleteAlbum :exec
+DELETE FROM album
+WHERE id = ?;

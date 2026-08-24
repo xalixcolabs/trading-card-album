@@ -13,14 +13,21 @@ type Querier interface {
 	GetAlbum(ctx context.Context, id string) (sqlc.Album, error)
 	CreateAlbum(ctx context.Context, arg sqlc.CreateAlbumParams) (sqlc.Album, error)
 	ListAlbumsByUserId(ctx context.Context, userID string) ([]sqlc.Album, error)
+	ListAlbumsWithStats(ctx context.Context) ([]sqlc.ListAlbumsWithStatsRow, error)
+	DeleteAlbum(ctx context.Context, id string) error
+	GetOverviewStats(ctx context.Context) (sqlc.GetOverviewStatsRow, error)
 
 	GetCard(ctx context.Context, id string) (sqlc.Card, error)
 	CreateCard(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error)
+	ListCards(ctx context.Context) ([]sqlc.Card, error)
 	GetCardByAlbumParticipant(ctx context.Context, arg sqlc.GetCardByAlbumParticipantParams) (sqlc.Card, error)
+	DeleteCard(ctx context.Context, id string) error
 
 	GetUser(ctx context.Context, id string) (sqlc.User, error)
 	CreateUser(ctx context.Context, arg sqlc.CreateUserParams) (sqlc.User, error)
 	UpdateUser(ctx context.Context, arg sqlc.UpdateUserParams) (sqlc.User, error)
+	UpdateUserIsAdmin(ctx context.Context, arg sqlc.UpdateUserIsAdminParams) (sqlc.User, error)
+	ListUsers(ctx context.Context) ([]sqlc.User, error)
 
 	CreateContact(ctx context.Context, arg sqlc.CreateContactParams) (sqlc.Contact, error)
 	ListContacts(ctx context.Context, userID string) ([]sqlc.ListContactsRow, error)
