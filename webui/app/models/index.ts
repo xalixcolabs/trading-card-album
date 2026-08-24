@@ -6,6 +6,11 @@
  * OpenAPI spec version: 1.0
  */
 
+export * from './adminDtoAlbum';
+export * from './adminDtoMessage';
+export * from './adminDtoOverview';
+export * from './adminDtoUpdateUserRoleRequest';
+export * from './adminDtoUser';
 export * from './albumDtoCreateAlbumCardRequest';
 export * from './albumDtoCreateAlbumRequest';
 export * from './albumDtoRegisterCardRequest';

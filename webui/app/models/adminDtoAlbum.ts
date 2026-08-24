@@ -6,15 +6,10 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface UserModelUser {
+export interface AdminDtoAlbum {
   created_at?: number;
-  description?: string;
-  email?: string;
-  github?: string;
   id?: string;
-  is_admin?: number;
-  linkedin?: string;
-  name?: string;
-  update_at?: number;
-  web?: string;
+  participant_count?: number;
+  title?: string;
+  total_cards?: number;
 }

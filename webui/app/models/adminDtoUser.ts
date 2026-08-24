@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface UserModelUser {
+export interface AdminDtoUser {
   created_at?: number;
   description?: string;
   email?: string;
@@ -15,6 +15,6 @@ export interface UserModelUser {
   is_admin?: number;
   linkedin?: string;
   name?: string;
-  update_at?: number;
+  updated_at?: number;
   web?: string;
 }

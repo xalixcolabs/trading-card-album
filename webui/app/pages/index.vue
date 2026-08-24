@@ -14,6 +14,11 @@
         class="flex h-9 w-9 items-center justify-center rounded-xl bg-raise text-mist ring-1 ring-edge transition-transform active:scale-90">
         <PhSlidersHorizontal :size="18" />
       </NuxtLink>
+      <NuxtLink v-if="profile?.is_admin" to="/admin"
+        class="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-soft text-accent ring-1 ring-accent/30 transition-transform active:scale-90"
+        aria-label="Administración">
+        <PhShieldStar :size="18" weight="fill" />
+      </NuxtLink>
     </div>
 
     <!-- Álbumes -->
@@ -74,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhStack, PhSlidersHorizontal } from '@phosphor-icons/vue'
+import { PhShieldStar, PhStack, PhSlidersHorizontal } from '@phosphor-icons/vue'
 import { getApiV1AuthMe } from '~/services/auth/auth'
 import { getApiV1Album } from '~/services/album/album'
 import { postApiV1AlbumParticipant } from '~/services/album-participant/album-participant'

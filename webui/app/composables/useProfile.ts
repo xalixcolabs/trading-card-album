@@ -14,6 +14,7 @@ interface Profile {
     linkedin: string,
     web: string,
     description: string,
+    is_admin: number,
     created_at: number,
     update_at: number,
 }

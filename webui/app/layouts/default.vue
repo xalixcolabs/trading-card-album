@@ -18,7 +18,7 @@ const route = useRoute()
 const joinOpen = ref(false)
 
 const showTabBar = computed(() => {
-  return !route.path.startsWith('/album') && route.path !== '/login'
+  return !route.path.startsWith('/album') && !route.path.startsWith('/admin') && route.path !== '/login'
 })
 
 const tabActive = computed<'home' | 'contacts'>(() => {
