@@ -27,10 +27,6 @@
         :class="active === 'users' ? 'bg-accent text-accent-ink ring-accent' : 'bg-raise text-mist ring-edge'">
         Usuarios
       </NuxtLink>
-      <NuxtLink to="/admin/cards" class="shrink-0 rounded-xl px-3.5 py-2 text-xs font-semibold ring-1 transition-colors"
-        :class="active === 'cards' ? 'bg-accent text-accent-ink ring-accent' : 'bg-raise text-mist ring-edge'">
-        Tarjetas
-      </NuxtLink>
     </nav>
 
     <div class="mt-6">
@@ -43,7 +39,7 @@
 import { PhArrowLeft, PhShieldStar } from '@phosphor-icons/vue'
 
 defineProps<{
-  active: 'overview' | 'albums' | 'users' | 'cards'
+  active: 'overview' | 'albums' | 'users'
 }>()
 
 const router = useRouter()
