@@ -11,11 +11,10 @@ import (
 	"github.com/matoous/go-nanoid/v2"
 )
 
-func CreateCard(request card_dto.CreateCardRequest) (card_model.Card, error) {
+func CreateCard(q database.Querier, request card_dto.CreateCardRequest) (card_model.Card, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
 	id, _ := gonanoid.New()
-	card, err := queries.CreateCard(ctx, sqlc.CreateCardParams{
+	card, err := q.CreateCard(ctx, sqlc.CreateCardParams{
 		ID:          id,
 		AlbumID:     request.AlbumId,
 		Number:      request.Number,

@@ -14,11 +14,10 @@ import (
 	"github.com/matoous/go-nanoid/v2"
 )
 
-func CreateAlbum(request album_dto.CreateAlbumRequest) (album_model.Album, error) {
+func CreateAlbum(q database.Querier, request album_dto.CreateAlbumRequest) (album_model.Album, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
 	id, _ := gonanoid.New()
-	album, err := queries.CreateAlbum(ctx, sqlc.CreateAlbumParams{
+	album, err := q.CreateAlbum(ctx, sqlc.CreateAlbumParams{
 		ID:         id,
 		Title:      request.Title,
 		TotalCards: int64(len(request.Cards)),
@@ -26,7 +25,7 @@ func CreateAlbum(request album_dto.CreateAlbumRequest) (album_model.Album, error
 	})
 	var cards []card_model.Card
 	for _, card := range request.Cards {
-		newCard, err := card_application.CreateCard(card_dto.CreateCardRequest{
+		newCard, err := card_application.CreateCard(q, card_dto.CreateCardRequest{
 			AlbumId:     album.ID,
 			Name:        card.Name,
 			Description: card.Description,
@@ -36,7 +35,7 @@ func CreateAlbum(request album_dto.CreateAlbumRequest) (album_model.Album, error
 		if err != nil {
 			return album_model.Album{}, err
 		}
-		_, err = queries.CreateCardPoolRow(ctx, sqlc.CreateCardPoolRowParams{
+		_, err = q.CreateCardPoolRow(ctx, sqlc.CreateCardPoolRowParams{
 			AlbumID: album.ID,
 			CardID:  newCard.ID,
 		})

@@ -16,26 +16,25 @@ import (
 	"github.com/matoous/go-nanoid/v2"
 )
 
-func CreateAlbumParticipant(user user_model.User, request album_participant_dto.CreateAlbumParticipantRequest) (album_participant_model.AlbumParticipant, error) {
+func CreateAlbumParticipant(q database.Querier, user user_model.User, request album_participant_dto.CreateAlbumParticipantRequest) (album_participant_model.AlbumParticipant, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
-	album, err := queries.GetAlbum(ctx, request.AlbumId)
+	album, err := q.GetAlbum(ctx, request.AlbumId)
 	if errors.Is(err, sql.ErrNoRows) {
 		return album_participant_model.AlbumParticipant{}, fmt.Errorf("Album no encontrado")
 	}
 	secret, _ := gonanoid.New()
-	cardId, err := card_pool_application.AssignCard(album.ID)
+	cardId, err := card_pool_application.AssignCard(q, album.ID)
 	if err != nil {
 		return album_participant_model.AlbumParticipant{}, err
 	}
-	albumParticipant, err := queries.CreateAlbumParticipant(ctx, sqlc.CreateAlbumParticipantParams{
+	albumParticipant, err := q.CreateAlbumParticipant(ctx, sqlc.CreateAlbumParticipantParams{
 		AlbumID:        album.ID,
 		UserID:         user.ID,
 		AssignedCardID: cardId,
 		Secret:         secret,
 		JoinedAt:       time.Now().Unix(),
 	})
-	if err = queries.CollectCard(ctx, sqlc.CollectCardParams{
+	if err = q.CollectCard(ctx, sqlc.CollectCardParams{
 		UserID:     user.ID,
 		AlbumID:    album.ID,
 		CardID:     cardId,

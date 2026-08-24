@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"com.xalixcolabs.trading-card-album/context/user/application"
+	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -37,7 +38,7 @@ func CheckJwtCoockie(c fiber.Ctx) error {
 			"message": "Sesion invalida",
 		})
 	}
-	user, err := user_application.GetUserById(id)
+	user, err := user_application.GetUserById(database.DefaultQuerier(), id)
 	if err != nil {
 		log.Printf("[CheckJwtCoockie GetUserById] %s", err)
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{

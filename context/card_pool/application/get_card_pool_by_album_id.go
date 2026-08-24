@@ -9,10 +9,9 @@ import (
 	"com.xalixcolabs.trading-card-album/database/sqlc"
 )
 
-func GetMyCardsByAlbumId(user user_model.User, albumId string) ([]card_model.Card, error) {
+func GetMyCardsByAlbumId(q database.Querier, user user_model.User, albumId string) ([]card_model.Card, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
-	cards, err := queries.GetUserCollection(ctx, sqlc.GetUserCollectionParams{
+	cards, err := q.GetUserCollection(ctx, sqlc.GetUserCollectionParams{
 		UserID:  user.ID,
 		AlbumID: albumId,
 	})

@@ -14,23 +14,22 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
-func RegisterCard(user user_model.User, request album_dto.RegisterCardRequest) (card_model.Card, error) {
+func RegisterCard(q database.Querier, user user_model.User, request album_dto.RegisterCardRequest) (card_model.Card, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
-	album, err := queries.GetAlbum(ctx, request.AlbumId)
+	album, err := q.GetAlbum(ctx, request.AlbumId)
 	if errors.Is(err, sql.ErrNoRows) {
 		return card_model.Card{}, err
 	}
-	contact, err := queries.GetUser(ctx, request.ContactId)
+	contact, err := q.GetUser(ctx, request.ContactId)
 	if errors.Is(err, sql.ErrNoRows) {
 		return card_model.Card{}, err
 	}
-	queries.CreateContact(ctx, sqlc.CreateContactParams{
+	q.CreateContact(ctx, sqlc.CreateContactParams{
 		UserID:    user.ID,
 		MetUserID: request.ContactId,
 		ScannedAt: time.Now().Unix(),
 	})
-	albumParticipant, err := queries.GetAlbumParticipant(ctx, sqlc.GetAlbumParticipantParams{
+	albumParticipant, err := q.GetAlbumParticipant(ctx, sqlc.GetAlbumParticipantParams{
 		AlbumID: album.ID,
 		UserID:  contact.ID,
 	})
@@ -40,7 +39,7 @@ func RegisterCard(user user_model.User, request album_dto.RegisterCardRequest) (
 	if albumParticipant.Secret != request.Secret {
 		return card_model.Card{}, errors.New("Esta QR ya ha sido escaneado")
 	}
-	owned, err := queries.CardInCollection(ctx, sqlc.CardInCollectionParams{
+	owned, err := q.CardInCollection(ctx, sqlc.CardInCollectionParams{
 		UserID:  user.ID,
 		AlbumID: album.ID,
 		CardID:  albumParticipant.AssignedCardID,
@@ -49,7 +48,7 @@ func RegisterCard(user user_model.User, request album_dto.RegisterCardRequest) (
 		return card_model.Card{}, err
 	}
 	if !owned {
-		if err = queries.CollectCard(ctx, sqlc.CollectCardParams{
+		if err = q.CollectCard(ctx, sqlc.CollectCardParams{
 			UserID:     user.ID,
 			AlbumID:    album.ID,
 			CardID:     albumParticipant.AssignedCardID,
@@ -59,7 +58,7 @@ func RegisterCard(user user_model.User, request album_dto.RegisterCardRequest) (
 		}
 	}
 	secret, _ := gonanoid.New()
-	_, err = queries.UpdateAlbumParticipantSecret(ctx, sqlc.UpdateAlbumParticipantSecretParams{
+	_, err = q.UpdateAlbumParticipantSecret(ctx, sqlc.UpdateAlbumParticipantSecretParams{
 		Secret:  secret,
 		AlbumID: album.ID,
 		UserID:  contact.ID,
@@ -67,6 +66,6 @@ func RegisterCard(user user_model.User, request album_dto.RegisterCardRequest) (
 	if err != nil {
 		return card_model.Card{}, err
 	}
-	card, _ := queries.GetCard(ctx, albumParticipant.AssignedCardID)
+	card, _ := q.GetCard(ctx, albumParticipant.AssignedCardID)
 	return card_model.NewCardFromSqlcCard(card), nil
 }

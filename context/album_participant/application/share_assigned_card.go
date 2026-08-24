@@ -9,10 +9,9 @@ import (
 	"com.xalixcolabs.trading-card-album/database/sqlc"
 )
 
-func ShareAssignedCard(user user_model.User, albumId string) (album_participant_dto.ShareAssignedCardResponse, error) {
+func ShareAssignedCard(q database.Querier, user user_model.User, albumId string) (album_participant_dto.ShareAssignedCardResponse, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
-	albumParticipant, err := queries.GetAlbumParticipant(ctx, sqlc.GetAlbumParticipantParams{
+	albumParticipant, err := q.GetAlbumParticipant(ctx, sqlc.GetAlbumParticipantParams{
 		UserID:  user.ID,
 		AlbumID: albumId,
 	})

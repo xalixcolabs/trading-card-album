@@ -7,6 +7,7 @@ import (
 	"com.xalixcolabs.trading-card-album/context/album_participant/model/dto"
 	"com.xalixcolabs.trading-card-album/context/auth/middleware"
 	"com.xalixcolabs.trading-card-album/context/user/model"
+	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 )
@@ -34,7 +35,7 @@ func createAlbumParticipant(c fiber.Ctx) error {
 	if err := c.Bind().JSON(request); err != nil {
 		return err
 	}
-	response, err := album_participant_application.CreateAlbumParticipant(session, *request)
+	response, err := album_participant_application.CreateAlbumParticipant(database.DefaultQuerier(), session, *request)
 	if err != nil {
 		log.Default().Printf("[Error createAlbumParticipant] %s", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

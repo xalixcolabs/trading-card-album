@@ -5,6 +5,7 @@ import (
 	"com.xalixcolabs.trading-card-album/context/user/application"
 	"com.xalixcolabs.trading-card-album/context/user/model"
 	"com.xalixcolabs.trading-card-album/context/user/model/dto"
+	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 )
@@ -39,7 +40,7 @@ func updateUserProfile(c fiber.Ctx) error {
 	if err := c.Bind().JSON(request); err != nil {
 		return err
 	}
-	response, err := user_application.UpdateUser(id, *request)
+	response, err := user_application.UpdateUser(database.DefaultQuerier(), id, *request)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error al actualizar usuario",

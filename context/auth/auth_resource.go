@@ -10,6 +10,7 @@ import (
 	"com.xalixcolabs.trading-card-album/context/auth/middleware"
 	"com.xalixcolabs.trading-card-album/context/user/application"
 	"com.xalixcolabs.trading-card-album/context/user/model"
+	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/golang-jwt/jwt/v5"
@@ -66,7 +67,7 @@ func callback(c fiber.Ctx) error {
 	}
 	admins := os.Getenv("TCA_ADMINS")
 	isAdmin := strings.Contains(admins, response.Email)
-	user, err := user_application.CreateUser(response.Email, isAdmin)
+	user, err := user_application.CreateUser(database.DefaultQuerier(), response.Email, isAdmin)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": err.Error()})
 	}

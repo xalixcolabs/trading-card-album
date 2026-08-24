@@ -11,6 +11,7 @@ import (
 	"com.xalixcolabs.trading-card-album/context/card/application"
 	"com.xalixcolabs.trading-card-album/context/card_pool/application"
 	"com.xalixcolabs.trading-card-album/context/user/model"
+	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/skip2/go-qrcode"
@@ -39,7 +40,7 @@ func RegisterAlbumResource(app *fiber.App) {
 // @Router /api/v1/album [get]
 func getAlbumsByUser(c fiber.Ctx) error {
 	session := c.Locals("session").(user_model.User)
-	album, err := album_application.GetAlbumsByUser(session)
+	album, err := album_application.GetAlbumsByUser(database.DefaultQuerier(), session)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error al listar albums",
@@ -60,7 +61,7 @@ func createAlbum(c fiber.Ctx) error {
 	if err := c.Bind().JSON(request); err != nil {
 		return err
 	}
-	album, err := album_application.CreateAlbum(*request)
+	album, err := album_application.CreateAlbum(database.DefaultQuerier(), *request)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error al crear album",
@@ -81,7 +82,7 @@ func shareAssignedCard(c fiber.Ctx) error {
 	isQr := c.Query("qr")
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)
-	response, err := album_participant_application.ShareAssignedCard(session, id)
+	response, err := album_participant_application.ShareAssignedCard(database.DefaultQuerier(), session, id)
 	if err != nil {
 		log.Default().Printf("[Error shareAssignedCard] %s", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -117,7 +118,7 @@ func registerNewCard(c fiber.Ctx) error {
 	if err := c.Bind().JSON(request); err != nil {
 		return err
 	}
-	response, err := album_application.RegisterCard(session, *request)
+	response, err := album_application.RegisterCard(database.DefaultQuerier(), session, *request)
 	if err != nil {
 		log.Default().Printf("[Error registerNewCard] %s", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -137,7 +138,7 @@ func registerNewCard(c fiber.Ctx) error {
 func assignedCard(c fiber.Ctx) error {
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)
-	response, err := card_application.GetCardByAlbumId(session, id)
+	response, err := card_application.GetCardByAlbumId(database.DefaultQuerier(), session, id)
 	if err != nil {
 		log.Default().Printf("[Error shareAssignedCard] %s", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -157,7 +158,7 @@ func assignedCard(c fiber.Ctx) error {
 func getCardPoolByAlbumId(c fiber.Ctx) error {
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)
-	response, err := card_pool_application.GetMyCardsByAlbumId(session, id)
+	response, err := card_pool_application.GetMyCardsByAlbumId(database.DefaultQuerier(), session, id)
 	if err != nil {
 		log.Default().Printf("[Error shareAssignedCard] %s", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

@@ -4,6 +4,7 @@ import (
 	"com.xalixcolabs.trading-card-album/context/auth/middleware"
 	"com.xalixcolabs.trading-card-album/context/card/application"
 	"com.xalixcolabs.trading-card-album/context/card/model/dto"
+	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 )
@@ -30,7 +31,7 @@ func CreateCard(c fiber.Ctx) error {
 	if err := c.Bind().JSON(request); err != nil {
 		return err
 	}
-	card, err := card_application.CreateCard(*request)
+	card, err := card_application.CreateCard(database.DefaultQuerier(), *request)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error al crear tarjeta",

@@ -10,10 +10,9 @@ import (
 	"com.xalixcolabs.trading-card-album/database/sqlc"
 )
 
-func UpdateUser(id string, request user_dto.UpdateUserRequest) (user_model.User, error) {
+func UpdateUser(q database.Querier, id string, request user_dto.UpdateUserRequest) (user_model.User, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
-	user, err := queries.UpdateUser(ctx, sqlc.UpdateUserParams{
+	user, err := q.UpdateUser(ctx, sqlc.UpdateUserParams{
 		ID:          id,
 		Name:        request.Name,
 		Email:       request.Email,

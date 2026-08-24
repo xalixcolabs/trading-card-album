@@ -9,15 +9,14 @@ import (
 	"github.com/matoous/go-nanoid/v2"
 )
 
-func CreateUser(email string, isAdmin bool) (sqlc.User, error) {
+func CreateUser(q database.Querier, email string, isAdmin bool) (sqlc.User, error) {
 	ctx := context.Background()
-	queries := sqlc.New(database.GetDatabase())
 	id, _ := gonanoid.New()
 	isAdmin_ := 0
 	if isAdmin {
 		isAdmin_ = 1
 	}
-	user, err := queries.CreateUser(ctx, sqlc.CreateUserParams{
+	user, err := q.CreateUser(ctx, sqlc.CreateUserParams{
 		ID:          id,
 		Name:        "",
 		Email:       email,
