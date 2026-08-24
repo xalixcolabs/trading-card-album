@@ -25,6 +25,7 @@ func RegisterAlbumResource(app *fiber.App) {
 	)
 
 	apiv1.Get("/", getAlbumsByUser)
+	apiv1.Get("/:id", getAlbumById)
 	apiv1.Post("", auth_middleware.CheckIsAdmin, createAlbum)
 	apiv1.Get("/:id/card", getCardPoolByAlbumId)
 	apiv1.Get("/:id/assigned_card", assignedCard)
@@ -44,6 +45,26 @@ func getAlbumsByUser(c fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error al listar albums",
+		})
+	}
+	return c.JSON(album)
+}
+
+// @Description	Get album by id
+// @Tags		Album
+// @Accept		json
+// @Produce		json
+// @Param		id   path  string  true  "Album ID"
+// @Success		200  {object}   album_model.Album
+// @Router /api/v1/album/{id} [get]
+func getAlbumById(c fiber.Ctx) error {
+	id := c.Params("id")
+	session := c.Locals("session").(user_model.User)
+	album, err := album_application.GetAlbumById(database.DefaultQuerier(), session, id)
+	if err != nil {
+		log.Default().Printf("[Error getAlbumById] %s", err)
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Álbum no encontrado",
 		})
 	}
 	return c.JSON(album)

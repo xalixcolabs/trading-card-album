@@ -16,6 +16,7 @@ type Querier interface {
 
 	GetCard(ctx context.Context, id string) (sqlc.Card, error)
 	CreateCard(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error)
+	ListCardsByAlbumId(ctx context.Context, albumID string) ([]sqlc.Card, error)
 	GetCardByAlbumParticipant(ctx context.Context, arg sqlc.GetCardByAlbumParticipantParams) (sqlc.Card, error)
 
 	GetUser(ctx context.Context, id string) (sqlc.User, error)

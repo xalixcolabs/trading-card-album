@@ -104,6 +104,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/album/{id}": {
+            "get": {
+                "description": "Get album by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/album_model.Album"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/album/{id}/assigned_card": {
             "get": {
                 "description": "Assigned card",

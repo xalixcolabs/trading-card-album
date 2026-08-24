@@ -214,6 +214,26 @@ paths:
             $ref: '#/definitions/album_model.Album'
       tags:
       - Album
+  /api/v1/album/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get album by id
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/album_model.Album'
+      tags:
+      - Album
   /api/v1/album/{id}/assigned_card:
     get:
       consumes:

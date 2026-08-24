@@ -15,6 +15,7 @@ type Querier struct {
 	ListAlbumsByUserIdFn           func(ctx context.Context, userID string) ([]sqlc.Album, error)
 	GetCardFn                      func(ctx context.Context, id string) (sqlc.Card, error)
 	CreateCardFn                   func(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error)
+	ListCardsByAlbumIdFn           func(ctx context.Context, albumID string) ([]sqlc.Card, error)
 	GetCardByAlbumParticipantFn    func(ctx context.Context, arg sqlc.GetCardByAlbumParticipantParams) (sqlc.Card, error)
 	GetUserFn                      func(ctx context.Context, id string) (sqlc.User, error)
 	CreateUserFn                   func(ctx context.Context, arg sqlc.CreateUserParams) (sqlc.User, error)
@@ -59,6 +60,13 @@ func (m *Querier) GetCard(ctx context.Context, id string) (sqlc.Card, error) {
 		return m.GetCardFn(ctx, id)
 	}
 	return sqlc.Card{}, nil
+}
+
+func (m *Querier) ListCardsByAlbumId(ctx context.Context, albumID string) ([]sqlc.Card, error) {
+	if m.ListCardsByAlbumIdFn != nil {
+		return m.ListCardsByAlbumIdFn(ctx, albumID)
+	}
+	return nil, nil
 }
 
 func (m *Querier) CreateCard(ctx context.Context, arg sqlc.CreateCardParams) (sqlc.Card, error) {
