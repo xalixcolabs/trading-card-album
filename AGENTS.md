@@ -46,14 +46,15 @@ context/<contexto>/
 - **`model/`**: entidades puras + `model/dto/` para request/response.
 - Los handlers obtienen la sesión desde `c.Locals("session")` (inyectada por `CheckJwtCoockie`).
 
-Contextos existentes: `user`, `auth`, `album`, `album_participant`, `card`, `card_pool`.
+Contextos existentes: `user`, `auth`, `album`, `album_participant`, `card`, `card_pool`, `contact`.
 
 ### Rutas API (todas bajo `/api/v1`)
 
 - **Auth** (`/auth`): `GET /`, `GET /me` (JWT), `GET /google/callback`
-- **Album** (`/album`): `GET /`, `POST /` (admin), `GET /:id/card`, `GET /:id/assigned_card`, `POST /new_card`, `GET /:id/share_assigned_card?qr=`
+- **Album** (`/album`): `GET /`, `GET /:id` (solo participantes; devuelve solo las tarjetas recolectadas), `POST /` (admin), `GET /:id/card`, `GET /:id/assigned_card`, `POST /new_card`, `GET /:id/share_assigned_card?qr=`
 - **Album participant** (`/album_participant`): `POST /`
 - **Card** (`/card`): `POST /`
+- **Contact** (`/contact`): `GET /`
 - **User** (`/user`): `PUT /:id`
 
 Swagger en `/swagger/*`.
@@ -115,6 +116,8 @@ Flujo típico de cambios:
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URL`
 - `JWT_SECRET`
 
+> `GOOGLE_REDIRECT_URL` apunta al **origen de la app**: `http://localhost:3000/api/v1/auth/google/callback` en desarrollo (Nuxt proxya `/api` hacia el backend) y al host real del binario en producción.
+
 > `.env` contiene **secretos reales** (OAuth y JWT). No debe versionarse ni exponerse en logs ni en código.
 
 ## Flujo de autenticación
@@ -136,7 +139,9 @@ Flujo típico de cambios:
 ## Frontend — notas
 
 - Servicios generados por orval usan el mutator `customFetch` (`webui/app/services/CustomFetch.ts`) que añade `credentials: 'include'` (para las cookies) y `baseURL` desde `runtimeConfig.public.apiBase`.
-- `runtimeConfig.public.apiBase`: `http://localhost:8080` en dev, `''` (mismo origen) en producción, ya que el backend sirve el frontend embebido.
+- `runtimeConfig.public.apiBase`: siempre `''` (mismo origen). En dev Nuxt (puerto `3000`) proxya `/api` hacia el backend (`vite.server.proxy` → `http://localhost:8080`); en producción Fiber sirve la SPA y el API juntos.
+- **`app.buildAssetsDir: 'assets'`**: los assets salen en `/assets` (no `/_nuxt`) porque `go:embed` excluye directorios que empiezan con `_` — sin esto el frontend embebido queda roto.
+- Fiber sirve el frontend embebido con **fallback SPA** (`main.go` → `registerFrontend`): si el path no es un archivo estático ni `/api/*` ni `/swagger/*`, responde `200.html`/`index.html` para que el cliente de Nuxt resuelva rutas como `/album/:id`.
 - Composables: `useApiData` (envuelve `useAsyncData`), `useProfile` (estado global del perfil).
-- Páginas principales: `index.vue`, `album/[id].vue`, `profile.vue`, `login.vue`. Componentes: `Card`, `FloatingMenu`, `MyQrModal`, `ScanQrModal`.
+- Páginas principales: `index.vue`, `album/[id].vue`, `contactos.vue`, `profile.vue`, `login.vue`. Componentes: `Card`, `AppSheet`, `TabBar`, `MyQrModal`, `ScanQrModal`, `GoogleMark`.
 - Middleware global `auth.global.ts`: redirige a `/login` si no existe la cookie `jwt`.
