@@ -276,6 +276,26 @@ paths:
             type: array
       tags:
       - Album
+  /api/v1/album/{id}/join_qr:
+    get:
+      consumes:
+      - application/json
+      description: Get join QR of an album (encode del código de invitación)
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      tags:
+      - Album
   /api/v1/album/{id}/share_assigned_card:
     get:
       consumes:

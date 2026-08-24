@@ -192,6 +192,37 @@
                 }
             }
         },
+        "/api/v1/album/{id}/join_qr": {
+            "get": {
+                "description": "Get join QR of an album (encode del código de invitación)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/album/{id}/share_assigned_card": {
             "get": {
                 "description": "Share assigned card",

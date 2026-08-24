@@ -26,6 +26,7 @@ func RegisterAlbumResource(app *fiber.App) {
 
 	apiv1.Get("/", getAlbumsByUser)
 	apiv1.Get("/:id", getAlbumById)
+	apiv1.Get("/:id/join_qr", joinQr)
 	apiv1.Post("", auth_middleware.CheckIsAdmin, createAlbum)
 	apiv1.Get("/:id/card", getCardPoolByAlbumId)
 	apiv1.Get("/:id/assigned_card", assignedCard)
@@ -68,6 +69,26 @@ func getAlbumById(c fiber.Ctx) error {
 		})
 	}
 	return c.JSON(album)
+}
+
+// @Description	Get join QR of an album (encode del código de invitación)
+// @Tags		Album
+// @Accept		json
+// @Produce		image/png
+// @Param		id   path  string  true  "Album ID"
+// @Success		200  {file}   binary
+// @Router /api/v1/album/{id}/join_qr [get]
+func joinQr(c fiber.Ctx) error {
+	id := c.Params("id")
+	png, err := qrcode.Encode(id, qrcode.Medium, 256)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Error al generar el QR",
+		})
+	}
+	c.Set("Content-Type", "image/png")
+	c.Set("Cache-Control", "no-store")
+	return c.Send(png)
 }
 
 // @Description	Create album
