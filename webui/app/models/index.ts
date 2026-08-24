@@ -7,10 +7,14 @@
  */
 
 export * from './adminDtoAlbum';
+export * from './adminDtoCreateCardRequest';
 export * from './adminDtoMessage';
 export * from './adminDtoOverview';
+export * from './adminDtoUpdateAlbumRequest';
+export * from './adminDtoUpdateCardRequest';
 export * from './adminDtoUpdateUserRoleRequest';
 export * from './adminDtoUser';
+export * from './adminDtoUserDetail';
 export * from './albumDtoCreateAlbumCardRequest';
 export * from './albumDtoCreateAlbumRequest';
 export * from './albumDtoRegisterCardRequest';
@@ -21,6 +25,7 @@ export * from './albumParticipantModelAlbumParticipant';
 export * from './cardDtoCreateCardRequest';
 export * from './cardModelCard';
 export * from './contactDtoContact';
+export * from './getApiV1AdminUsersParams';
 export * from './getApiV1AlbumIdShareAssignedCardParams';
 export * from './sqlcAlbum';
 export * from './userDtoUpdateUserRequest';

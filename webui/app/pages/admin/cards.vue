@@ -1,7 +1,16 @@
 <template>
   <AdminShell active="cards">
-    <h2 class="text-lg font-bold tracking-tight text-ink">Tarjetas</h2>
-    <p class="mt-1 text-sm text-mist">{{ cards?.length ?? 0 }} tarjetas en circulación.</p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-bold tracking-tight text-ink">Tarjetas</h2>
+        <p class="mt-1 text-sm text-mist">{{ cards?.length ?? 0 }} tarjetas en circulación.</p>
+      </div>
+      <button type="button" @click="openCreate"
+        class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-accent px-3.5 py-2.5 text-xs font-semibold text-accent-ink shadow-glow transition-transform active:scale-95">
+        <PhPlus :size="15" weight="bold" />
+        Nueva
+      </button>
+    </div>
 
     <div v-if="pending" class="mt-5 flex flex-col gap-3">
       <div v-for="i in 4" :key="i" class="h-16 animate-pulse rounded-2xl bg-raise ring-1 ring-edge"></div>
@@ -17,6 +26,11 @@
           <p class="truncate text-[15px] font-semibold text-ink">{{ card.name }}</p>
           <p class="font-mono text-xs text-mist tabular">#{{ card.number }}</p>
         </div>
+        <button type="button" @click="openEdit(card)"
+          class="shrink-0 rounded-lg bg-panel p-2.5 text-mist ring-1 ring-edge transition-transform active:scale-90"
+          aria-label="Editar tarjeta">
+          <PhPencilSimple :size="16" />
+        </button>
         <button type="button" @click="removeCard(card)"
           class="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
           :class="confirmingId === card.id ? 'bg-danger text-white' : 'bg-panel text-faint ring-1 ring-edge'"
@@ -27,19 +41,39 @@
 
       <p v-if="cards && cards.length === 0" class="mt-4 text-center text-sm text-faint">Aún no hay tarjetas.</p>
     </div>
+
+    <AdminCardSheet :is-open="sheetOpen" :mode="sheetMode" :card="editingCard" :albums="albums ?? []"
+      @close="sheetOpen = false" @saved="onSaved" />
   </AdminShell>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ middleware: 'admin' })
-import { getApiV1AdminCards, deleteApiV1AdminCardsId } from '~/services/admin/admin'
+import { PhPencilSimple, PhPlus } from '@phosphor-icons/vue'
+import { getApiV1AdminCards, deleteApiV1AdminCardsId, getApiV1AdminAlbums } from '~/services/admin/admin'
 import type { CardModelCard } from '~/models'
 
 const toast = useToast()
 const confirmingId = ref<string | null>(null)
 const deleting = ref(false)
+const sheetOpen = ref(false)
+const sheetMode = ref<'create' | 'edit'>('create')
+const editingCard = ref<CardModelCard | undefined>()
 
 const { data: cards, pending, refresh } = useApiData(() => getApiV1AdminCards(), 'admin-cards')
+const { data: albums } = useApiData(() => getApiV1AdminAlbums(), 'admin-albums')
+
+const openCreate = () => {
+  editingCard.value = undefined
+  sheetMode.value = 'create'
+  sheetOpen.value = true
+}
+
+const openEdit = (card: CardModelCard) => {
+  editingCard.value = card
+  sheetMode.value = 'edit'
+  sheetOpen.value = true
+}
 
 function removeCard(card: CardModelCard) {
   if (confirmingId.value !== card.id) {
@@ -58,11 +92,16 @@ async function performDelete(card: CardModelCard) {
     await deleteApiV1AdminCardsId(card.id!)
     toast.success({ title: 'Tarjeta eliminada', message: card.name || '' })
     confirmingId.value = null
-    await refresh()
+    await onSaved()
   } catch {
     toast.error({ title: 'No se pudo eliminar', message: 'Inténtalo de nuevo.' })
   } finally {
     deleting.value = false
   }
+}
+
+const onSaved = async () => {
+  await refresh()
+  await refreshNuxtData('admin-albums')
 }
 </script>

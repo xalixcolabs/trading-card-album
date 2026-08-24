@@ -7,11 +7,18 @@
  */
 import type {
   AdminDtoAlbum,
+  AdminDtoCreateCardRequest,
   AdminDtoMessage,
   AdminDtoOverview,
+  AdminDtoUpdateAlbumRequest,
+  AdminDtoUpdateCardRequest,
   AdminDtoUpdateUserRoleRequest,
   AdminDtoUser,
-  CardModelCard
+  AdminDtoUserDetail,
+  AlbumDtoCreateAlbumRequest,
+  AlbumModelAlbum,
+  CardModelCard,
+  GetApiV1AdminUsersParams
 } from '../../models';
 
 import { customFetch } from '.././CustomFetch';
@@ -51,6 +58,41 @@ export const getApiV1AdminAlbums = async ( options?: RequestInit): Promise<getAp
 );}
 
 
+export type postApiV1AdminAlbumsResponse200 = {
+  data: AlbumModelAlbum
+  status: 200
+}
+
+export type postApiV1AdminAlbumsResponseSuccess = (postApiV1AdminAlbumsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiV1AdminAlbumsResponse = (postApiV1AdminAlbumsResponseSuccess)
+
+export const getPostApiV1AdminAlbumsUrl = () => {
+
+
+
+
+  return `/api/v1/admin/albums`
+}
+
+/**
+ * Create an album with its cards
+ */
+export const postApiV1AdminAlbums = async (albumDtoCreateAlbumRequest: AlbumDtoCreateAlbumRequest, options?: RequestInit): Promise<postApiV1AdminAlbumsResponse> => {
+
+  return customFetch<postApiV1AdminAlbumsResponse>(getPostApiV1AdminAlbumsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(albumDtoCreateAlbumRequest)
+  }
+);}
+
+
 export type deleteApiV1AdminAlbumsIdResponse200 = {
   data: AdminDtoMessage
   status: 200
@@ -82,6 +124,42 @@ export const deleteApiV1AdminAlbumsId = async (id: string, options?: RequestInit
     method: 'DELETE'
 
 
+  }
+);}
+
+
+export type putApiV1AdminAlbumsIdResponse200 = {
+  data: AdminDtoAlbum
+  status: 200
+}
+
+export type putApiV1AdminAlbumsIdResponseSuccess = (putApiV1AdminAlbumsIdResponse200) & {
+  headers: Headers;
+};
+;
+
+export type putApiV1AdminAlbumsIdResponse = (putApiV1AdminAlbumsIdResponseSuccess)
+
+export const getPutApiV1AdminAlbumsIdUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/admin/albums/${id}`
+}
+
+/**
+ * Update album title
+ */
+export const putApiV1AdminAlbumsId = async (id: string,
+    adminDtoUpdateAlbumRequest: AdminDtoUpdateAlbumRequest, options?: RequestInit): Promise<putApiV1AdminAlbumsIdResponse> => {
+
+  return customFetch<putApiV1AdminAlbumsIdResponse>(getPutApiV1AdminAlbumsIdUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminDtoUpdateAlbumRequest)
   }
 );}
 
@@ -121,6 +199,41 @@ export const getApiV1AdminCards = async ( options?: RequestInit): Promise<getApi
 );}
 
 
+export type postApiV1AdminCardsResponse200 = {
+  data: CardModelCard
+  status: 200
+}
+
+export type postApiV1AdminCardsResponseSuccess = (postApiV1AdminCardsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiV1AdminCardsResponse = (postApiV1AdminCardsResponseSuccess)
+
+export const getPostApiV1AdminCardsUrl = () => {
+
+
+
+
+  return `/api/v1/admin/cards`
+}
+
+/**
+ * Create a card in an album
+ */
+export const postApiV1AdminCards = async (adminDtoCreateCardRequest: AdminDtoCreateCardRequest, options?: RequestInit): Promise<postApiV1AdminCardsResponse> => {
+
+  return customFetch<postApiV1AdminCardsResponse>(getPostApiV1AdminCardsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminDtoCreateCardRequest)
+  }
+);}
+
+
 export type deleteApiV1AdminCardsIdResponse200 = {
   data: AdminDtoMessage
   status: 200
@@ -152,6 +265,42 @@ export const deleteApiV1AdminCardsId = async (id: string, options?: RequestInit)
     method: 'DELETE'
 
 
+  }
+);}
+
+
+export type putApiV1AdminCardsIdResponse200 = {
+  data: CardModelCard
+  status: 200
+}
+
+export type putApiV1AdminCardsIdResponseSuccess = (putApiV1AdminCardsIdResponse200) & {
+  headers: Headers;
+};
+;
+
+export type putApiV1AdminCardsIdResponse = (putApiV1AdminCardsIdResponseSuccess)
+
+export const getPutApiV1AdminCardsIdUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/admin/cards/${id}`
+}
+
+/**
+ * Update a card
+ */
+export const putApiV1AdminCardsId = async (id: string,
+    adminDtoUpdateCardRequest: AdminDtoUpdateCardRequest, options?: RequestInit): Promise<putApiV1AdminCardsIdResponse> => {
+
+  return customFetch<putApiV1AdminCardsIdResponse>(getPutApiV1AdminCardsIdUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminDtoUpdateCardRequest)
   }
 );}
 
@@ -203,20 +352,62 @@ export type getApiV1AdminUsersResponseSuccess = (getApiV1AdminUsersResponse200) 
 
 export type getApiV1AdminUsersResponse = (getApiV1AdminUsersResponseSuccess)
 
-export const getGetApiV1AdminUsersUrl = () => {
+export const getGetApiV1AdminUsersUrl = (params?: GetApiV1AdminUsersParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/v1/admin/users`
+  return stringifiedParams.length > 0 ? `/api/v1/admin/users?${stringifiedParams}` : `/api/v1/admin/users`
 }
 
 /**
- * List all users
+ * List users, optionally filtered by email
  */
-export const getApiV1AdminUsers = async ( options?: RequestInit): Promise<getApiV1AdminUsersResponse> => {
+export const getApiV1AdminUsers = async (params?: GetApiV1AdminUsersParams, options?: RequestInit): Promise<getApiV1AdminUsersResponse> => {
 
-  return customFetch<getApiV1AdminUsersResponse>(getGetApiV1AdminUsersUrl(),
+  return customFetch<getApiV1AdminUsersResponse>(getGetApiV1AdminUsersUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+export type getApiV1AdminUsersIdResponse200 = {
+  data: AdminDtoUserDetail
+  status: 200
+}
+
+export type getApiV1AdminUsersIdResponseSuccess = (getApiV1AdminUsersIdResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiV1AdminUsersIdResponse = (getApiV1AdminUsersIdResponseSuccess)
+
+export const getGetApiV1AdminUsersIdUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/admin/users/${id}`
+}
+
+/**
+ * Get user detail with albums and cards
+ */
+export const getApiV1AdminUsersId = async (id: string, options?: RequestInit): Promise<getApiV1AdminUsersIdResponse> => {
+
+  return customFetch<getApiV1AdminUsersIdResponse>(getGetApiV1AdminUsersIdUrl(id),
   {
     ...options,
     method: 'GET'
