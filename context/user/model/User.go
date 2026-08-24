@@ -10,7 +10,7 @@ type User struct {
 	Linkedin    string `json:"linkedin"`
 	Web         string `json:"web"`
 	Description string `json:"description"`
-	IsAdmin     int64  `json:"-"`
+	IsAdmin     int64  `json:"is_admin"`
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"update_at"`
 }
