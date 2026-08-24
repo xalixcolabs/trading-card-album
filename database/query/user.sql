@@ -21,7 +21,7 @@ INSERT INTO user (
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) ON CONFLICT(email) DO UPDATE SET
-    name = excluded.name
+    updated_at = excluded.updated_at
 RETURNING *;
 
 -- name: UpdateUser :one
