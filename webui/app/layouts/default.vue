@@ -8,15 +8,12 @@
       <div :class="showTabBar ? 'h-28' : ''"></div>
     </div>
 
-    <TabBar v-if="showTabBar" :active="tabActive" @scan="scanOpen = true" />
-
-    <ScanQrModal :is-open="scanOpen" @close="scanOpen = false" @card-added-successfully="onCardAdded" />
+    <TabBar v-if="showTabBar" :active="tabActive" />
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
-const scanOpen = ref(false)
 
 const showTabBar = computed(() => {
   return !route.path.startsWith('/album') && route.path !== '/login'
@@ -27,8 +24,4 @@ const tabActive = computed<'home' | 'contacts' | 'profile'>(() => {
   if (route.path.startsWith('/contactos')) return 'contacts'
   return 'home'
 })
-
-const onCardAdded = async () => {
-  await refreshNuxtData()
-}
 </script>
