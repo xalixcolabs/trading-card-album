@@ -164,6 +164,41 @@ export const putApiV1AdminAlbumsId = async (id: string,
 );}
 
 
+export type getApiV1AdminAlbumsIdCardsResponse200 = {
+  data: CardModelCard[]
+  status: 200
+}
+
+export type getApiV1AdminAlbumsIdCardsResponseSuccess = (getApiV1AdminAlbumsIdCardsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiV1AdminAlbumsIdCardsResponse = (getApiV1AdminAlbumsIdCardsResponseSuccess)
+
+export const getGetApiV1AdminAlbumsIdCardsUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/admin/albums/${id}/cards`
+}
+
+/**
+ * Get cards of an album
+ */
+export const getApiV1AdminAlbumsIdCards = async (id: string, options?: RequestInit): Promise<getApiV1AdminAlbumsIdCardsResponse> => {
+
+  return customFetch<getApiV1AdminAlbumsIdCardsResponse>(getGetApiV1AdminAlbumsIdCardsUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
 export type getApiV1AdminCardsResponse200 = {
   data: CardModelCard[]
   status: 200

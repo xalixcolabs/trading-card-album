@@ -11,7 +11,7 @@
     </div>
 
     <form class="mt-5 flex flex-col gap-4" @submit.prevent="handleSubmit">
-      <div v-if="mode === 'create'" class="flex flex-col gap-1.5">
+      <div v-if="mode === 'create' && !fixedAlbumId" class="flex flex-col gap-1.5">
         <label for="card-album" class="text-[13px] font-semibold text-mist">Álbum</label>
         <select id="card-album" v-model="albumId" required
           class="rounded-xl bg-panel px-4 py-3 text-sm text-ink ring-1 ring-edge focus:outline-none focus:ring-2 focus:ring-accent">
@@ -58,11 +58,12 @@ import { PhCardholder } from '@phosphor-icons/vue'
 import { postApiV1AdminCards, putApiV1AdminCardsId } from '~/services/admin/admin'
 import type { AdminDtoAlbum, CardModelCard } from '~/models'
 
-const { isOpen, mode, card, albums } = defineProps<{
+const { isOpen, mode, card, albums, fixedAlbumId } = defineProps<{
   isOpen: boolean
   mode: 'create' | 'edit'
   card?: CardModelCard
   albums: AdminDtoAlbum[]
+  fixedAlbumId?: string
 }>()
 
 const emit = defineEmits<{
@@ -78,12 +79,12 @@ const description = ref('')
 const imageUrl = ref('')
 const submitting = ref(false)
 
-watch(() => card, (value) => {
+watch(() => [card, fixedAlbumId] as const, ([value, fixedId]) => {
   number.value = value?.number ?? ''
   name.value = value?.name ?? ''
   description.value = value?.description ?? ''
   imageUrl.value = value?.image_url ?? ''
-  albumId.value = value?.album_id ?? ''
+  albumId.value = value?.album_id ?? fixedId ?? ''
 }, { immediate: true })
 
 async function handleSubmit() {

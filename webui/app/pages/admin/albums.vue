@@ -18,19 +18,25 @@
 
     <div v-else class="mt-5 flex flex-col gap-3">
       <div v-for="album in albums" :key="album.id"
-        class="flex items-center gap-3 rounded-2xl bg-raise p-4 ring-1 ring-edge">
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-[15px] font-semibold text-ink">{{ album.title }}</p>
-          <p class="mt-0.5 text-xs text-mist">
-            {{ album.total_cards }} tarjetas · {{ album.participant_count }} participantes
-          </p>
-        </div>
-        <button type="button" @click="openEdit(album)"
+        class="flex items-center gap-3 rounded-2xl bg-raise p-4 ring-1 ring-edge transition-transform active:scale-[0.98]">
+        <button type="button" @click="router.push(`/admin/albums/${album.id}/cards`)"
+          class="flex min-w-0 flex-1 items-center gap-3 text-left">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+            <PhStack :size="20" weight="duotone" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[15px] font-semibold text-ink">{{ album.title }}</p>
+            <p class="mt-0.5 text-xs text-mist">
+              {{ album.total_cards }} tarjetas · {{ album.participant_count }} participantes
+            </p>
+          </div>
+        </button>
+        <button type="button" @click.stop="openEdit(album)"
           class="shrink-0 rounded-lg bg-panel p-2.5 text-mist ring-1 ring-edge transition-transform active:scale-90"
           aria-label="Editar álbum">
           <PhPencilSimple :size="16" />
         </button>
-        <button type="button" @click="removeAlbum(album)"
+        <button type="button" @click.stop="removeAlbum(album)"
           class="shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
           :class="confirmingId === album.id ? 'bg-danger text-white' : 'bg-panel text-faint ring-1 ring-edge'"
           :disabled="deleting">
@@ -47,10 +53,11 @@
 
 <script setup lang="ts">
 definePageMeta({ middleware: 'admin' })
-import { PhPencilSimple, PhPlus } from '@phosphor-icons/vue'
+import { PhPencilSimple, PhPlus, PhStack } from '@phosphor-icons/vue'
 import { getApiV1AdminAlbums, deleteApiV1AdminAlbumsId } from '~/services/admin/admin'
 import type { AdminDtoAlbum } from '~/models'
 
+const router = useRouter()
 const toast = useToast()
 const confirmingId = ref<string | null>(null)
 const deleting = ref(false)

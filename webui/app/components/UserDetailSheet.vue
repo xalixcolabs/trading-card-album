@@ -1,6 +1,6 @@
 <template>
   <AppSheet :is-open="isOpen" @close="$emit('close')">
-    <div v-if="pending" class="flex flex-col gap-3 pt-4">
+    <div v-if="loading" class="flex flex-col gap-3 pt-4">
       <div v-for="i in 3" :key="i" class="h-16 animate-pulse rounded-2xl bg-raise ring-1 ring-edge"></div>
     </div>
 
@@ -48,8 +48,9 @@
 
 <script setup lang="ts">
 import { getApiV1AdminUsersId } from '~/services/admin/admin'
+import type { AdminDtoUserDetail } from '~/models'
 
-const { isOpen, userId } = defineProps<{
+const props = defineProps<{
   isOpen: boolean
   userId: string
 }>()
@@ -58,7 +59,24 @@ defineEmits<{
   (e: 'close'): void
 }>()
 
-const { data: detail, pending } = useApiData(() => getApiV1AdminUsersId(userId), `admin-user-${userId}`)
+const detail = ref<AdminDtoUserDetail | null>(null)
+const loading = ref(false)
+
+watch(() => props.userId, async (id) => {
+  if (!id) {
+    detail.value = null
+    return
+  }
+  loading.value = true
+  try {
+    const response = await getApiV1AdminUsersId(id)
+    detail.value = response.data
+  } catch {
+    detail.value = null
+  } finally {
+    loading.value = false
+  }
+}, { immediate: true })
 
 function initialOf(name?: string) {
   return (name || '?').charAt(0).toUpperCase()
