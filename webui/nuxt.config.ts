@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   css: ['./app/assets/css/main.css'],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
+    // Los assets salen en /assets en vez de /_nuxt porque go:embed
+    // excluye directorios que empiezan con "_".
+    buildAssetsDir: 'assets',
   },
   devServer: {
     host: 'localhost',
@@ -15,9 +18,9 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NODE_ENV === 'development'
-        ? 'http://localhost:8080'
-        : ''
+      // Mismo origen: en dev Nuxt proxya /api hacia el backend y en
+      // producción Fiber sirve la SPA y el API juntos.
+      apiBase: ''
     }
   },
 
@@ -25,6 +28,11 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    server: {
+      proxy: {
+        '/api': 'http://localhost:8080',
+      },
+    },
   },
 
   modules: ['nuxt-toast', 'nuxt-qrcode'],
