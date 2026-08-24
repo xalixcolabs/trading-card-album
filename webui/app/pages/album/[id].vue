@@ -11,6 +11,11 @@
         <h1 class="truncate text-xl font-bold tracking-tight text-ink">{{ albumTitle }}</h1>
         <p class="text-[13px] text-mist">{{ collectionCount }} de {{ totalCards }} tarjetas</p>
       </div>
+      <button type="button" @click="inviteOpen = true"
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-raise text-mist ring-1 ring-edge transition-transform active:scale-90"
+        aria-label="Invitar al álbum">
+        <PhShareNetwork :size="20" />
+      </button>
     </div>
 
     <!-- Progreso -->
@@ -92,11 +97,12 @@
 
     <ScanQrModal :is-open="scanOpen" @close="scanOpen = false" @card-added-successfully="onCardAdded" />
     <MyQrModal :is-open="qrOpen" :album-id="albumId" @close="qrOpen = false" />
+    <InviteSheet :is-open="inviteOpen" :album-id="albumId" @close="inviteOpen = false" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { PhArrowLeft, PhQrCode, PhScan, PhStack } from '@phosphor-icons/vue'
+import { PhArrowLeft, PhQrCode, PhScan, PhShareNetwork, PhStack } from '@phosphor-icons/vue'
 import { getApiV1AlbumId, getApiV1AlbumIdAssignedCard } from '~/services/album/album'
 import { getApiV1AuthMe } from '~/services/auth/auth'
 import type { CardModelCard } from '~/models'
@@ -107,6 +113,7 @@ const albumId = route.params.id as string
 
 const scanOpen = ref(false)
 const qrOpen = ref(false)
+const inviteOpen = ref(false)
 
 const { data: profile } = useApiData(() => getApiV1AuthMe(), 'profile')
 const { data: album, pending: albumPending, refresh: refreshAlbum } = useApiData(() => getApiV1AlbumId(albumId), `album-${albumId}`)

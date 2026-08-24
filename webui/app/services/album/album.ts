@@ -192,6 +192,41 @@ export const getApiV1AlbumIdCard = async (id: string, options?: RequestInit): Pr
 );}
 
 
+export type getApiV1AlbumIdJoinQrResponse200 = {
+  data: Blob
+  status: 200
+}
+
+export type getApiV1AlbumIdJoinQrResponseSuccess = (getApiV1AlbumIdJoinQrResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiV1AlbumIdJoinQrResponse = (getApiV1AlbumIdJoinQrResponseSuccess)
+
+export const getGetApiV1AlbumIdJoinQrUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/album/${id}/join_qr`
+}
+
+/**
+ * Get join QR of an album (encode del código de invitación)
+ */
+export const getApiV1AlbumIdJoinQr = async (id: string, options?: RequestInit): Promise<getApiV1AlbumIdJoinQrResponse> => {
+
+  return customFetch<getApiV1AlbumIdJoinQrResponse>(getGetApiV1AlbumIdJoinQrUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
 export type getApiV1AlbumIdShareAssignedCardResponse200ApplicationJson = {
   data: AlbumParticipantDtoShareAssignedCardResponse
   status: 200
