@@ -1,0 +1,368 @@
+definitions:
+  album_dto.CreateAlbumCardRequest:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
+    type: object
+  album_dto.CreateAlbumRequest:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/album_dto.CreateAlbumCardRequest'
+        type: array
+      title:
+        type: string
+    type: object
+  album_dto.RegisterCardRequest:
+    properties:
+      album_id:
+        type: string
+      card_id:
+        type: string
+      contact_id:
+        type: string
+      secret:
+        type: string
+    type: object
+  album_model.Album:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/card_model.Card'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: string
+      title:
+        type: string
+      total_cards:
+        type: integer
+    type: object
+  album_participant_dto.CreateAlbumParticipantRequest:
+    properties:
+      album_id:
+        type: string
+    type: object
+  album_participant_dto.ShareAssignedCardResponse:
+    properties:
+      album_id:
+        type: string
+      card_id:
+        type: string
+      contact_id:
+        type: string
+      secret:
+        type: string
+    type: object
+  album_participant_model.AlbumParticipant:
+    properties:
+      album_id:
+        type: string
+      assigned_card_id:
+        type: string
+      joined_at:
+        type: integer
+      user_id:
+        type: string
+    type: object
+  card_dto.CreateCardRequest:
+    properties:
+      album_id:
+        type: string
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
+    type: object
+  card_model.Card:
+    properties:
+      album_id:
+        type: string
+      created_at:
+        type: integer
+      description:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      number:
+        type: string
+      updated_at:
+        type: integer
+    type: object
+  sqlc.Album:
+    properties:
+      createdAt:
+        format: int64
+        type: integer
+      id:
+        type: string
+      title:
+        type: string
+      totalCards:
+        format: int64
+        type: integer
+    type: object
+  user_dto.UpdateUserRequest:
+    properties:
+      description:
+        type: string
+      email:
+        type: string
+      github:
+        type: string
+      linkedin:
+        type: string
+      name:
+        type: string
+      web:
+        type: string
+    type: object
+  user_model.User:
+    properties:
+      created_at:
+        type: integer
+      description:
+        type: string
+      email:
+        type: string
+      github:
+        type: string
+      id:
+        type: string
+      linkedin:
+        type: string
+      name:
+        type: string
+      update_at:
+        type: integer
+      web:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: MVP para intercambio de tarjetas coleccionables.
+  title: Trading Card Album API
+  version: "1.0"
+paths:
+  /api/v1/album:
+    get:
+      consumes:
+      - application/json
+      description: Get albums by user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/sqlc.Album'
+            type: array
+      tags:
+      - Album
+    post:
+      consumes:
+      - application/json
+      description: Create album
+      parameters:
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/album_dto.CreateAlbumRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/album_model.Album'
+      tags:
+      - Album
+  /api/v1/album/{id}/assigned_card:
+    get:
+      consumes:
+      - application/json
+      description: Assigned card
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/card_model.Card'
+      tags:
+      - Album
+  /api/v1/album/{id}/card:
+    get:
+      consumes:
+      - application/json
+      description: Card Pool
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/card_model.Card'
+            type: array
+      tags:
+      - Album
+  /api/v1/album/{id}/share_assigned_card:
+    get:
+      consumes:
+      - application/json
+      description: Share assigned card
+      parameters:
+      - description: Album ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: qr view
+        in: query
+        name: qr
+        type: string
+      produces:
+      - application/json
+      - image/png
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/album_participant_dto.ShareAssignedCardResponse'
+      tags:
+      - Album
+  /api/v1/album/new_card:
+    post:
+      consumes:
+      - application/json
+      description: Register new card
+      parameters:
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/album_dto.RegisterCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/card_model.Card'
+      tags:
+      - Album
+  /api/v1/album_participant:
+    post:
+      consumes:
+      - application/json
+      description: Create Album participant
+      parameters:
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/album_participant_dto.CreateAlbumParticipantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/album_participant_model.AlbumParticipant'
+      tags:
+      - Album Participant
+  /api/v1/auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Get current session user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_model.User'
+      tags:
+      - Auth
+  /api/v1/card:
+    post:
+      consumes:
+      - application/json
+      description: Create card
+      parameters:
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/card_dto.CreateCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/card_model.Card'
+      tags:
+      - Card
+  /api/v1/user/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user_dto.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_model.User'
+      tags:
+      - User
+swagger: "2.0"

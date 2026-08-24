@@ -1,0 +1,569 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "MVP para intercambio de tarjetas coleccionables.",
+        "title": "Trading Card Album API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/album": {
+            "get": {
+                "description": "Get albums by user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/sqlc.Album"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create album",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/album_dto.CreateAlbumRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/album_model.Album"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/album/new_card": {
+            "post": {
+                "description": "Register new card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/album_dto.RegisterCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/album/{id}/assigned_card": {
+            "get": {
+                "description": "Assigned card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/album/{id}/card": {
+            "get": {
+                "description": "Card Pool",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/card_model.Card"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/album/{id}/share_assigned_card": {
+            "get": {
+                "description": "Share assigned card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "image/png"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "qr view",
+                        "name": "qr",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/album_participant_dto.ShareAssignedCardResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/album_participant": {
+            "post": {
+                "description": "Create Album participant",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Album Participant"
+                ],
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/album_participant_dto.CreateAlbumParticipantRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/album_participant_model.AlbumParticipant"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "description": "Get current session user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_model.User"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/card": {
+            "post": {
+                "description": "Create card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Card"
+                ],
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/card_dto.CreateCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{id}": {
+            "put": {
+                "description": "Update user by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dto.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_model.User"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "album_dto.CreateAlbumCardRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                }
+            }
+        },
+        "album_dto.CreateAlbumRequest": {
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/album_dto.CreateAlbumCardRequest"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "album_dto.RegisterCardRequest": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                },
+                "card_id": {
+                    "type": "string"
+                },
+                "contact_id": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                }
+            }
+        },
+        "album_model.Album": {
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/card_model.Card"
+                    }
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "total_cards": {
+                    "type": "integer"
+                }
+            }
+        },
+        "album_participant_dto.CreateAlbumParticipantRequest": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "album_participant_dto.ShareAssignedCardResponse": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                },
+                "card_id": {
+                    "type": "string"
+                },
+                "contact_id": {
+                    "type": "string"
+                },
+                "secret": {
+                    "type": "string"
+                }
+            }
+        },
+        "album_participant_model.AlbumParticipant": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                },
+                "assigned_card_id": {
+                    "type": "string"
+                },
+                "joined_at": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "card_dto.CreateCardRequest": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                }
+            }
+        },
+        "card_model.Card": {
+            "type": "object",
+            "properties": {
+                "album_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sqlc.Album": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "totalCards": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "user_dto.UpdateUserRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "github": {
+                    "type": "string"
+                },
+                "linkedin": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "web": {
+                    "type": "string"
+                }
+            }
+        },
+        "user_model.User": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "github": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "linkedin": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "update_at": {
+                    "type": "integer"
+                },
+                "web": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
