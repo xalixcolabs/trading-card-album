@@ -21,7 +21,8 @@ INSERT INTO user (
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) ON CONFLICT(email) DO UPDATE SET
-    updated_at = excluded.updated_at
+    updated_at = excluded.updated_at,
+    picture = excluded.picture
 RETURNING *;
 
 -- name: UpdateUser :one

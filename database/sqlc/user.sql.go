@@ -15,7 +15,8 @@ INSERT INTO user (
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) ON CONFLICT(email) DO UPDATE SET
-    updated_at = excluded.updated_at
+    updated_at = excluded.updated_at,
+    picture = excluded.picture
 RETURNING id, name, email, github, linkedin, web, description, is_admin, picture, created_at, updated_at
 `
 

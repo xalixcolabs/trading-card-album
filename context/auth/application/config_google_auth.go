@@ -35,6 +35,7 @@ func ConfigGoogleAuth() *oauth2.Config {
 			RedirectURL:  os.Getenv("GOOGLE_REDIRECT_URL"),
 			Scopes: []string{
 				"https://www.googleapis.com/auth/userinfo.email",
+				"https://www.googleapis.com/auth/userinfo.profile",
 			},
 			Endpoint: google.Endpoint,
 		}
