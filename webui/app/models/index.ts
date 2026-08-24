@@ -15,6 +15,7 @@ export * from './albumParticipantDtoShareAssignedCardResponse';
 export * from './albumParticipantModelAlbumParticipant';
 export * from './cardDtoCreateCardRequest';
 export * from './cardModelCard';
+export * from './contactDtoContact';
 export * from './getApiV1AlbumIdShareAssignedCardParams';
 export * from './sqlcAlbum';
 export * from './userDtoUpdateUserRequest';

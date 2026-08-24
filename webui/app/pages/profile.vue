@@ -1,153 +1,139 @@
 <template>
-  <div class="p-4 flex flex-col gap-6 font-sans">
-    <!-- Header Avatar Section -->
-    <div class="mt-8 flex flex-col items-center gap-3">
-      <p class="text-xl text-base-content/60 font-semibold uppercase tracking-wider text-center">
-        Perfil de Coleccionista
-      </p>
-      <p class="text-xs text-center text-base-content/70 px-6 max-w-sm">
-        Completa tu perfil para que otros desarrolladores puedan ver tus redes al interactuar contigo.
-      </p>
-    </div>
-
-    <!-- Form Sections -->
-    <div class="flex flex-col gap-4">
-
-      <!-- Personal Information Card -->
-      <div class="card bg-base-100 shadow-md border border-base-300">
-        <div class="card-body p-5 flex flex-col gap-3.5">
-          <h3 class="font-extrabold text-sm uppercase tracking-wider text-primary">Información Personal</h3>
-
-          <!-- Name Input -->
-          <div class="flex flex-col gap-1">
-            <label class="text-[10px] font-bold text-base-content/60 uppercase tracking-wider">Nombre Completo</label>
-            <input type="text" v-model="name" placeholder="Ingresa tu nombre"
-              class="input input-bordered w-full bg-base-200" required />
-          </div>
-
-          <!-- Email Input (Prefilled from Google Login - Readonly) -->
-          <div class="flex flex-col gap-1">
-            <label class="text-[10px] font-bold text-base-content/60 uppercase tracking-wider">Correo Electrónico
-              (Google)</label>
-            <input type="email" v-model="email"
-              class="input input-bordered w-full bg-base-300 text-base-content/50 cursor-not-allowed" readonly
-              disabled />
-          </div>
-        </div>
-      </div>
-
-      <!-- Social Networks Card -->
-      <div class="card bg-base-100 shadow-md border border-base-300">
-        <div class="card-body p-5 flex flex-col gap-3.5">
-          <h3 class="font-extrabold text-sm uppercase tracking-wider text-secondary">Redes Sociales</h3>
-
-          <!-- Github Input -->
-          <div class="flex flex-col gap-1">
-            <label class="text-[10px] font-bold text-base-content/60 uppercase tracking-wider">Usuario GitHub</label>
-            <div class="relative flex items-center">
-              <span class="absolute left-3 text-lg text-base-content/50 font-mono">@</span>
-              <input type="text" v-model="github" placeholder="usuario"
-                class="input input-bordered w-full bg-base-200" />
-            </div>
-          </div>
-
-          <!-- Linkedin Input -->
-          <div class="flex flex-col gap-1">
-            <label class="text-[10px] font-bold text-base-content/60 uppercase tracking-wider">Usuario LinkedIn</label>
-            <div class="relative flex items-center">
-              <span class="absolute left-3 text-[10px] text-base-content/50 font-mono">in/</span>
-              <input type="text" v-model="linkedin" placeholder="usuario-perfil"
-                class="input input-bordered w-full bg-base-200" />
-            </div>
-          </div>
-
-          <!-- Web URL Input -->
-          <div class="flex flex-col gap-1">
-            <label class="text-[10px] font-bold text-base-content/60 uppercase tracking-wider">Sitio Web /
-              Portafolio</label>
-            <input type="url" v-model="web" placeholder="https://tuweb.com"
-              class="input input-bordered w-full bg-base-200" />
-          </div>
-        </div>
-      </div>
-
-      <div class="card bg-base-100 shadow-md border border-base-300">
-        <div class="card-body p-5 flex flex-col gap-3.5">
-          <h3 class="font-extrabold text-sm uppercase tracking-wider text-secondary">Sobre Mí</h3>
-          <div class="flex flex-col gap-1">
-            <label class="text-[10px] font-bold text-base-content/60 uppercase tracking-wider">Descripción o Dato
-              Curioso</label>
-            <textarea v-model="description" placeholder="Cuéntanos algo interesante sobre ti o tu experiencia dev..."
-              class="textarea textarea-bordered w-full h-24 bg-base-200"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Button -->
-      <button @click="handleSubmit"
-        class="btn btn-primary mb-10 w-full shadow-lg font-bold uppercase tracking-wider cursor-pointer">
-        Guardar Perfil
+  <div class="px-5 pt-4 pb-6">
+    <!-- Encabezado -->
+    <div class="flex items-center gap-2">
+      <button type="button" @click="router.back()"
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-raise text-mist ring-1 ring-edge transition-transform active:scale-90"
+        aria-label="Volver">
+        <PhArrowLeft :size="20" />
       </button>
+      <h1 class="text-xl font-bold tracking-tight text-ink">Editar perfil</h1>
     </div>
+
+    <!-- Avatar -->
+    <div class="mt-6 flex flex-col items-center">
+      <div
+        class="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-raise text-3xl font-bold text-accent ring-1 ring-edge">
+        {{ initial }}
+      </div>
+      <p class="mt-3 text-sm text-mist">Estos datos se muestran a quien escanea tu tarjeta.</p>
+    </div>
+
+    <!-- Formulario -->
+    <form class="mt-7 flex flex-col gap-6" @submit.prevent="handleSubmit">
+      <section class="flex flex-col gap-3">
+        <h2 class="text-[11px] font-semibold uppercase tracking-[0.18em] text-faint">Información</h2>
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-1.5">
+            <label for="name" class="text-[13px] font-semibold text-mist">Nombre completo</label>
+            <input id="name" v-model="name" type="text" required placeholder="Tu nombre"
+              class="rounded-xl bg-panel px-4 py-3 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="email" class="text-[13px] font-semibold text-mist">Correo (Google)</label>
+            <input id="email" v-model="email" type="email" disabled readonly
+              class="rounded-xl bg-raise/60 px-4 py-3 text-sm text-faint ring-1 ring-edge" />
+          </div>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-[11px] font-semibold uppercase tracking-[0.18em] text-faint">Redes</h2>
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-1.5">
+            <label for="github" class="text-[13px] font-semibold text-mist">GitHub</label>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-faint">@</span>
+              <input id="github" v-model="github" type="text" placeholder="usuario"
+                class="w-full rounded-xl bg-panel py-3 pl-8 pr-4 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="linkedin" class="text-[13px] font-semibold text-mist">LinkedIn</label>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-faint">in/</span>
+              <input id="linkedin" v-model="linkedin" type="text" placeholder="usuario-perfil"
+                class="w-full rounded-xl bg-panel py-3 pl-10 pr-4 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="web" class="text-[13px] font-semibold text-mist">Sitio web</label>
+            <input id="web" v-model="web" type="url" placeholder="https://tusitio.dev"
+              class="rounded-xl bg-panel px-4 py-3 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
+          </div>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-[11px] font-semibold uppercase tracking-[0.18em] text-faint">Sobre ti</h2>
+        <div class="flex flex-col gap-1.5">
+          <label for="description" class="text-[13px] font-semibold text-mist">Descripción</label>
+          <textarea id="description" v-model="description" rows="4" placeholder="Un dato curioso o tu stack favorito…"
+            class="resize-none rounded-xl bg-panel px-4 py-3 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent"></textarea>
+        </div>
+      </section>
+
+      <!-- Guardar -->
+      <button type="submit" :disabled="saving"
+        class="mt-2 w-full rounded-2xl bg-accent px-4 py-3.5 text-sm font-semibold text-accent-ink shadow-glow transition-transform active:scale-[0.97] disabled:opacity-50">
+        {{ saving ? 'Guardando…' : 'Guardar perfil' }}
+      </button>
+    </form>
   </div>
 </template>
 
-<script setup>
-import { getApiV1AuthMe } from '~/services/auth/auth';
-import { putApiV1UserId } from '~/services/user/user';
-
-const { data: profile } = useApiData(() => getApiV1AuthMe(), 'profile')
+<script setup lang="ts">
+import { PhArrowLeft } from '@phosphor-icons/vue'
+import { getApiV1AuthMe } from '~/services/auth/auth'
+import { putApiV1UserId } from '~/services/user/user'
 
 const router = useRouter()
 const toast = useToast()
+const saving = ref(false)
 
-const name = useState(() => profile.value.name ?? '')
-const email = useState(() => profile.value.email ?? 'usuario@gmail.com')
-const github = useState(() => profile.value.github ?? '')
-const linkedin = useState(() => profile.value.linkedin ?? '')
-const web = useState(() => profile.value.web ?? '')
-const description = useState(() => profile.value.description ?? '')
+const { data: profile } = useApiData(() => getApiV1AuthMe(), 'profile')
 
-watch(profile, () => {
-  name.value = profile.value.name
-  email.value = profile.value.email
-  github.value = profile.value.github
-  linkedin.value = profile.value.linkedin
-  web.value = profile.value.web
-  description.value = profile.value.description
-})
+const name = ref('')
+const email = ref('')
+const github = ref('')
+const linkedin = ref('')
+const web = ref('')
+const description = ref('')
 
-const handleSubmit = async () => {
+watch(profile, (value) => {
+  if (!value) return
+  name.value = value.name ?? ''
+  email.value = value.email ?? ''
+  github.value = value.github ?? ''
+  linkedin.value = value.linkedin ?? ''
+  web.value = value.web ?? ''
+  description.value = value.description ?? ''
+}, { immediate: true })
+
+const initial = computed(() => (name.value || '?').charAt(0).toUpperCase())
+
+async function handleSubmit() {
   if (!name.value.trim()) {
-    toast.error({
-      title: 'Error',
-      message: 'Por favor, ingresa tu nombre.'
-    })
+    toast.error({ title: 'Falta el nombre', message: 'Escribe tu nombre para continuar.' })
     return
   }
-
+  saving.value = true
   try {
-    const newData = {
-      name: name.value,
+    await putApiV1UserId(profile.value!.id!, {
+      name: name.value.trim(),
       email: email.value,
-      github: github.value,
-      linkedin: linkedin.value,
-      web: web.value,
-      description: description.value,
-    }
-    await putApiV1UserId(profile.value.id, newData)
-    toast.success({
-      title: "OK",
-      message: "Perfil actualizado con exito  "
+      github: github.value.trim(),
+      linkedin: linkedin.value.trim(),
+      web: web.value.trim(),
+      description: description.value.trim(),
     })
+    toast.success({ title: 'Perfil actualizado', message: 'Tus datos ya están guardados.' })
     await refreshNuxtData('profile')
-    navigateTo('/')
-  } catch (err) {
-    console.error('Error saving profile changes:', err)
-    toast.error({
-      title: 'Error',
-      message: 'Error al guardar el perfil. Intenta de nuevo.'
-    })
+    router.push('/')
+  } catch {
+    toast.error({ title: 'No se pudo guardar', message: 'Revisa tu conexión e inténtalo de nuevo.' })
+  } finally {
+    saving.value = false
   }
 }
 </script>

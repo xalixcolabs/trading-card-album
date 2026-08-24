@@ -1,141 +1,85 @@
 <template>
   <div>
-    <div @click="openHero"
-      class="group relative aspect-2/3 w-full rounded-2xl overflow-hidden shadow-md cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.98] border border-base-200/80 bg-base-200 text-base-content">
-      <img :src="`${card.image_url}`" :alt="card.name"
-        class="w-full h-full object-cover select-none transition-transform duration-500 group-hover:scale-105" />
+    <button type="button" @click="isOpen = true"
+      class="group relative block aspect-2/3 w-full cursor-pointer overflow-hidden rounded-card bg-raise text-left ring-1 ring-edge transition-all duration-300 hover:ring-accent/40 active:scale-[0.97]">
+      <img :src="card.image_url" :alt="card.name" loading="lazy"
+        class="h-full w-full select-none object-cover transition-transform duration-500 group-hover:scale-105" />
+
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
 
       <div
-        class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity">
+        class="absolute bottom-2 left-2 right-2 flex items-center justify-between rounded-lg border border-white/10 bg-black/45 px-2 py-1.5 backdrop-blur-sm">
+        <span class="font-mono text-[10px] font-bold text-accent tabular">#{{ card.number }}</span>
+        <span class="truncate pl-2 text-xs font-semibold text-white">{{ card.name }}</span>
       </div>
+    </button>
 
-      <div
-        class="absolute bottom-2 left-2 right-2 flex justify-between items-center bg-black/60 backdrop-blur-xs py-1 px-2.5 rounded-lg border border-white/10">
-        <span class="text-[10px] font-bold text-primary font-mono">#{{ card.number }}</span>
-        <span class="text-xs font-semibold text-primary-content truncate max-w-[80%]">{{ card.name }}</span>
-      </div>
-    </div>
-
-    <Teleport to="body">
-      <Transition name="fade">
-        <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-          @click.self="closeHero">
+    <AppSheet :is-open="isOpen" @close="isOpen = false">
+      <div class="pt-4 text-center">
+        <div class="relative mx-auto w-full max-w-[260px]">
           <div
-            class="relative w-full max-w-[320px] aspect-[2.5/3.6] bg-base-100 text-base-content rounded-2xl shadow-[0_0_35px_rgba(0,0,0,0.3)] dark:shadow-[0_0_35px_rgba(0,0,0,0.8)] border border-base-300 flex flex-col p-3.5 overflow-hidden select-none animate-card-float">
-            <div
-              class="absolute inset-0 pointer-events-none opacity-40 mix-blend-color-dodge animate-shine-sweep bg-holo-shine">
-            </div>
+            class="relative aspect-2/3 w-full overflow-hidden rounded-card border border-edge bg-raise shadow-glow">
+            <img :src="card.image_url" :alt="card.name" class="h-full w-full object-cover" />
 
-            <button @click="closeHero"
-              class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center border border-white/10 hover:border-white/20 transition-all cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent"></div>
 
-            <div
-              class="flex-1 flex flex-col justify-between border-2 border-base-300 rounded-xl p-3 h-full bg-base-100 shadow-[inset_0_0_12px_rgba(0,0,0,0.02)]">
+            <div class="pointer-events-none absolute inset-0 holo-shine"></div>
 
-              <div
-                class="flex justify-between items-center bg-base-200 px-3 py-2 rounded-lg border border-base-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
-                <span class="text-[13px] font-black text-base-content leading-tight truncate max-w-47.5">{{ card.name
-                  }}</span>
-                <span class="text-[11px] font-black font-mono text-primary">#{{ card.number }}</span>
-              </div>
-
-              <div
-                class="my-3 relative aspect-square w-full overflow-hidden rounded-lg border border-base-300 bg-base-200/50 flex items-center justify-center shadow-inner">
-                <img :src="`${card.image_url}`" :alt="card.name" class="w-full h-full object-cover" />
-              </div>
-
-              <div
-                class="flex-1 flex items-center justify-center bg-base-200/30 p-3 rounded-lg border border-base-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-                <p class="text-[11px] text-base-content/85 italic leading-relaxed text-center font-medium">
-                  {{ card.description || 'Una carta misteriosa por descubrir.' }}
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="absolute inset-0 pointer-events-none bg-linear-to-tr from-transparent via-white/5 to-transparent mix-blend-overlay">
+            <div class="absolute bottom-3 left-3 right-3 text-left">
+              <span class="font-mono text-xs font-bold text-accent tabular">#{{ card.number }}</span>
+              <h3 class="text-lg font-bold leading-tight text-white">{{ card.name }}</h3>
             </div>
           </div>
+
+          <div
+            class="pointer-events-none absolute -inset-px rounded-card ring-1 ring-inset ring-white/10">
+          </div>
         </div>
-      </Transition>
-    </Teleport>
+
+        <p class="mx-auto mt-5 max-w-[34ch] text-sm leading-relaxed text-mist">
+          {{ card.description || 'Una carta misteriosa por descubrir.' }}
+        </p>
+      </div>
+    </AppSheet>
   </div>
 </template>
 
 <script setup lang="ts">
-
-defineProps<{
+const props = defineProps<{
   card: {
-    id: string,
-    album_id: string,
-    number: string,
-    name: string,
-    description: string,
-    image_url: string,
-    created_at: number,
-    updated_at: number,
+    id: string
+    album_id: string
+    number: string
+    name: string
+    description: string
+    image_url: string
+    created_at: number
+    updated_at: number
   }
 }>()
 
-const isOpen = useState(() => false)
-
-const openHero = () => {
-  isOpen.value = true
-}
-
-const closeHero = () => {
-  isOpen.value = false
-}
+const isOpen = ref(false)
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+.holo-shine {
+  background-image: linear-gradient(115deg,
+      transparent 15%,
+      rgba(255, 255, 255, 0.14) 25%,
+      rgba(45, 212, 191, 0.14) 40%,
+      rgba(255, 255, 255, 0.14) 75%,
+      transparent 85%);
+  background-size: 200% 200%;
+  animation: holo 8s ease-in-out infinite;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-@keyframes float-card {
-  0% {
-    transform: perspective(1000px) rotateX(3deg) rotateY(-6deg) scale3d(1, 1, 1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-  }
-
-  25% {
-    transform: perspective(1000px) rotateX(-3deg) rotateY(-3deg) scale3d(1, 1, 1);
-    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.25);
-  }
-
-  50% {
-    transform: perspective(1000px) rotateX(3deg) rotateY(6deg) scale3d(1, 1, 1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-  }
-
-  75% {
-    transform: perspective(1000px) rotateX(4deg) rotateY(-3deg) scale3d(1, 1, 1);
-    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.25);
-  }
-
-  100% {
-    transform: perspective(1000px) rotateX(3deg) rotateY(-6deg) scale3d(1, 1, 1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+@media (prefers-reduced-motion: reduce) {
+  .holo-shine {
+    animation: none;
   }
 }
 
-.animate-card-float {
-  animation: float-card 7s infinite ease-in-out;
-}
-
-@keyframes shine-sweep {
+@keyframes holo {
   0% {
     background-position: 0% 0%;
   }
@@ -147,20 +91,5 @@ const closeHero = () => {
   100% {
     background-position: 0% 0%;
   }
-}
-
-.animate-shine-sweep {
-  animation: shine-sweep 7s infinite ease-in-out;
-  background-size: 200% 200%;
-}
-
-.bg-holo-shine {
-  background-image: linear-gradient(115deg,
-      transparent 15%,
-      rgba(255, 255, 255, 0.15) 25%,
-      rgba(0, 229, 255, 0.12) 40%,
-      rgba(255, 0, 128, 0.12) 60%,
-      rgba(255, 255, 255, 0.15) 75%,
-      transparent 85%);
 }
 </style>
