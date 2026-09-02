@@ -29,6 +29,7 @@ func RegisterAlbumParticipantResource(app *fiber.App) {
 // @Param		request body album_participant_dto.CreateAlbumParticipantRequest true "payload"
 // @Success		200  {object}   album_participant_model.AlbumParticipant
 // @Router /api/v1/album_participant [post]
+// @Security BearerAuth
 func createAlbumParticipant(c fiber.Ctx) error {
 	session := c.Locals("session").(user_model.User)
 	request := new(album_participant_dto.CreateAlbumParticipantRequest)

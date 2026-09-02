@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/api/v1/admin/albums": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "List all albums with stats",
                 "consumes": [
                     "application/json"
@@ -40,6 +45,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create an album with its cards",
                 "consumes": [
                     "application/json"
@@ -73,6 +83,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/albums/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update album title",
                 "consumes": [
                     "application/json"
@@ -111,6 +126,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete an album",
                 "consumes": [
                     "application/json"
@@ -142,6 +162,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/albums/{id}/cards": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get cards of an album",
                 "consumes": [
                     "application/json"
@@ -176,6 +201,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/cards": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "List all cards",
                 "consumes": [
                     "application/json"
@@ -199,6 +229,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a card in an album",
                 "consumes": [
                     "application/json"
@@ -232,6 +267,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/cards/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update a card",
                 "consumes": [
                     "application/json"
@@ -270,6 +310,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete a card",
                 "consumes": [
                     "application/json"
@@ -301,6 +346,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/overview": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get platform overview metrics",
                 "consumes": [
                     "application/json"
@@ -323,6 +373,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/users": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "List users, optionally filtered by email",
                 "consumes": [
                     "application/json"
@@ -356,6 +411,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get user detail with albums and cards",
                 "consumes": [
                     "application/json"
@@ -387,6 +447,11 @@ const docTemplate = `{
         },
         "/api/v1/admin/users/{id}/role": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update user admin role",
                 "consumes": [
                     "application/json"
@@ -427,6 +492,11 @@ const docTemplate = `{
         },
         "/api/v1/album": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get albums by user",
                 "consumes": [
                     "application/json"
@@ -450,6 +520,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create album",
                 "consumes": [
                     "application/json"
@@ -483,6 +558,11 @@ const docTemplate = `{
         },
         "/api/v1/album/new_card": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Register new card",
                 "consumes": [
                     "application/json"
@@ -516,6 +596,11 @@ const docTemplate = `{
         },
         "/api/v1/album/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get album by id",
                 "consumes": [
                     "application/json"
@@ -547,6 +632,11 @@ const docTemplate = `{
         },
         "/api/v1/album/{id}/assigned_card": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Assigned card",
                 "consumes": [
                     "application/json"
@@ -578,6 +668,11 @@ const docTemplate = `{
         },
         "/api/v1/album/{id}/card": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Card Pool",
                 "consumes": [
                     "application/json"
@@ -612,6 +707,11 @@ const docTemplate = `{
         },
         "/api/v1/album/{id}/join_qr": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get join QR of an album (encode del código de invitación)",
                 "consumes": [
                     "application/json"
@@ -643,6 +743,11 @@ const docTemplate = `{
         },
         "/api/v1/album/{id}/qr_events": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "SSE: avisa cuando el QR compartido de este álbum fue escaneado",
                 "consumes": [
                     "application/json"
@@ -674,6 +779,11 @@ const docTemplate = `{
         },
         "/api/v1/album/{id}/share_assigned_card": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Share assigned card",
                 "consumes": [
                     "application/json"
@@ -712,6 +822,11 @@ const docTemplate = `{
         },
         "/api/v1/album_participant": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create Album participant",
                 "consumes": [
                     "application/json"
@@ -745,6 +860,11 @@ const docTemplate = `{
         },
         "/api/v1/auth/me": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get current session user",
                 "consumes": [
                     "application/json"
@@ -767,6 +887,11 @@ const docTemplate = `{
         },
         "/api/v1/card": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create card",
                 "consumes": [
                     "application/json"
@@ -800,6 +925,11 @@ const docTemplate = `{
         },
         "/api/v1/contact": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "List contacts of the current user",
                 "consumes": [
                     "application/json"
@@ -825,6 +955,11 @@ const docTemplate = `{
         },
         "/api/v1/user/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update user by ID",
                 "consumes": [
                     "application/json"
@@ -1300,6 +1435,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

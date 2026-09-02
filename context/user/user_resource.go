@@ -28,6 +28,7 @@ func RegisterUserResource(app *fiber.App) {
 // @Param		request body user_dto.UpdateUserRequest true "payload"
 // @Success		200  {object}   user_model.User
 // @Router /api/v1/user/{id} [put]
+// @Security BearerAuth
 func updateUserProfile(c fiber.Ctx) error {
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)

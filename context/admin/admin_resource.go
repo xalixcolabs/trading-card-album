@@ -41,6 +41,7 @@ func RegisterAdminResource(app *fiber.App) {
 // @Produce		json
 // @Success		200  {object}   admin_dto.Overview
 // @Router /api/v1/admin/overview [get]
+// @Security BearerAuth
 func getOverview(c fiber.Ctx) error {
 	overview, err := admin_application.GetOverview(database.DefaultQuerier())
 	if err != nil {
@@ -57,6 +58,7 @@ func getOverview(c fiber.Ctx) error {
 // @Produce		json
 // @Success		200  {array}   admin_dto.Album
 // @Router /api/v1/admin/albums [get]
+// @Security BearerAuth
 func getAlbums(c fiber.Ctx) error {
 	albums, err := admin_application.ListAlbums(database.DefaultQuerier())
 	if err != nil {
@@ -74,6 +76,7 @@ func getAlbums(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {array}   card_model.Card
 // @Router /api/v1/admin/albums/{id}/cards [get]
+// @Security BearerAuth
 func getAlbumCards(c fiber.Ctx) error {
 	id := c.Params("id")
 	cards, err := admin_application.ListCardsByAlbum(database.DefaultQuerier(), id)
@@ -92,6 +95,7 @@ func getAlbumCards(c fiber.Ctx) error {
 // @Param		request body album_dto.CreateAlbumRequest true "payload"
 // @Success		200  {object}   album_model.Album
 // @Router /api/v1/admin/albums [post]
+// @Security BearerAuth
 func createAlbum(c fiber.Ctx) error {
 	request := new(album_dto.CreateAlbumRequest)
 	if err := c.Bind().JSON(request); err != nil {
@@ -115,6 +119,7 @@ func createAlbum(c fiber.Ctx) error {
 // @Param		request body admin_dto.UpdateAlbumRequest true "payload"
 // @Success		200  {object}   admin_dto.Album
 // @Router /api/v1/admin/albums/{id} [put]
+// @Security BearerAuth
 func updateAlbum(c fiber.Ctx) error {
 	id := c.Params("id")
 	request := new(admin_dto.UpdateAlbumRequest)
@@ -137,6 +142,7 @@ func updateAlbum(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {object}   admin_dto.Message
 // @Router /api/v1/admin/albums/{id} [delete]
+// @Security BearerAuth
 func deleteAlbum(c fiber.Ctx) error {
 	id := c.Params("id")
 	if err := admin_application.DeleteAlbum(database.DefaultQuerier(), id); err != nil {
@@ -154,6 +160,7 @@ func deleteAlbum(c fiber.Ctx) error {
 // @Param		email  query  string  false  "Filter by email"
 // @Success		200  {array}   admin_dto.User
 // @Router /api/v1/admin/users [get]
+// @Security BearerAuth
 func getUsers(c fiber.Ctx) error {
 	email := c.Query("email")
 	var (
@@ -180,6 +187,7 @@ func getUsers(c fiber.Ctx) error {
 // @Param		id   path  string  true  "User ID"
 // @Success		200  {object}   admin_dto.UserDetail
 // @Router /api/v1/admin/users/{id} [get]
+// @Security BearerAuth
 func getUserDetail(c fiber.Ctx) error {
 	id := c.Params("id")
 	detail, err := admin_application.GetUserDetail(database.DefaultQuerier(), id)
@@ -199,6 +207,7 @@ func getUserDetail(c fiber.Ctx) error {
 // @Param		request body admin_dto.UpdateUserRoleRequest true "payload"
 // @Success		200  {object}   admin_dto.User
 // @Router /api/v1/admin/users/{id}/role [put]
+// @Security BearerAuth
 func updateUserRole(c fiber.Ctx) error {
 	id := c.Params("id")
 	request := new(admin_dto.UpdateUserRoleRequest)
@@ -220,6 +229,7 @@ func updateUserRole(c fiber.Ctx) error {
 // @Produce		json
 // @Success		200  {array}   card_model.Card
 // @Router /api/v1/admin/cards [get]
+// @Security BearerAuth
 func getCards(c fiber.Ctx) error {
 	cards, err := admin_application.ListCards(database.DefaultQuerier())
 	if err != nil {
@@ -237,6 +247,7 @@ func getCards(c fiber.Ctx) error {
 // @Param		request body admin_dto.CreateCardRequest true "payload"
 // @Success		200  {object}   card_model.Card
 // @Router /api/v1/admin/cards [post]
+// @Security BearerAuth
 func createCard(c fiber.Ctx) error {
 	request := new(admin_dto.CreateCardRequest)
 	if err := c.Bind().JSON(request); err != nil {
@@ -259,6 +270,7 @@ func createCard(c fiber.Ctx) error {
 // @Param		request body admin_dto.UpdateCardRequest true "payload"
 // @Success		200  {object}   card_model.Card
 // @Router /api/v1/admin/cards/{id} [put]
+// @Security BearerAuth
 func updateCard(c fiber.Ctx) error {
 	id := c.Params("id")
 	request := new(admin_dto.UpdateCardRequest)
@@ -281,6 +293,7 @@ func updateCard(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Card ID"
 // @Success		200  {object}   admin_dto.Message
 // @Router /api/v1/admin/cards/{id} [delete]
+// @Security BearerAuth
 func deleteCard(c fiber.Ctx) error {
 	id := c.Params("id")
 	if err := admin_application.DeleteCard(database.DefaultQuerier(), id); err != nil {

@@ -25,6 +25,7 @@ func RegisterContactResource(app *fiber.App) {
 // @Produce		json
 // @Success		200  {array}   contact_dto.Contact
 // @Router /api/v1/contact [get]
+// @Security BearerAuth
 func listContacts(c fiber.Ctx) error {
 	session := c.Locals("session").(user_model.User)
 	contacts, err := contact_application.ListContacts(database.DefaultQuerier(), session)

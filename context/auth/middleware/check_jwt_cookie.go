@@ -3,6 +3,7 @@ package auth_middleware
 import (
 	"log"
 	"os"
+	"strings"
 
 	"com.xalixcolabs.trading-card-album/context/user/application"
 	"com.xalixcolabs.trading-card-album/database"
@@ -11,13 +12,20 @@ import (
 )
 
 func CheckJwtCoockie(c fiber.Ctx) error {
-	cookieJwt := c.Cookies("jwt")
-	if cookieJwt == "" {
+	// Aceptar el JWT desde el header Authorization (Bearer) o desde la cookie.
+	tokenString := ""
+	if auth := c.Get(fiber.HeaderAuthorization); strings.HasPrefix(auth, "Bearer ") {
+		tokenString = strings.TrimPrefix(auth, "Bearer ")
+	}
+	if tokenString == "" {
+		tokenString = c.Cookies("jwt")
+	}
+	if tokenString == "" {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"message": "Sesion invalida",
 		})
 	}
-	token, err := jwt.Parse(cookieJwt, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 	if err != nil {

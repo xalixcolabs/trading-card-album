@@ -26,6 +26,7 @@ func RegisterCardResource(app *fiber.App) {
 // @Param		request body card_dto.CreateCardRequest true "payload"
 // @Success		200 {object} card_model.Card
 // @Router /api/v1/card [post]
+// @Security BearerAuth
 func CreateCard(c fiber.Ctx) error {
 	request := new(card_dto.CreateCardRequest)
 	if err := c.Bind().JSON(request); err != nil {

@@ -44,6 +44,7 @@ func RegisterAlbumResource(app *fiber.App) {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {string}   string
 // @Router /api/v1/album/{id}/qr_events [get]
+// @Security BearerAuth
 func qrEvents(c fiber.Ctx) error {
 	sse.New(sse.Config{
 		Handler: func(c fiber.Ctx, stream *sse.Stream) error {
@@ -73,6 +74,7 @@ func qrEvents(c fiber.Ctx) error {
 // @Produce		json
 // @Success		200 {array} sqlc.Album
 // @Router /api/v1/album [get]
+// @Security BearerAuth
 func getAlbumsByUser(c fiber.Ctx) error {
 	session := c.Locals("session").(user_model.User)
 	album, err := album_application.GetAlbumsByUser(database.DefaultQuerier(), session)
@@ -91,6 +93,7 @@ func getAlbumsByUser(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {object}   album_model.Album
 // @Router /api/v1/album/{id} [get]
+// @Security BearerAuth
 func getAlbumById(c fiber.Ctx) error {
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)
@@ -111,6 +114,7 @@ func getAlbumById(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {file}   binary
 // @Router /api/v1/album/{id}/join_qr [get]
+// @Security BearerAuth
 func joinQr(c fiber.Ctx) error {
 	id := c.Params("id")
 	png, err := qrcode.Encode(id, qrcode.Medium, 256)
@@ -131,6 +135,7 @@ func joinQr(c fiber.Ctx) error {
 // @Param		request body album_dto.CreateAlbumRequest true "payload"
 // @Success		200  {object}  album_model.Album
 // @Router /api/v1/album [post]
+// @Security BearerAuth
 func createAlbum(c fiber.Ctx) error {
 	request := new(album_dto.CreateAlbumRequest)
 	if err := c.Bind().JSON(request); err != nil {
@@ -153,6 +158,7 @@ func createAlbum(c fiber.Ctx) error {
 // @Param		qr   query  string  false  "qr view"
 // @Success		200  {object}   album_participant_dto.ShareAssignedCardResponse
 // @Router /api/v1/album/{id}/share_assigned_card [get]
+// @Security BearerAuth
 func shareAssignedCard(c fiber.Ctx) error {
 	isQr := c.Query("qr")
 	id := c.Params("id")
@@ -187,6 +193,7 @@ func shareAssignedCard(c fiber.Ctx) error {
 // @Param		request body album_dto.RegisterCardRequest true "payload"
 // @Success		200 {object} card_model.Card
 // @Router /api/v1/album/new_card [post]
+// @Security BearerAuth
 func registerNewCard(c fiber.Ctx) error {
 	session := c.Locals("session").(user_model.User)
 	request := new(album_dto.RegisterCardRequest)
@@ -210,6 +217,7 @@ func registerNewCard(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {object}   card_model.Card
 // @Router /api/v1/album/{id}/assigned_card [get]
+// @Security BearerAuth
 func assignedCard(c fiber.Ctx) error {
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)
@@ -230,6 +238,7 @@ func assignedCard(c fiber.Ctx) error {
 // @Param		id   path  string  true  "Album ID"
 // @Success		200  {array}   card_model.Card
 // @Router /api/v1/album/{id}/card [get]
+// @Security BearerAuth
 func getCardPoolByAlbumId(c fiber.Ctx) error {
 	id := c.Params("id")
 	session := c.Locals("session").(user_model.User)

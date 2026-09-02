@@ -30,6 +30,7 @@ func RegisterAuthResource(app *fiber.App) {
 // @Produce		json
 // @Success		200  {object}   user_model.User
 // @Router /api/v1/auth/me [get]
+// @Security BearerAuth
 func me(c fiber.Ctx) {
 	c.JSON(c.Locals("session").(user_model.User))
 }

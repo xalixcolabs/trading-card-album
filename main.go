@@ -29,6 +29,9 @@ var embedFrontend embed.FS
 // @title          Trading Card Album API
 // @version        1.0
 // @description    MVP para intercambio de tarjetas coleccionables.
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	godotenv.Load()
 
@@ -44,7 +47,9 @@ func main() {
 	events.StartCleanup(24*time.Hour, 24*time.Hour)
 
 	app := fiber.New()
-	app.Get("/swagger/*", swaggo.HandlerDefault)
+	app.Get("/swagger/*", swaggo.New(swaggo.Config{
+		PersistAuthorization: true,
+	}))
 	registerApiResources(app)
 	registerFrontend(app, embedFrontend)
 	log.Fatal(app.Listen(":" + port))
