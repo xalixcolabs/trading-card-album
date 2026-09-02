@@ -5,8 +5,7 @@
 .env.*
 !.env.example
 
-# Artefactos de build
-build/
+# Base de datos local
 database/*.sqlite3
 *.sqlite3
 

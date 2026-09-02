@@ -17,13 +17,17 @@ Gracias por querer contribuir. Estas guías buscan que los cambios sean pequeño
 
 ## Ejecutar con Docker
 
-Alternativa a levantar el entorno local: se compila la imagen y se corre con las variables de entorno.
+Hay dos formas de obtener la imagen:
+
+- **`make docker`**: compila en local (`make build`) y **empaqueta el binario de `build/`** en una imagen **distroless** (`Dockerfile`). Solo necesita el binario ya compilado.
+- **`make docker-full`**: **compila todo dentro de Docker** (frontend + backend) con el multi-stage `Dockerfile.full`. No requiere herramientas locales.
+
+En ambos casos las variables de entorno se pasan en tiempo de ejecución (el `.env` no se copia a la imagen).
 
 ```bash
-make docker   # docker build -t trading-card-album:latest .
+make docker       # local: make build + empaquetado distroless
+make docker-full  # todo dentro de Docker
 ```
-
-> El `.env` no se copia a la imagen: **todas** las variables de entorno se pasan en tiempo de ejecución.
 
 Ejemplo de `docker-compose.yaml` (el backend expone la API + el frontend embebido en `:8080`.
 

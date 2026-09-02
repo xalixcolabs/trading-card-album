@@ -1,4 +1,4 @@
-.PHONY: build dev dev-backend dev-frontend test docker db-migrate gen-sql gen-swagger gen
+.PHONY: build dev dev-backend dev-frontend test docker docker-full db-migrate gen-sql gen-swagger gen
 
 # ==============================================================================
 # ENTORNO DE DESARROLLO
@@ -33,9 +33,13 @@ build-backend:
 build-frontend:
 	@cd webui && npm run generate
 
-docker:
-	@echo "🐳 Construyendo imagen Docker..."
+docker: build
+	@echo "🐳 Empaquetando el binario local (build/) con distroless..."
 	@docker build -t trading-card-album:latest .
+
+docker-full:
+	@echo "🐳 Construyendo todo con Docker (multi-etapa)..."
+	@docker build -f Dockerfile.full -t trading-card-album:full .
 
 # ==============================================================================
 # TESTS

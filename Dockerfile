@@ -1,43 +1,15 @@
 # syntax=docker/dockerfile:1
 
-# ------------------------------------------------------------------------
-# Etapa 1: Frontend (Nuxt). Genera webui/.output/public, que el binario
-# de Go embebe vía //go:embed.
-# ------------------------------------------------------------------------
-FROM node:22-alpine AS frontend
-WORKDIR /build/webui
+# Empaqueta el binario ya compilado en local (ver `make build`) en una imagen
+# distroless. No compila nada: solo copia build/trading-card-album.
+#
+#   make build
+#   docker build -t trading-card-album:latest .
 
-COPY webui/package.json webui/package-lock.json ./
-RUN npm ci
-
-COPY webui/ ./
-RUN npm run generate
-
-# ------------------------------------------------------------------------
-# Etapa 2: Backend (Go). Compila el binario con el frontend embebido.
-# CGO está habilitado porque dbmate (driver sqlite) depende de mattn/go-sqlite3.
-# ------------------------------------------------------------------------
-FROM golang:1.25 AS builder
-WORKDIR /build
-
-COPY go.mod go.sum ./
-RUN go mod download
-
-COPY . .
-COPY --from=frontend /build/webui/.output /build/webui/.output
-
-RUN go build -ldflags="-s -w" -o /out/trading-card-album .
-
-# ------------------------------------------------------------------------
-# Etapa 3: Runtime. Solo el binario + certificados (OAuth contra Google).
-# ------------------------------------------------------------------------
-FROM debian:bookworm-slim
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates tzdata \
-    && rm -rf /var/lib/apt/lists/*
+FROM gcr.io/distroless/base-debian12
 
 WORKDIR /app
-COPY --from=builder /out/trading-card-album /app/trading-card-album
+COPY build/trading-card-album /app/trading-card-album
 
 ENV APP_PORT=8080
 ENV DATABASE_URL=sqlite:data/trading-card-album.sqlite3
