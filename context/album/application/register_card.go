@@ -3,11 +3,13 @@ package album_application
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"time"
 
 	"com.xalixcolabs.trading-card-album/context/album/model/dto"
 	"com.xalixcolabs.trading-card-album/context/card/model"
+	"com.xalixcolabs.trading-card-album/context/events"
 	"com.xalixcolabs.trading-card-album/context/user/model"
 	"com.xalixcolabs.trading-card-album/database"
 	"com.xalixcolabs.trading-card-album/database/sqlc"
@@ -66,6 +68,10 @@ func RegisterCard(q database.Querier, user user_model.User, request album_dto.Re
 	if err != nil {
 		return card_model.Card{}, err
 	}
+	// El QR del participante cambió (secret rotado): avisar por SSE para que
+	// su cliente refresque el QR.
+	eventData, _ := json.Marshal(map[string]string{"album_id": album.ID})
+	events.Publish(contact.ID, eventData)
 	card, _ := q.GetCard(ctx, albumParticipant.AssignedCardID)
 	return card_model.NewCardFromSqlcCard(card), nil
 }

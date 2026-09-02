@@ -633,6 +633,37 @@
                 }
             }
         },
+        "/api/v1/album/{id}/qr_events": {
+            "get": {
+                "description": "SSE: avisa cuando el QR compartido de este álbum fue escaneado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/event-stream"
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/album/{id}/share_assigned_card": {
             "get": {
                 "description": "Share assigned card",

@@ -10,10 +10,12 @@ import (
 	"com.xalixcolabs.trading-card-album/context/auth/middleware"
 	"com.xalixcolabs.trading-card-album/context/card/application"
 	"com.xalixcolabs.trading-card-album/context/card_pool/application"
+	"com.xalixcolabs.trading-card-album/context/events"
 	"com.xalixcolabs.trading-card-album/context/user/model"
 	"com.xalixcolabs.trading-card-album/database"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
+	"github.com/gofiber/fiber/v3/middleware/sse"
 	"github.com/skip2/go-qrcode"
 )
 
@@ -32,6 +34,35 @@ func RegisterAlbumResource(app *fiber.App) {
 	apiv1.Get("/:id/assigned_card", assignedCard)
 	apiv1.Post("/new_card", registerNewCard)
 	apiv1.Get("/:id/share_assigned_card", shareAssignedCard)
+	apiv1.Get("/:id/qr_events", qrEvents)
+}
+
+// @Description	SSE: avisa cuando el QR compartido de este álbum fue escaneado
+// @Tags		Album
+// @Accept		json
+// @Produce		text/event-stream
+// @Param		id   path  string  true  "Album ID"
+// @Success		200  {string}   string
+// @Router /api/v1/album/{id}/qr_events [get]
+func qrEvents(c fiber.Ctx) error {
+	sse.New(sse.Config{
+		Handler: func(c fiber.Ctx, stream *sse.Stream) error {
+			session := c.Locals("session").(user_model.User)
+			ch := events.Subscribe(session.ID)
+			defer events.Unsubscribe(session.ID, ch)
+			for {
+				select {
+				case <-stream.Done():
+					return nil
+				case data := <-ch:
+					if err := stream.Event(sse.Event{Data: data}); err != nil {
+						return err
+					}
+				}
+			}
+		},
+	})(c)
+	return nil
 }
 
 // @Description	Get albums by user

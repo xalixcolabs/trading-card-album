@@ -32,7 +32,7 @@
 import { PhArrowsClockwise, PhDotOutline } from '@phosphor-icons/vue'
 import { getApiV1AlbumIdShareAssignedCard } from '~/services/album/album'
 
-const { albumId } = defineProps<{
+const props = defineProps<{
   albumId: string
   isOpen: boolean
 }>()
@@ -41,12 +41,14 @@ defineEmits<{
   (e: 'close'): void
 }>()
 
+const toast = useToast()
 const profile = useProfile()
 const imageUrl = ref<string | null>(null)
+let eventSource: EventSource | null = null
 
 const { data: qrImage, refresh: refreshQr } = useApiData(
-  () => getApiV1AlbumIdShareAssignedCard(albumId, { qr: 't' }) as any,
-  `qr-${albumId}`,
+  () => getApiV1AlbumIdShareAssignedCard(props.albumId, { qr: 't' }) as any,
+  `qr-${props.albumId}`,
 )
 
 watch(qrImage, (blob) => {
@@ -54,4 +56,27 @@ watch(qrImage, (blob) => {
     imageUrl.value = URL.createObjectURL(blob as any)
   }
 }, { immediate: true })
+
+watch(() => props.isOpen, (open) => {
+  if (open) {
+    connectQrEvents()
+  } else {
+    eventSource?.close()
+    eventSource = null
+  }
+})
+
+function connectQrEvents() {
+  if (eventSource) return
+  eventSource = new EventSource(`/api/v1/album/${props.albumId}/qr_events`)
+  eventSource.addEventListener('message', async (event) => {
+    try {
+      const payload = JSON.parse(event.data)
+      if (payload?.album_id === props.albumId) {
+        toast.info({ title: 'QR escaneado', message: 'Tu tarjeta fue agregada; tu código se renovó.' })
+        await refreshQr()
+      }
+    } catch { }
+  })
+}
 </script>
