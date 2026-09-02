@@ -48,13 +48,15 @@ func qrEvents(c fiber.Ctx) error {
 	sse.New(sse.Config{
 		Handler: func(c fiber.Ctx, stream *sse.Stream) error {
 			session := c.Locals("session").(user_model.User)
-			ch := events.Subscribe(session.ID)
-			defer events.Unsubscribe(session.ID, ch)
+			sub := events.Subscribe(session.ID)
+			defer events.Unsubscribe(session.ID, sub)
 			for {
 				select {
 				case <-stream.Done():
 					return nil
-				case data := <-ch:
+				case <-sub.Closed:
+					return nil
+				case data := <-sub.Data:
 					if err := stream.Event(sse.Event{Data: data}); err != nil {
 						return err
 					}

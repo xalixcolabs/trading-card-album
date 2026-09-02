@@ -7,12 +7,14 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"com.xalixcolabs.trading-card-album/context/album"
 	"com.xalixcolabs.trading-card-album/context/album_participant"
 	"com.xalixcolabs.trading-card-album/context/admin"
 	"com.xalixcolabs.trading-card-album/context/auth"
 	"com.xalixcolabs.trading-card-album/context/contact"
+	"com.xalixcolabs.trading-card-album/context/events"
 	"com.xalixcolabs.trading-card-album/context/user"
 	"com.xalixcolabs.trading-card-album/database"
 	_ "com.xalixcolabs.trading-card-album/docs"
@@ -37,6 +39,9 @@ func main() {
 	}
 
 	database.RunMigrations()
+
+	// Limpieza periódica de suscripciones SSE inactivas (cada 24 horas).
+	events.StartCleanup(24*time.Hour, 24*time.Hour)
 
 	app := fiber.New()
 	app.Get("/swagger/*", swaggo.HandlerDefault)

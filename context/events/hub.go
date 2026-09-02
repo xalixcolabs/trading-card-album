@@ -1,49 +1,116 @@
 package events
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
-// Hub es un pub/sub en memoria para notificaciones por SSE. Permite
-// publicar eventos dirigidos a un usuario (p. ej. "tu QR fue escaneado")
-// y que sus conexiones SSE los reciban.
-type Hub struct {
-	mu   sync.RWMutex
-	subs map[string]map[chan []byte]struct{}
+// Subscription representa una conexión SSE suscrita a eventos de un usuario.
+// Data recibe los eventos; Closed se cierra cuando el hub decide eliminarla
+// (p. ej. limpieza por inactividad), indicando al consumidor que cierre.
+type Subscription struct {
+	Data     chan []byte
+	Closed   chan struct{}
+	lastSeen int64
+	once     sync.Once
 }
 
-var globalHub = &Hub{subs: make(map[string]map[chan []byte]struct{})}
+// Hub es un pub/sub en memoria para notificaciones por SSE, dirigido por
+// usuario. Permite publicar eventos (p. ej. "tu QR fue escaneado") y limpiar
+// suscripciones inactivas de forma periódica.
+type Hub struct {
+	mu   sync.RWMutex
+	subs map[string]map[*Subscription]struct{}
+}
 
-// Subscribe registra un canal para recibir eventos del usuario y lo devuelve.
-func Subscribe(userID string) chan []byte {
-	ch := make(chan []byte, 1)
+var globalHub = &Hub{subs: make(map[string]map[*Subscription]struct{})}
+
+// Subscribe registra una suscripción para el usuario y la devuelve.
+func Subscribe(userID string) *Subscription {
+	sub := &Subscription{
+		Data:     make(chan []byte, 1),
+		Closed:   make(chan struct{}),
+		lastSeen: time.Now().UnixMilli(),
+	}
 	globalHub.mu.Lock()
 	defer globalHub.mu.Unlock()
 	if globalHub.subs[userID] == nil {
-		globalHub.subs[userID] = make(map[chan []byte]struct{})
+		globalHub.subs[userID] = make(map[*Subscription]struct{})
 	}
-	globalHub.subs[userID][ch] = struct{}{}
-	return ch
+	globalHub.subs[userID][sub] = struct{}{}
+	return sub
 }
 
-// Unsubscribe elimina el canal del usuario.
-func Unsubscribe(userID string, ch chan []byte) {
+// Unsubscribe elimina la suscripción del usuario sin señalizar cierre.
+func Unsubscribe(userID string, sub *Subscription) {
 	globalHub.mu.Lock()
 	defer globalHub.mu.Unlock()
-	if subs, ok := globalHub.subs[userID]; ok {
-		delete(subs, ch)
-		if len(subs) == 0 {
-			delete(globalHub.subs, userID)
+	deleteSubscriptionLocked(userID, sub)
+}
+
+// Publish envía data a las suscripciones del usuario sin bloquear y marca su
+// última actividad.
+func Publish(userID string, data []byte) {
+	globalHub.mu.Lock()
+	defer globalHub.mu.Unlock()
+	now := time.Now().UnixMilli()
+	for sub := range globalHub.subs[userID] {
+		select {
+		case sub.Data <- data:
+			sub.lastSeen = now
+		default:
 		}
 	}
 }
 
-// Publish envía data a todos los suscriptores del usuario sin bloquear.
-func Publish(userID string, data []byte) {
-	globalHub.mu.RLock()
-	defer globalHub.mu.RUnlock()
-	for ch := range globalHub.subs[userID] {
-		select {
-		case ch <- data:
-		default:
+// Cleanup elimina las suscripciones inactivas (sin actividad en maxIdle) y
+// cierra su canal Closed para que el consumidor SSE cierre; el cliente se
+// reconecta vía EventSource.
+func Cleanup(maxIdle time.Duration) {
+	globalHub.cleanup(maxIdle)
+}
+
+func (h *Hub) cleanup(maxIdle time.Duration) {
+	cutoff := time.Now().Add(-maxIdle).UnixMilli()
+
+	h.mu.RLock()
+	type target struct {
+		userID string
+		sub    *Subscription
+	}
+	var targets []target
+	for userID, subs := range h.subs {
+		for sub := range subs {
+			if sub.lastSeen < cutoff {
+				targets = append(targets, target{userID: userID, sub: sub})
+			}
+		}
+	}
+	h.mu.RUnlock()
+
+	for _, t := range targets {
+		t.sub.once.Do(func() { close(t.sub.Closed) })
+		h.mu.Lock()
+		deleteSubscriptionLocked(t.userID, t.sub)
+		h.mu.Unlock()
+	}
+}
+
+// StartCleanup ejecuta Cleanup cada interval en segundo plano.
+func StartCleanup(interval, maxIdle time.Duration) {
+	ticker := time.NewTicker(interval)
+	go func() {
+		for range ticker.C {
+			globalHub.cleanup(maxIdle)
+		}
+	}()
+}
+
+func deleteSubscriptionLocked(userID string, sub *Subscription) {
+	if subs, ok := globalHub.subs[userID]; ok {
+		delete(subs, sub)
+		if len(subs) == 0 {
+			delete(globalHub.subs, userID)
 		}
 	}
 }
