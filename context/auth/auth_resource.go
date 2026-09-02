@@ -85,7 +85,7 @@ func callback(c fiber.Ctx) error {
 		HTTPOnly: false,
 		Secure:   true,
 		SameSite: "Lax",
-		Domain:   "localhost",
+		Domain:   c.Hostname(),
 	})
 	return c.Redirect().To("/")
 }
