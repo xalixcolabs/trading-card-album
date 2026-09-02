@@ -31,17 +31,20 @@ RUN go build -ldflags="-s -w" -o /out/trading-card-album .
 # ------------------------------------------------------------------------
 # Etapa 3: Runtime. Solo el binario + certificados (OAuth contra Google).
 # ------------------------------------------------------------------------
-FROM debian:bookworm-slim
+FROM docker.io/debian:bookworm-slim
+
+WORKDIR /app
+
+# Instalar certificados CA por si tu app hace peticiones HTTPS
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates tzdata \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-COPY --from=builder /out/trading-card-album /app/trading-card-album
+COPY --from=builder /out /app
 
 ENV APP_PORT=8080
-ENV DATABASE_URL=sqlite:data/trading-card-album.sqlite3
+ENV DATABASE_URL=sqlite:database/trading-card-album.sqlite3
 
 EXPOSE 8080
 
-CMD ["/app/trading-card-album"]
+ENTRYPOINT ["/app/trading-card-album"]
