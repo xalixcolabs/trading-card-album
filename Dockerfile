@@ -2,18 +2,21 @@
 
 # Empaqueta el binario ya compilado en local (ver `make build`) en una imagen
 # distroless. No compila nada: solo copia build/trading-card-album.
-#
-#   make build
-#   docker build -t trading-card-album:latest .
+# $ make build docker
 
-FROM gcr.io/distroless/base-debian12
+FROM docker.io/debian:bookworm-slim
 
 WORKDIR /app
-COPY build/trading-card-album /app/trading-card-album
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY build/ .
 
 ENV APP_PORT=8080
-ENV DATABASE_URL=sqlite:data/trading-card-album.sqlite3
+ENV DATABASE_URL=sqlite:database/trading-card-album.sqlite3
 
 EXPOSE 8080
 
-CMD ["/app/trading-card-album"]
+ENTRYPOINT ["/app/trading-card-album"]

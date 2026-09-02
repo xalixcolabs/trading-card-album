@@ -35,7 +35,6 @@ FROM docker.io/debian:bookworm-slim
 
 WORKDIR /app
 
-# Instalar certificados CA por si tu app hace peticiones HTTPS
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates tzdata \
     && rm -rf /var/lib/apt/lists/*
