@@ -5,6 +5,12 @@
 # Artefactos de build
 build/
 
+# Assets servidos por nginx (no se versionan)
+cards/
+
+# Infraestructura local
+docker-compose.yaml
+
 # Base de datos local
 *.sqlite3
 database/*.sqlite3
