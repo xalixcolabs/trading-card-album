@@ -33,7 +33,7 @@ build-backend:
 build-frontend:
 	@cd webui && npm run generate
 
-docker: build
+docker:
 	@echo "🐳 Empaquetando el binario local (build/) con distroless..."
 	@docker build -t trading-card-album:latest .
 
