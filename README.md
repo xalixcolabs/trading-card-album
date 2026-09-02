@@ -36,4 +36,4 @@ Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
-Hecho con ❤️ por **XalixcoLabs**.
+Hecho con 💚 por **Xalixco Labs**.
