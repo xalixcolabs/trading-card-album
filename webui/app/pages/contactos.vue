@@ -39,9 +39,17 @@
             </div>
           </div>
 
-          <p v-if="contact.description" class="px-4 pb-1 text-[13px] leading-snug text-mist/90">
+          <p v-if="contact.description"
+            :class="expanded.has(contact.user_id) ? '' : 'line-clamp-3'"
+            class="px-4 pb-1 text-[13px] leading-snug text-mist/90">
             {{ contact.description }}
           </p>
+
+          <button v-if="contact.description && (contact.description?.length ?? 0) > 90"
+            type="button" @click="toggleExpanded(contact.user_id)"
+            class="px-4 pb-2 pt-0.5 text-left text-xs font-semibold text-accent transition-transform active:scale-95">
+            {{ expanded.has(contact.user_id) ? 'Ver menos' : 'Ver más' }}
+          </button>
 
           <div class="flex flex-wrap gap-2 border-t border-edge-soft px-4 py-3">
             <a v-if="contact.github" :href="`https://github.com/${contact.github}`" target="_blank" rel="noopener"
@@ -100,8 +108,20 @@ import { getApiV1Contact } from '~/services/contact/contact'
 
 const scannerOpen = ref(false)
 const search = ref('')
+const expanded = ref<Set<string>>(new Set())
 
 const { data: contacts, pending, refresh: refreshContacts } = useApiData(() => getApiV1Contact(), 'contacts')
+
+function toggleExpanded(id?: string) {
+  if (!id) return
+  const next = new Set(expanded.value)
+  if (next.has(id)) {
+    next.delete(id)
+  } else {
+    next.add(id)
+  }
+  expanded.value = next
+}
 
 const filteredContacts = computed(() => {
   const query = search.value.trim().toLowerCase()
