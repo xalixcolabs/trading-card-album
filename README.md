@@ -36,4 +36,4 @@ Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
-Hecho con ❤️ por el **GDG Guadalajara**.
+Hecho con ❤️ por **XalixcoLabs**.
