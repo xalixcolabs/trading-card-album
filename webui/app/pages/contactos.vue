@@ -6,8 +6,15 @@
     </div>
 
     <div class="mt-6">
+      <!-- Buscador local -->
+      <div v-if="contacts && contacts.length" class="relative">
+        <PhMagnifyingGlass :size="17" class="absolute left-4 top-1/2 -translate-y-1/2 text-faint" />
+        <input v-model="search" type="search" placeholder="Buscar por nombre o correo…"
+          class="w-full rounded-xl bg-panel py-3 pl-11 pr-4 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
+      </div>
+
       <!-- Loading -->
-      <div v-if="pending" class="flex flex-col gap-3">
+      <div v-if="pending" class="mt-4 flex flex-col gap-3">
         <div v-for="i in 4" :key="i" class="flex animate-pulse items-center gap-3 rounded-2xl bg-raise p-4 ring-1 ring-edge">
           <div class="h-12 w-12 rounded-2xl bg-panel"></div>
           <div class="flex-1 space-y-2">
@@ -18,8 +25,8 @@
       </div>
 
       <!-- Lista -->
-      <div v-else-if="contacts && contacts.length" class="flex flex-col gap-3">
-        <div v-for="contact in contacts" :key="contact.user_id"
+      <div v-else-if="filteredContacts.length" class="mt-4 flex flex-col gap-3">
+        <div v-for="contact in filteredContacts" :key="contact.user_id"
           class="overflow-hidden rounded-2xl bg-raise ring-1 ring-edge transition-transform active:scale-[0.99]">
           <div class="flex items-center gap-3 p-4">
             <div class="h-12 w-12 shrink-0 overflow-hidden rounded-2xl ring-1 ring-edge">
@@ -31,6 +38,10 @@
               <p class="mt-0.5 text-[11px] text-faint">Conocido el {{ dateOf(contact.scanned_at) }}</p>
             </div>
           </div>
+
+          <p v-if="contact.description" class="px-4 pb-1 text-[13px] leading-snug text-mist/90">
+            {{ contact.description }}
+          </p>
 
           <div class="flex flex-wrap gap-2 border-t border-edge-soft px-4 py-3">
             <a v-if="contact.github" :href="`https://github.com/${contact.github}`" target="_blank" rel="noopener"
@@ -49,6 +60,17 @@
               class="text-xs italic text-faint">Aún sin redes públicas</span>
           </div>
         </div>
+      </div>
+
+      <!-- Sin resultados de búsqueda -->
+      <div v-else-if="contacts && contacts.length" class="mt-4 overflow-hidden rounded-3xl border border-dashed border-edge bg-raise/60 p-6 text-center">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-accent">
+          <PhMagnifyingGlass :size="26" weight="duotone" />
+        </div>
+        <h2 class="mt-4 text-lg font-bold text-ink">Sin resultados</h2>
+        <p class="mx-auto mt-1 max-w-[34ch] text-sm leading-relaxed text-mist">
+          No hay contactos que coincidan con «{{ search }}».
+        </p>
       </div>
 
       <!-- Vacío -->
@@ -73,11 +95,23 @@
 </template>
 
 <script setup lang="ts">
-import { PhGlobe, PhGithubLogo, PhLinkedinLogo, PhScan, PhUsers } from '@phosphor-icons/vue'
+import { PhGlobe, PhGithubLogo, PhLinkedinLogo, PhMagnifyingGlass, PhScan, PhUsers } from '@phosphor-icons/vue'
 import { getApiV1Contact } from '~/services/contact/contact'
 
 const scannerOpen = ref(false)
+const search = ref('')
+
 const { data: contacts, pending, refresh: refreshContacts } = useApiData(() => getApiV1Contact(), 'contacts')
+
+const filteredContacts = computed(() => {
+  const query = search.value.trim().toLowerCase()
+  if (!query) return contacts.value ?? []
+  return (contacts.value ?? []).filter(contact => {
+    const name = (contact.name || '').toLowerCase()
+    const email = (contact.email || '').toLowerCase()
+    return name.includes(query) || email.includes(query)
+  })
+})
 
 function dateOf(unix?: number) {
   if (!unix) return '—'
