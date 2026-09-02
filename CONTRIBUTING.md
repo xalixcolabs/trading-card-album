@@ -25,7 +25,7 @@ make docker   # docker build -t trading-card-album:latest .
 
 > El `.env` no se copia a la imagen: **todas** las variables de entorno se pasan en tiempo de ejecución.
 
-Ejemplo de `docker-compose.yaml` (el backend expone la API + el frontend embebido en `:8080`, y opcionalmente nginx sirve las imágenes de las tarjetas desde `./cards` en `:8081`):
+Ejemplo de `docker-compose.yaml` (el backend expone la API + el frontend embebido en `:8080`.
 
 ```yaml
 services:
@@ -48,20 +48,9 @@ services:
       - tca-data:/app/data
     restart: unless-stopped
 
-  nginx:
-    image: nginx:alpine
-    container_name: tca_cards
-    ports:
-      - "8081:80"
-    volumes:
-      - ./cards:/usr/share/nginx/html:ro,z
-    restart: unless-stopped
-
 volumes:
   tca-data:
 ```
-
-- Si las URLs de las imágenes de tus tarjetas usan `http://localhost:8081/...`, corre también el servicio `nginx`.
 - `GOOGLE_REDIRECT_URL` debe coincidir con el origen desde el que se abre la app (en este ejemplo `http://localhost:8080`).
 
 ## Flujo de trabajo git
