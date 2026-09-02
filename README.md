@@ -1,4 +1,8 @@
-# Trading Card Album
+<h1>
+<img src="webui/public/favicon.png" width="80" />
+<sup><sub>Trading Card Album</sub>
+</sup>
+</h1>
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
 

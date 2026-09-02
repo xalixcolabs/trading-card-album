@@ -7,6 +7,11 @@ export default defineNuxtConfig({
   ssr: false,
   css: ['./app/assets/css/main.css'],
   app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' }
+      ]
+    },
     pageTransition: { name: 'page', mode: 'out-in' },
     // Los assets salen en /assets en vez de /_nuxt porque go:embed
     // excluye directorios que empiezan con "_".
