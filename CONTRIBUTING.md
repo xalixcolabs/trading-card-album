@@ -15,6 +15,55 @@ Gracias por querer contribuir. Estas guías buscan que los cambios sean pequeño
 3. Requisitos de herramientas: **sqlc**, **swag**, y opcionalmente **dbmate** (CLI).
 4. Corre `make dev` y verifica que todo arranca.
 
+## Ejecutar con Docker
+
+Alternativa a levantar el entorno local: se compila la imagen y se corre con las variables de entorno.
+
+```bash
+make docker   # docker build -t trading-card-album:latest .
+```
+
+> El `.env` no se copia a la imagen: **todas** las variables de entorno se pasan en tiempo de ejecución.
+
+Ejemplo de `docker-compose.yaml` (el backend expone la API + el frontend embebido en `:8080`, y opcionalmente nginx sirve las imágenes de las tarjetas desde `./cards` en `:8081`):
+
+```yaml
+services:
+  app:
+    image: trading-card-album:latest
+    container_name: tca_app
+    ports:
+      - "8080:8080"
+    environment:
+      APP_PORT: "8080"
+      DATABASE_URL: "sqlite:data/trading-card-album.sqlite3"
+      TCA_ADMINS: "admin@example.com"
+      JWT_SECRET: "cambia-este-secreto"
+      GOOGLE_CLIENT_ID: "xxxx.apps.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "xxxx"
+      # El origen de la app: apunta al host/puerto donde se accede al contenedor.
+      GOOGLE_REDIRECT_URL: "http://localhost:8080/api/v1/auth/google/callback"
+    volumes:
+      # Persistencia de la base de datos SQLite.
+      - tca-data:/app/data
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: tca_cards
+    ports:
+      - "8081:80"
+    volumes:
+      - ./cards:/usr/share/nginx/html:ro,z
+    restart: unless-stopped
+
+volumes:
+  tca-data:
+```
+
+- Si las URLs de las imágenes de tus tarjetas usan `http://localhost:8081/...`, corre también el servicio `nginx`.
+- `GOOGLE_REDIRECT_URL` debe coincidir con el origen desde el que se abre la app (en este ejemplo `http://localhost:8080`).
+
 ## Flujo de trabajo git
 
 - Trabaja en una **rama** descriptiva (`feat/...`, `fix/...`, `refactor/...`).
