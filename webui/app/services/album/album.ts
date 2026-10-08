@@ -227,6 +227,41 @@ export const getApiV1AlbumIdJoinQr = async (id: string, options?: RequestInit): 
 );}
 
 
+export type getApiV1AlbumIdQrEventsResponse200 = {
+  data: string
+  status: 200
+}
+
+export type getApiV1AlbumIdQrEventsResponseSuccess = (getApiV1AlbumIdQrEventsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiV1AlbumIdQrEventsResponse = (getApiV1AlbumIdQrEventsResponseSuccess)
+
+export const getGetApiV1AlbumIdQrEventsUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/album/${id}/qr_events`
+}
+
+/**
+ * SSE: avisa cuando el QR compartido de este álbum fue escaneado
+ */
+export const getApiV1AlbumIdQrEvents = async (id: string, options?: RequestInit): Promise<getApiV1AlbumIdQrEventsResponse> => {
+
+  return customFetch<getApiV1AlbumIdQrEventsResponse>(getGetApiV1AlbumIdQrEventsUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
 export type getApiV1AlbumIdShareAssignedCardResponse200ApplicationJson = {
   data: AlbumParticipantDtoShareAssignedCardResponse
   status: 200
