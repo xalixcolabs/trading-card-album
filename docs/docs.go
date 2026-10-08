@@ -1124,6 +1124,9 @@ const docTemplate = `{
                 "album_id": {
                     "type": "string"
                 },
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1188,6 +1191,9 @@ const docTemplate = `{
         "admin_dto.UpdateCardRequest": {
             "type": "object",
             "properties": {
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1271,6 +1277,9 @@ const docTemplate = `{
         "album_dto.CreateAlbumCardRequest": {
             "type": "object",
             "properties": {
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1387,6 +1396,9 @@ const docTemplate = `{
                 "album_id": {
                     "type": "string"
                 },
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1406,6 +1418,9 @@ const docTemplate = `{
             "properties": {
                 "album_id": {
                     "type": "string"
+                },
+                "auto_assignable": {
+                    "type": "boolean"
                 },
                 "created_at": {
                     "type": "integer"

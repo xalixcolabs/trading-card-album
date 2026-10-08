@@ -21,6 +21,8 @@ definitions:
     properties:
       album_id:
         type: string
+      auto_assignable:
+        type: boolean
       description:
         type: string
       image_url:
@@ -62,6 +64,8 @@ definitions:
     type: object
   admin_dto.UpdateCardRequest:
     properties:
+      auto_assignable:
+        type: boolean
       description:
         type: string
       image_url:
@@ -116,6 +120,8 @@ definitions:
     type: object
   album_dto.CreateAlbumCardRequest:
     properties:
+      auto_assignable:
+        type: boolean
       description:
         type: string
       image_url:
@@ -191,6 +197,8 @@ definitions:
     properties:
       album_id:
         type: string
+      auto_assignable:
+        type: boolean
       description:
         type: string
       image_url:
@@ -204,6 +212,8 @@ definitions:
     properties:
       album_id:
         type: string
+      auto_assignable:
+        type: boolean
       created_at:
         type: integer
       description:

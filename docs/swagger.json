@@ -1116,6 +1116,9 @@
                 "album_id": {
                     "type": "string"
                 },
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1180,6 +1183,9 @@
         "admin_dto.UpdateCardRequest": {
             "type": "object",
             "properties": {
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1263,6 +1269,9 @@
         "album_dto.CreateAlbumCardRequest": {
             "type": "object",
             "properties": {
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1379,6 +1388,9 @@
                 "album_id": {
                     "type": "string"
                 },
+                "auto_assignable": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1398,6 +1410,9 @@
             "properties": {
                 "album_id": {
                     "type": "string"
+                },
+                "auto_assignable": {
+                    "type": "boolean"
                 },
                 "created_at": {
                     "type": "integer"
