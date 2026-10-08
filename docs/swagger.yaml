@@ -12,6 +12,11 @@ definitions:
       total_cards:
         type: integer
     type: object
+  admin_dto.AssignCardRequest:
+    properties:
+      card_id:
+        type: string
+    type: object
   admin_dto.CreateCardRequest:
     properties:
       album_id:
@@ -558,6 +563,34 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/admin_dto.UserDetail'
+      security:
+      - BearerAuth: []
+      tags:
+      - Admin
+  /api/v1/admin/users/{id}/cards:
+    post:
+      consumes:
+      - application/json
+      description: Assign a specific card to a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin_dto.AssignCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/card_model.Card'
       security:
       - BearerAuth: []
       tags:

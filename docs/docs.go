@@ -445,6 +445,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/admin/users/{id}/cards": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Assign a specific card to a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.AssignCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/admin/users/{id}/role": {
             "put": {
                 "security": [
@@ -1017,6 +1062,14 @@ const docTemplate = `{
                 },
                 "total_cards": {
                     "type": "integer"
+                }
+            }
+        },
+        "admin_dto.AssignCardRequest": {
+            "type": "object",
+            "properties": {
+                "card_id": {
+                    "type": "string"
                 }
             }
         },
