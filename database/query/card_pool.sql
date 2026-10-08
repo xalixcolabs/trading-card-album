@@ -1,8 +1,9 @@
 -- name: GetRandomAvailableCard :one
-SELECT card_id 
-FROM card_pool 
-WHERE album_id = ? AND is_drawn = 0 
-ORDER BY RANDOM() 
+SELECT cp.card_id
+FROM card_pool cp
+JOIN card c ON c.id = cp.card_id
+WHERE cp.album_id = ? AND cp.is_drawn = 0 AND c.auto_assignable = 1
+ORDER BY RANDOM()
 LIMIT 1;
 
 -- name: ResetCardPool :one

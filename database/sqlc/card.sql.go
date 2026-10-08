@@ -11,21 +11,22 @@ import (
 
 const createCard = `-- name: CreateCard :one
 INSERT INTO card (
-  id, album_id, number, name, description, image_url, created_at, updated_at
+  id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?
-) RETURNING id, album_id, number, name, description, image_url, created_at, updated_at
+  ?, ?, ?, ?, ?, ?, ?, ?, ?
+) RETURNING id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at
 `
 
 type CreateCardParams struct {
-	ID          string
-	AlbumID     string
-	Number      string
-	Name        string
-	Description string
-	ImageUrl    string
-	CreatedAt   int64
-	UpdatedAt   int64
+	ID             string
+	AlbumID        string
+	Number         string
+	Name           string
+	Description    string
+	ImageUrl       string
+	AutoAssignable int64
+	CreatedAt      int64
+	UpdatedAt      int64
 }
 
 func (q *Queries) CreateCard(ctx context.Context, arg CreateCardParams) (Card, error) {
@@ -36,6 +37,7 @@ func (q *Queries) CreateCard(ctx context.Context, arg CreateCardParams) (Card, e
 		arg.Name,
 		arg.Description,
 		arg.ImageUrl,
+		arg.AutoAssignable,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
@@ -47,6 +49,7 @@ func (q *Queries) CreateCard(ctx context.Context, arg CreateCardParams) (Card, e
 		&i.Name,
 		&i.Description,
 		&i.ImageUrl,
+		&i.AutoAssignable,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -74,7 +77,7 @@ func (q *Queries) DeleteCardsByAlbumId(ctx context.Context, albumID string) erro
 }
 
 const getCard = `-- name: GetCard :one
-SELECT id, album_id, number, name, description, image_url, created_at, updated_at FROM card
+SELECT id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at FROM card
 WHERE id = ? LIMIT 1
 `
 
@@ -88,6 +91,7 @@ func (q *Queries) GetCard(ctx context.Context, id string) (Card, error) {
 		&i.Name,
 		&i.Description,
 		&i.ImageUrl,
+		&i.AutoAssignable,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -95,7 +99,7 @@ func (q *Queries) GetCard(ctx context.Context, id string) (Card, error) {
 }
 
 const listCards = `-- name: ListCards :many
-SELECT id, album_id, number, name, description, image_url, created_at, updated_at FROM card
+SELECT id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at FROM card
 ORDER BY number
 `
 
@@ -115,6 +119,7 @@ func (q *Queries) ListCards(ctx context.Context) ([]Card, error) {
 			&i.Name,
 			&i.Description,
 			&i.ImageUrl,
+			&i.AutoAssignable,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -132,7 +137,7 @@ func (q *Queries) ListCards(ctx context.Context) ([]Card, error) {
 }
 
 const listCardsByAlbumId = `-- name: ListCardsByAlbumId :many
-SELECT id, album_id, number, name, description, image_url, created_at, updated_at FROM card
+SELECT id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at FROM card
 WHERE album_id = ?
 ORDER BY number
 `
@@ -153,6 +158,7 @@ func (q *Queries) ListCardsByAlbumId(ctx context.Context, albumID string) ([]Car
 			&i.Name,
 			&i.Description,
 			&i.ImageUrl,
+			&i.AutoAssignable,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -176,19 +182,21 @@ SET album_id = ?,
     name = ?,
     description = ?,
     image_url = ?,
+    auto_assignable = ?,
     updated_at = ?
 WHERE id = ?
-RETURNING id, album_id, number, name, description, image_url, created_at, updated_at
+RETURNING id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at
 `
 
 type UpdateCardParams struct {
-	AlbumID     string
-	Number      string
-	Name        string
-	Description string
-	ImageUrl    string
-	UpdatedAt   int64
-	ID          string
+	AlbumID        string
+	Number         string
+	Name           string
+	Description    string
+	ImageUrl       string
+	AutoAssignable int64
+	UpdatedAt      int64
+	ID             string
 }
 
 func (q *Queries) UpdateCard(ctx context.Context, arg UpdateCardParams) (Card, error) {
@@ -198,6 +206,7 @@ func (q *Queries) UpdateCard(ctx context.Context, arg UpdateCardParams) (Card, e
 		arg.Name,
 		arg.Description,
 		arg.ImageUrl,
+		arg.AutoAssignable,
 		arg.UpdatedAt,
 		arg.ID,
 	)
@@ -209,6 +218,7 @@ func (q *Queries) UpdateCard(ctx context.Context, arg UpdateCardParams) (Card, e
 		&i.Name,
 		&i.Description,
 		&i.ImageUrl,
+		&i.AutoAssignable,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

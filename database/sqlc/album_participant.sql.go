@@ -78,7 +78,7 @@ func (q *Queries) GetAlbumParticipant(ctx context.Context, arg GetAlbumParticipa
 }
 
 const getCardByAlbumParticipant = `-- name: GetCardByAlbumParticipant :one
-SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.created_at, c.updated_at
+SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.auto_assignable, c.created_at, c.updated_at
 FROM album_participant ap
 JOIN card c ON ap.assigned_card_id = c.id
 WHERE ap.album_id = ?
@@ -102,6 +102,7 @@ func (q *Queries) GetCardByAlbumParticipant(ctx context.Context, arg GetCardByAl
 		&i.Name,
 		&i.Description,
 		&i.ImageUrl,
+		&i.AutoAssignable,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

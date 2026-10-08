@@ -20,14 +20,15 @@ type AlbumParticipant struct {
 }
 
 type Card struct {
-	ID          string
-	AlbumID     string
-	Number      string
-	Name        string
-	Description string
-	ImageUrl    string
-	CreatedAt   int64
-	UpdatedAt   int64
+	ID             string
+	AlbumID        string
+	Number         string
+	Name           string
+	Description    string
+	ImageUrl       string
+	AutoAssignable int64
+	CreatedAt      int64
+	UpdatedAt      int64
 }
 
 type CardPool struct {

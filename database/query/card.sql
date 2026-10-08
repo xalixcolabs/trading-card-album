@@ -13,9 +13,9 @@ ORDER BY number;
 
 -- name: CreateCard :one
 INSERT INTO card (
-  id, album_id, number, name, description, image_url, created_at, updated_at
+  id, album_id, number, name, description, image_url, auto_assignable, created_at, updated_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) RETURNING *;
 
 -- name: UpdateCard :one
@@ -25,6 +25,7 @@ SET album_id = ?,
     name = ?,
     description = ?,
     image_url = ?,
+    auto_assignable = ?,
     updated_at = ?
 WHERE id = ?
 RETURNING *;

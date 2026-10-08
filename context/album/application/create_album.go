@@ -26,11 +26,12 @@ func CreateAlbum(q database.Querier, request album_dto.CreateAlbumRequest) (albu
 	var cards []card_model.Card
 	for _, card := range request.Cards {
 		newCard, err := card_application.CreateCard(q, card_dto.CreateCardRequest{
-			AlbumId:     album.ID,
-			Name:        card.Name,
-			Description: card.Description,
-			Number:      card.Number,
-			ImageUrl:    card.ImageUrl,
+			AlbumId:        album.ID,
+			Name:           card.Name,
+			Description:    card.Description,
+			Number:         card.Number,
+			ImageUrl:       card.ImageUrl,
+			AutoAssignable: card.AutoAssignable,
 		})
 		if err != nil {
 			return album_model.Album{}, err
@@ -43,14 +44,15 @@ func CreateAlbum(q database.Querier, request album_dto.CreateAlbumRequest) (albu
 			return album_model.Album{}, err
 		}
 		cards = append(cards, card_model.Card{
-			ID:          newCard.ID,
-			AlbumId:     newCard.AlbumId,
-			Number:      newCard.Number,
-			Name:        newCard.Name,
-			Description: newCard.Description,
-			ImageUrl:    newCard.ImageUrl,
-			CreatedAt:   newCard.CreatedAt,
-			UpdatedAt:   newCard.UpdatedAt,
+			ID:             newCard.ID,
+			AlbumId:        newCard.AlbumId,
+			Number:         newCard.Number,
+			Name:           newCard.Name,
+			Description:    newCard.Description,
+			ImageUrl:       newCard.ImageUrl,
+			AutoAssignable: newCard.AutoAssignable,
+			CreatedAt:      newCard.CreatedAt,
+			UpdatedAt:      newCard.UpdatedAt,
 		})
 	}
 	return album_model.NewAlbumFromSqlcAlbum(album, cards), err

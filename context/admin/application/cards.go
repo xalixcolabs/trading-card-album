@@ -48,11 +48,12 @@ func CreateCard(q database.Querier, request admin_dto.CreateCardRequest) (card_m
 		return card_model.Card{}, err
 	}
 	card, err := card_application.CreateCard(q, card_dto.CreateCardRequest{
-		AlbumId:     album.ID,
-		Number:      request.Number,
-		Name:        request.Name,
-		Description: request.Description,
-		ImageUrl:    request.ImageUrl,
+		AlbumId:        album.ID,
+		Number:         request.Number,
+		Name:           request.Name,
+		Description:    request.Description,
+		ImageUrl:       request.ImageUrl,
+		AutoAssignable: request.AutoAssignable,
 	})
 	if err != nil {
 		return card_model.Card{}, err
@@ -82,14 +83,24 @@ func UpdateCard(q database.Querier, cardId string, request admin_dto.UpdateCardR
 	if err != nil {
 		return card_model.Card{}, err
 	}
+	// Si no se especifica, se conserva la auto asignabilidad actual.
+	autoAssignable := card.AutoAssignable != 0
+	if request.AutoAssignable != nil {
+		autoAssignable = *request.AutoAssignable
+	}
+	autoAssignableInt := int64(0)
+	if autoAssignable {
+		autoAssignableInt = 1
+	}
 	updated, err := q.UpdateCard(ctx, sqlc.UpdateCardParams{
-		AlbumID:     card.AlbumID,
-		Number:      request.Number,
-		Name:        request.Name,
-		Description: request.Description,
-		ImageUrl:    request.ImageUrl,
-		UpdatedAt:   time.Now().Unix(),
-		ID:          cardId,
+		AlbumID:        card.AlbumID,
+		Number:         request.Number,
+		Name:           request.Name,
+		Description:    request.Description,
+		ImageUrl:       request.ImageUrl,
+		AutoAssignable: autoAssignableInt,
+		UpdatedAt:      time.Now().Unix(),
+		ID:             cardId,
 	})
 	if err != nil {
 		return card_model.Card{}, err

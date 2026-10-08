@@ -27,6 +27,7 @@ CREATE TABLE card(
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     image_url TEXT NOT NULL,
+    auto_assignable INTEGER NOT NULL DEFAULT 1,
     created_at INTEGER NOT NULL,
     updated_at INTEGER NOT NULL,
     FOREIGN KEY (album_id) REFERENCES albums(album_id) ON DELETE CASCADE,
@@ -83,4 +84,5 @@ INSERT INTO "schema_migrations" (version) VALUES
   ('20260624144904'),
   ('20260624163100'),
   ('20260824120000'),
-  ('20261007120000');
+  ('20261007120000'),
+  ('20261007140000');

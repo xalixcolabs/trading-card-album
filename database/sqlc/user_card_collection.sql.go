@@ -62,7 +62,7 @@ func (q *Queries) DeleteUserCollectionByAlbumId(ctx context.Context, albumID str
 }
 
 const getUserCollection = `-- name: GetUserCollection :many
-SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.created_at, c.updated_at
+SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.auto_assignable, c.created_at, c.updated_at
 FROM user_card_collection ucc
 JOIN card c ON ucc.card_id = c.id
 WHERE ucc.user_id = ? AND ucc.album_id = ?
@@ -90,6 +90,7 @@ func (q *Queries) GetUserCollection(ctx context.Context, arg GetUserCollectionPa
 			&i.Name,
 			&i.Description,
 			&i.ImageUrl,
+			&i.AutoAssignable,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -107,7 +108,7 @@ func (q *Queries) GetUserCollection(ctx context.Context, arg GetUserCollectionPa
 }
 
 const listCollectedCardsByUser = `-- name: ListCollectedCardsByUser :many
-SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.created_at, c.updated_at
+SELECT c.id, c.album_id, c.number, c.name, c.description, c.image_url, c.auto_assignable, c.created_at, c.updated_at
 FROM user_card_collection ucc
 JOIN card c ON ucc.card_id = c.id
 WHERE ucc.user_id = ?
@@ -130,6 +131,7 @@ func (q *Queries) ListCollectedCardsByUser(ctx context.Context, userID string) (
 			&i.Name,
 			&i.Description,
 			&i.ImageUrl,
+			&i.AutoAssignable,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {

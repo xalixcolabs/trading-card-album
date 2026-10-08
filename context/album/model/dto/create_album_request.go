@@ -6,8 +6,9 @@ type CreateAlbumRequest struct {
 }
 
 type CreateAlbumCardRequest struct {
-	Number      string `json:"number"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ImageUrl    string `json:"image_url"`
+	Number         string `json:"number"`
+	Name           string `json:"name"`
+	Description    string `json:"description"`
+	ImageUrl       string `json:"image_url"`
+	AutoAssignable *bool  `json:"auto_assignable"`
 }
