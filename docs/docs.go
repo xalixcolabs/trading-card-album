@@ -490,6 +490,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/admin/users/{id}/gift_card": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Gift a specific card to a user without changing their assigned card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_dto.GiftCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/card_model.Card"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/admin/users/{id}/role": {
             "put": {
                 "security": [
@@ -1089,6 +1134,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "number": {
+                    "type": "string"
+                }
+            }
+        },
+        "admin_dto.GiftCardRequest": {
+            "type": "object",
+            "properties": {
+                "card_id": {
                     "type": "string"
                 }
             }
