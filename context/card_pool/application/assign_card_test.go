@@ -66,6 +66,23 @@ func TestAssignCardResetsPoolWhenExhausted(t *testing.T) {
 	}
 }
 
+func TestAssignCardReturnsErrorWhenNoAutoAssignableCard(t *testing.T) {
+	// El pool solo tiene tarjetas no auto asignables (solo para admin): aun
+	// reiniciando, no hay ninguna tarjeta que el sistema pueda repartir.
+	mock := &queriermock.Querier{
+		GetRandomAvailableCardFn: func(ctx context.Context, albumID string) (string, error) {
+			return "", sql.ErrNoRows
+		},
+		ResetCardPoolFn: func(ctx context.Context, albumID string) (sqlc.CardPool, error) {
+			return sqlc.CardPool{}, nil
+		},
+	}
+	_, err := card_pool_application.AssignCard(mock, "album-1")
+	if err == nil || err.Error() != "pool vacío tras reiniciar: sql: no rows in result set" {
+		t.Errorf("expected empty auto-assignable pool error, got %v", err)
+	}
+}
+
 func TestAssignCardReturnsErrorWhenResetFails(t *testing.T) {
 	mock := &queriermock.Querier{
 		GetRandomAvailableCardFn: func(ctx context.Context, albumID string) (string, error) {
