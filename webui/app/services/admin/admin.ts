@@ -9,6 +9,7 @@ import type {
   AdminDtoAlbum,
   AdminDtoAssignCardRequest,
   AdminDtoCreateCardRequest,
+  AdminDtoGiftCardRequest,
   AdminDtoMessage,
   AdminDtoOverview,
   AdminDtoUpdateAlbumRequest,
@@ -485,6 +486,42 @@ export const postApiV1AdminUsersIdCards = async (id: string,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(adminDtoAssignCardRequest)
+  }
+);}
+
+
+export type postApiV1AdminUsersIdGiftCardResponse200 = {
+  data: CardModelCard
+  status: 200
+}
+
+export type postApiV1AdminUsersIdGiftCardResponseSuccess = (postApiV1AdminUsersIdGiftCardResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiV1AdminUsersIdGiftCardResponse = (postApiV1AdminUsersIdGiftCardResponseSuccess)
+
+export const getPostApiV1AdminUsersIdGiftCardUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/admin/users/${id}/gift_card`
+}
+
+/**
+ * Gift a specific card to a user without changing their assigned card
+ */
+export const postApiV1AdminUsersIdGiftCard = async (id: string,
+    adminDtoGiftCardRequest: AdminDtoGiftCardRequest, options?: RequestInit): Promise<postApiV1AdminUsersIdGiftCardResponse> => {
+
+  return customFetch<postApiV1AdminUsersIdGiftCardResponse>(getPostApiV1AdminUsersIdGiftCardUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminDtoGiftCardRequest)
   }
 );}
 

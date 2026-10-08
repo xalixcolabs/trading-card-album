@@ -9,6 +9,7 @@
 export * from './adminDtoAlbum';
 export * from './adminDtoAssignCardRequest';
 export * from './adminDtoCreateCardRequest';
+export * from './adminDtoGiftCardRequest';
 export * from './adminDtoMessage';
 export * from './adminDtoOverview';
 export * from './adminDtoUpdateAlbumRequest';
