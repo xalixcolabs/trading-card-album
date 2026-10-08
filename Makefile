@@ -1,5 +1,10 @@
 .PHONY: build dev dev-backend dev-frontend test docker docker-full db-migrate gen-sql gen-swagger gen
 
+# Dominio público de la app para las meta tags OpenGraph/Twitter.
+# Override: make build-frontend NUXT_PUBLIC_SITE_URL=https://tu-dominio
+NUXT_PUBLIC_SITE_URL ?= http://localhost:8080
+export NUXT_PUBLIC_SITE_URL
+
 # ==============================================================================
 # ENTORNO DE DESARROLLO
 # ==============================================================================
@@ -39,7 +44,7 @@ docker:
 
 docker-full:
 	@echo "🐳 Construyendo todo con Docker (multi-etapa)..."
-	@docker build -f Dockerfile.full -t trading-card-album:full .
+	@docker build -f Dockerfile.full --build-arg NUXT_PUBLIC_SITE_URL=$(NUXT_PUBLIC_SITE_URL) -t trading-card-album:full .
 
 # ==============================================================================
 # TESTS

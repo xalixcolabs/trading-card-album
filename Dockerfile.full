@@ -7,6 +7,11 @@
 FROM node:22-alpine AS frontend
 WORKDIR /build/webui
 
+# Dominio público para las meta tags OpenGraph/Twitter. Reemplazable en build:
+#   docker build -f Dockerfile.full --build-arg NUXT_PUBLIC_SITE_URL=https://tu-dominio .
+ARG NUXT_PUBLIC_SITE_URL=http://localhost:8080
+ENV NUXT_PUBLIC_SITE_URL=$NUXT_PUBLIC_SITE_URL
+
 COPY webui/package.json webui/package-lock.json ./
 RUN npm ci
 
