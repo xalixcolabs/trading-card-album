@@ -20,13 +20,22 @@ RUN npm run generate
 FROM golang:1.25 AS builder
 WORKDIR /build
 
+# `|direct` hace fallback al repositorio de origen ante cualquier error del
+# proxy (p. ej. "stream error: ... INTERNAL_ERROR; received from peer").
+ENV GOPROXY=https://proxy.golang.org|direct
+
 COPY go.mod go.sum ./
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download \
+    || (echo "go mod download falló, reintentando…" && sleep 5 && go mod download) \
+    || (echo "go mod download falló de nuevo, último intento…" && sleep 20 && go mod download)
 
 COPY . .
 COPY --from=frontend /build/webui/.output /build/webui/.output
 
-RUN go build -ldflags="-s -w" -o /out/trading-card-album .
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    go build -ldflags="-s -w" -o /out/trading-card-album .
 
 # ------------------------------------------------------------------------
 # Etapa 3: Runtime. Solo el binario + certificados (OAuth contra Google).
