@@ -7,6 +7,7 @@
  */
 
 export interface ContactDtoContact {
+  contact?: string;
   description?: string;
   email?: string;
   github?: string;

@@ -16,6 +16,8 @@ export interface UserModelUser {
   linkedin?: string;
   name?: string;
   picture?: string;
+  public_contact?: string;
+  public_email?: number;
   update_at?: number;
   web?: string;
 }

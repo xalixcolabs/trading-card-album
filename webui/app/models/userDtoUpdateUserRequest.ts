@@ -12,5 +12,7 @@ export interface UserDtoUpdateUserRequest {
   github?: string;
   linkedin?: string;
   name?: string;
+  public_contact?: string;
+  public_email?: number;
   web?: string;
 }
