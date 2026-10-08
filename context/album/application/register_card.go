@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"com.xalixcolabs.trading-card-album/context/album/model/dto"
+	"com.xalixcolabs.trading-card-album/context/album_participant/application"
+	"com.xalixcolabs.trading-card-album/context/album_participant/model/dto"
 	"com.xalixcolabs.trading-card-album/context/card/model"
 	"com.xalixcolabs.trading-card-album/context/events"
 	"com.xalixcolabs.trading-card-album/context/user/model"
@@ -40,6 +42,14 @@ func RegisterCard(q database.Querier, user user_model.User, request album_dto.Re
 	}
 	if albumParticipant.Secret != request.Secret {
 		return card_model.Card{}, errors.New("Esta QR ya ha sido escaneado")
+	}
+	// Escanear una tarjeta del álbum une automáticamente al escáner si aún no
+	// era participante: recibe su propia tarjeta asignada y su secret.
+	// CreateAlbumParticipant es idempotente, así que no reasigna si ya participa.
+	if _, err = album_participant_application.CreateAlbumParticipant(q, user, album_participant_dto.CreateAlbumParticipantRequest{
+		AlbumId: album.ID,
+	}); err != nil {
+		return card_model.Card{}, err
 	}
 	owned, err := q.CardInCollection(ctx, sqlc.CardInCollectionParams{
 		UserID:  user.ID,
