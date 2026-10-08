@@ -8,6 +8,7 @@
 
 export interface AdminDtoCreateCardRequest {
   album_id?: string;
+  auto_assignable?: boolean;
   description?: string;
   image_url?: string;
   name?: string;

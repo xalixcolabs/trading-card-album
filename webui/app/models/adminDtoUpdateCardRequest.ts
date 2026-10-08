@@ -7,6 +7,7 @@
  */
 
 export interface AdminDtoUpdateCardRequest {
+  auto_assignable?: boolean;
   description?: string;
   image_url?: string;
   name?: string;

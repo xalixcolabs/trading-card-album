@@ -8,6 +8,7 @@
 
 export interface CardModelCard {
   album_id?: string;
+  auto_assignable?: boolean;
   created_at?: number;
   description?: string;
   id?: string;
