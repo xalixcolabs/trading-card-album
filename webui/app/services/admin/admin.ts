@@ -7,6 +7,7 @@
  */
 import type {
   AdminDtoAlbum,
+  AdminDtoAssignCardRequest,
   AdminDtoCreateCardRequest,
   AdminDtoMessage,
   AdminDtoOverview,
@@ -448,6 +449,42 @@ export const getApiV1AdminUsersId = async (id: string, options?: RequestInit): P
     method: 'GET'
 
 
+  }
+);}
+
+
+export type postApiV1AdminUsersIdCardsResponse200 = {
+  data: CardModelCard
+  status: 200
+}
+
+export type postApiV1AdminUsersIdCardsResponseSuccess = (postApiV1AdminUsersIdCardsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiV1AdminUsersIdCardsResponse = (postApiV1AdminUsersIdCardsResponseSuccess)
+
+export const getPostApiV1AdminUsersIdCardsUrl = (id: string,) => {
+
+
+
+
+  return `/api/v1/admin/users/${id}/cards`
+}
+
+/**
+ * Assign a specific card to a user
+ */
+export const postApiV1AdminUsersIdCards = async (id: string,
+    adminDtoAssignCardRequest: AdminDtoAssignCardRequest, options?: RequestInit): Promise<postApiV1AdminUsersIdCardsResponse> => {
+
+  return customFetch<postApiV1AdminUsersIdCardsResponse>(getPostApiV1AdminUsersIdCardsUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminDtoAssignCardRequest)
   }
 );}
 

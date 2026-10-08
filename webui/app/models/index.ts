@@ -7,6 +7,7 @@
  */
 
 export * from './adminDtoAlbum';
+export * from './adminDtoAssignCardRequest';
 export * from './adminDtoCreateCardRequest';
 export * from './adminDtoMessage';
 export * from './adminDtoOverview';
