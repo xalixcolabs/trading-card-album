@@ -33,6 +33,28 @@
             <input id="email" v-model="email" type="email" disabled readonly
               class="rounded-xl bg-raise/60 px-4 py-3 text-sm text-faint ring-1 ring-edge" />
           </div>
+          <div class="flex items-center justify-between gap-3 rounded-xl bg-panel px-4 py-3 ring-1 ring-edge">
+            <div class="min-w-0">
+              <p class="text-[13px] font-semibold text-mist">Compartir mi correo</p>
+              <p class="mt-0.5 text-[11px] text-faint">
+                {{ publicEmail ? 'Tus contactos verán tu correo.' : 'Privado: verán lo que pongas abajo.' }}
+              </p>
+            </div>
+            <button type="button" role="switch" :aria-checked="publicEmail" aria-label="Compartir mi correo"
+              class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors"
+              :class="publicEmail ? 'bg-accent' : 'bg-raise ring-1 ring-edge'"
+              @click="publicEmail = !publicEmail">
+              <span class="inline-block h-5 w-5 rounded-full bg-white shadow transition-transform"
+                :class="publicEmail ? 'translate-x-[22px]' : 'translate-x-0.5'" />
+            </button>
+          </div>
+          <div v-if="!publicEmail" class="flex flex-col gap-1.5">
+            <label for="public_contact" class="text-[13px] font-semibold text-mist">Contacto público</label>
+            <input id="public_contact" v-model="publicContact" type="text"
+              placeholder="Otro correo, teléfono, @telegram…"
+              class="rounded-xl bg-panel px-4 py-3 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
+            <p class="text-[11px] text-faint">Lo verán tus contactos en lugar de tu correo.</p>
+          </div>
         </div>
       </section>
 
@@ -98,6 +120,8 @@ const github = ref('')
 const linkedin = ref('')
 const web = ref('')
 const description = ref('')
+const publicEmail = ref(false)
+const publicContact = ref('')
 
 watch(profile, (value) => {
   if (!value) return
@@ -107,6 +131,8 @@ watch(profile, (value) => {
   linkedin.value = value.linkedin ?? ''
   web.value = value.web ?? ''
   description.value = value.description ?? ''
+  publicEmail.value = (value.public_email ?? 0) === 1
+  publicContact.value = value.public_contact ?? ''
 }, { immediate: true })
 
 async function handleSubmit() {
@@ -123,6 +149,8 @@ async function handleSubmit() {
       linkedin: linkedin.value.trim(),
       web: web.value.trim(),
       description: description.value.trim(),
+      public_email: publicEmail.value ? 1 : 0,
+      public_contact: publicContact.value.trim(),
     })
     toast.success({ title: 'Perfil actualizado', message: 'Tus datos ya están guardados.' })
     await refreshNuxtData('profile')

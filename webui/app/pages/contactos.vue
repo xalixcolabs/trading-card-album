@@ -9,7 +9,7 @@
       <!-- Buscador local -->
       <div v-if="contacts && contacts.length" class="relative">
         <PhMagnifyingGlass :size="17" class="absolute left-4 top-1/2 -translate-y-1/2 text-faint" />
-        <input v-model="search" type="search" placeholder="Buscar por nombre o correo…"
+        <input v-model="search" type="search" placeholder="Buscar por nombre o contacto…"
           class="w-full rounded-xl bg-panel py-3 pl-11 pr-4 text-sm text-ink ring-1 ring-edge placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent" />
       </div>
 
@@ -34,7 +34,13 @@
             </div>
             <div class="min-w-0 flex-1">
               <p class="truncate text-[15px] font-semibold text-ink">{{ contact.name || 'Desarrollador' }}</p>
-              <p class="truncate text-[13px] text-mist">{{ contact.email }}</p>
+              <p v-if="contact.email" class="truncate text-[13px] text-mist">
+                <PhEnvelopeSimple :size="13" class="mr-1 -mt-0.5 inline text-faint" />{{ contact.email }}
+              </p>
+              <p v-else-if="contact.contact" class="truncate text-[13px] text-mist">
+                <PhChatCircleText :size="13" class="mr-1 -mt-0.5 inline text-faint" />{{ contact.contact }}
+              </p>
+              <p v-else class="truncate text-[13px] text-faint">Sin contacto público</p>
               <p class="mt-0.5 text-[11px] text-faint">Conocido el {{ dateOf(contact.scanned_at) }}</p>
             </div>
           </div>
@@ -103,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhGlobe, PhGithubLogo, PhLinkedinLogo, PhMagnifyingGlass, PhScan, PhUsers } from '@phosphor-icons/vue'
+import { PhChatCircleText, PhEnvelopeSimple, PhGlobe, PhGithubLogo, PhLinkedinLogo, PhMagnifyingGlass, PhScan, PhUsers } from '@phosphor-icons/vue'
 import { getApiV1Contact } from '~/services/contact/contact'
 
 const scannerOpen = ref(false)
@@ -129,7 +135,8 @@ const filteredContacts = computed(() => {
   return (contacts.value ?? []).filter(contact => {
     const name = (contact.name || '').toLowerCase()
     const email = (contact.email || '').toLowerCase()
-    return name.includes(query) || email.includes(query)
+    const extra = (contact.contact || '').toLowerCase()
+    return name.includes(query) || email.includes(query) || extra.includes(query)
   })
 })
 
