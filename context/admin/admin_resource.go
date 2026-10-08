@@ -30,6 +30,7 @@ func RegisterAdminResource(app *fiber.App) {
 	apiV1.Get("/users/:id", getUserDetail)
 	apiV1.Put("/users/:id/role", updateUserRole)
 	apiV1.Post("/users/:id/cards", assignCardToUser)
+	apiV1.Post("/users/:id/gift_card", giftCardToUser)
 	apiV1.Get("/cards", getCards)
 	apiV1.Post("/cards", createCard)
 	apiV1.Put("/cards/:id", updateCard)
@@ -240,6 +241,30 @@ func assignCardToUser(c fiber.Ctx) error {
 		return err
 	}
 	card, err := admin_application.AssignCardToUser(database.DefaultQuerier(), id, request.CardId)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(card)
+}
+
+// @Description	Gift a specific card to a user without changing their assigned card
+// @Tags		Admin
+// @Accept		json
+// @Produce		json
+// @Param		id   path  string  true  "User ID"
+// @Param		request body admin_dto.GiftCardRequest true "payload"
+// @Success		200  {object}   card_model.Card
+// @Router /api/v1/admin/users/{id}/gift_card [post]
+// @Security BearerAuth
+func giftCardToUser(c fiber.Ctx) error {
+	id := c.Params("id")
+	request := new(admin_dto.GiftCardRequest)
+	if err := c.Bind().JSON(request); err != nil {
+		return err
+	}
+	card, err := admin_application.GiftCardToUser(database.DefaultQuerier(), id, request.CardId)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
