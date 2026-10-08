@@ -1327,6 +1327,9 @@ const docTemplate = `{
         "contact_dto.Contact": {
             "type": "object",
             "properties": {
+                "contact": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -1393,6 +1396,12 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "public_contact": {
+                    "type": "string"
+                },
+                "public_email": {
+                    "type": "integer"
+                },
                 "web": {
                     "type": "string"
                 }
@@ -1427,6 +1436,12 @@ const docTemplate = `{
                 },
                 "picture": {
                     "type": "string"
+                },
+                "public_contact": {
+                    "type": "string"
+                },
+                "public_email": {
+                    "type": "integer"
                 },
                 "update_at": {
                     "type": "integer"
