@@ -31,7 +31,8 @@ func (q *Queries) CreateContact(ctx context.Context, arg CreateContactParams) (C
 }
 
 const listContacts = `-- name: ListContacts :many
-SELECT u.id, u.name, u.email, u.github, u.linkedin, u.web, u.description,
+SELECT u.id, u.name, u.email, u.public_email, u.public_contact,
+       u.github, u.linkedin, u.web, u.description,
        u.is_admin, u.picture, u.created_at, u.updated_at, c.scanned_at
 FROM contact c
 JOIN user u ON u.id = c.met_user_id
@@ -40,18 +41,20 @@ ORDER BY c.scanned_at DESC
 `
 
 type ListContactsRow struct {
-	ID          string
-	Name        string
-	Email       string
-	Github      string
-	Linkedin    string
-	Web         string
-	Description string
-	IsAdmin     int64
-	Picture     string
-	CreatedAt   int64
-	UpdatedAt   int64
-	ScannedAt   int64
+	ID            string
+	Name          string
+	Email         string
+	PublicEmail   int64
+	PublicContact string
+	Github        string
+	Linkedin      string
+	Web           string
+	Description   string
+	IsAdmin       int64
+	Picture       string
+	CreatedAt     int64
+	UpdatedAt     int64
+	ScannedAt     int64
 }
 
 func (q *Queries) ListContacts(ctx context.Context, userID string) ([]ListContactsRow, error) {
@@ -67,6 +70,8 @@ func (q *Queries) ListContacts(ctx context.Context, userID string) ([]ListContac
 			&i.ID,
 			&i.Name,
 			&i.Email,
+			&i.PublicEmail,
+			&i.PublicContact,
 			&i.Github,
 			&i.Linkedin,
 			&i.Web,

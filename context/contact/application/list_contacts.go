@@ -16,10 +16,15 @@ func ListContacts(q database.Querier, user user_model.User) ([]contact_dto.Conta
 	}
 	contacts := make([]contact_dto.Contact, 0, len(rows))
 	for _, row := range rows {
+		email := ""
+		if row.PublicEmail != 0 {
+			email = row.Email
+		}
 		contacts = append(contacts, contact_dto.Contact{
 			UserID:      row.ID,
 			Name:        row.Name,
-			Email:       row.Email,
+			Email:       email,
+			Contact:     row.PublicContact,
 			Github:      row.Github,
 			Linkedin:    row.Linkedin,
 			Web:         row.Web,

@@ -13,14 +13,16 @@ import (
 func UpdateUser(q database.Querier, id string, request user_dto.UpdateUserRequest) (user_model.User, error) {
 	ctx := context.Background()
 	user, err := q.UpdateUser(ctx, sqlc.UpdateUserParams{
-		ID:          id,
-		Name:        request.Name,
-		Email:       request.Email,
-		Github:      request.Github,
-		Linkedin:    request.Linkedin,
-		Web:         request.Web,
-		Description: request.Description,
-		UpdatedAt:   time.Now().Unix(),
+		ID:            id,
+		Name:          request.Name,
+		Email:         request.Email,
+		Github:        request.Github,
+		Linkedin:      request.Linkedin,
+		Web:           request.Web,
+		Description:   request.Description,
+		PublicEmail:   request.PublicEmail,
+		PublicContact: request.PublicContact,
+		UpdatedAt:     time.Now().Unix(),
 	})
 	return user_model.NewUserFromSqlcUser(user), err
 }

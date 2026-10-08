@@ -30,12 +30,14 @@ func TestUpdateUserAppliesRequest(t *testing.T) {
 	}
 
 	request := dto.UpdateUserRequest{
-		Name:        "Uziel",
-		Email:       "uziel@example.com",
-		Github:      "github.com/uziel",
-		Linkedin:    "linkedin.com/uziel",
-		Web:         "uziel.dev",
-		Description: "Go dev",
+		Name:          "Uziel",
+		Email:         "uziel@example.com",
+		Github:        "github.com/uziel",
+		Linkedin:      "linkedin.com/uziel",
+		Web:           "uziel.dev",
+		Description:   "Go dev",
+		PublicEmail:   1,
+		PublicContact: "@uziel",
 	}
 
 	user, err := user_application.UpdateUser(mock, "user-1", request)
@@ -44,6 +46,9 @@ func TestUpdateUserAppliesRequest(t *testing.T) {
 	}
 	if captured.ID != "user-1" {
 		t.Errorf("expected id user-1, got %s", captured.ID)
+	}
+	if captured.PublicEmail != 1 || captured.PublicContact != "@uziel" {
+		t.Errorf("expected contact privacy fields, got %+v", captured)
 	}
 	if user.Name != "Uziel" || user.Description != "Go dev" {
 		t.Errorf("unexpected user: %+v", user)

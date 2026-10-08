@@ -33,6 +33,8 @@ github = ?,
 linkedin = ?,
 web = ?,
 description = ?,
+public_email = ?,
+public_contact = ?,
 updated_at = ?
 WHERE id = ?
 RETURNING *;

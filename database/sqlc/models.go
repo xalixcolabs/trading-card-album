@@ -47,17 +47,19 @@ type SchemaMigration struct {
 }
 
 type User struct {
-	ID          string
-	Name        string
-	Email       string
-	Github      string
-	Linkedin    string
-	Web         string
-	Description string
-	IsAdmin     int64
-	Picture     string
-	CreatedAt   int64
-	UpdatedAt   int64
+	ID            string
+	Name          string
+	Email         string
+	Github        string
+	Linkedin      string
+	Web           string
+	Description   string
+	IsAdmin       int64
+	Picture       string
+	PublicEmail   int64
+	PublicContact string
+	CreatedAt     int64
+	UpdatedAt     int64
 }
 
 type UserCardCollection struct {
