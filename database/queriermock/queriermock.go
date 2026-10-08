@@ -36,6 +36,7 @@ CreateContactFn             func(ctx context.Context, arg sqlc.CreateContactPara
 	CreateAlbumParticipantFn       func(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	GetAlbumParticipantFn          func(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	UpdateAlbumParticipantSecretFn func(ctx context.Context, arg sqlc.UpdateAlbumParticipantSecretParams) (sqlc.AlbumParticipant, error)
+	UpdateAlbumParticipantAssignedCardFn func(ctx context.Context, arg sqlc.UpdateAlbumParticipantAssignedCardParams) (sqlc.AlbumParticipant, error)
 	DeleteAlbumParticipantsByAlbumIdFn func(ctx context.Context, albumID string) error
 	CreateCardPoolRowFn            func(ctx context.Context, arg sqlc.CreateCardPoolRowParams) (sqlc.CardPool, error)
 	GetRandomAvailableCardFn       func(ctx context.Context, albumID string) (string, error)
@@ -220,6 +221,13 @@ func (m *Querier) GetAlbumParticipant(ctx context.Context, arg sqlc.GetAlbumPart
 func (m *Querier) UpdateAlbumParticipantSecret(ctx context.Context, arg sqlc.UpdateAlbumParticipantSecretParams) (sqlc.AlbumParticipant, error) {
 	if m.UpdateAlbumParticipantSecretFn != nil {
 		return m.UpdateAlbumParticipantSecretFn(ctx, arg)
+	}
+	return sqlc.AlbumParticipant{}, nil
+}
+
+func (m *Querier) UpdateAlbumParticipantAssignedCard(ctx context.Context, arg sqlc.UpdateAlbumParticipantAssignedCardParams) (sqlc.AlbumParticipant, error) {
+	if m.UpdateAlbumParticipantAssignedCardFn != nil {
+		return m.UpdateAlbumParticipantAssignedCardFn(ctx, arg)
 	}
 	return sqlc.AlbumParticipant{}, nil
 }

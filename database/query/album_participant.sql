@@ -27,6 +27,12 @@ SET secret = ?
 WHERE album_id = ? AND user_id = ?
 RETURNING *;
 
+-- name: UpdateAlbumParticipantAssignedCard :one
+UPDATE album_participant
+SET assigned_card_id = ?
+WHERE album_id = ? AND user_id = ?
+RETURNING *;
+
 -- name: DeleteAlbumParticipantsByAlbumId :exec
 DELETE FROM album_participant
 WHERE album_id = ?;

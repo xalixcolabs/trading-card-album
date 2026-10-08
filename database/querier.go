@@ -40,6 +40,7 @@ type Querier interface {
 	CreateAlbumParticipant(ctx context.Context, arg sqlc.CreateAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	GetAlbumParticipant(ctx context.Context, arg sqlc.GetAlbumParticipantParams) (sqlc.AlbumParticipant, error)
 	UpdateAlbumParticipantSecret(ctx context.Context, arg sqlc.UpdateAlbumParticipantSecretParams) (sqlc.AlbumParticipant, error)
+	UpdateAlbumParticipantAssignedCard(ctx context.Context, arg sqlc.UpdateAlbumParticipantAssignedCardParams) (sqlc.AlbumParticipant, error)
 	DeleteAlbumParticipantsByAlbumId(ctx context.Context, albumID string) error
 
 	CreateCardPoolRow(ctx context.Context, arg sqlc.CreateCardPoolRowParams) (sqlc.CardPool, error)

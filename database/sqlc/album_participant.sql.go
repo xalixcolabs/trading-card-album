@@ -142,6 +142,32 @@ func (q *Queries) ListAlbumParticipants(ctx context.Context) ([]AlbumParticipant
 	return items, nil
 }
 
+const updateAlbumParticipantAssignedCard = `-- name: UpdateAlbumParticipantAssignedCard :one
+UPDATE album_participant
+SET assigned_card_id = ?
+WHERE album_id = ? AND user_id = ?
+RETURNING album_id, user_id, assigned_card_id, joined_at, secret
+`
+
+type UpdateAlbumParticipantAssignedCardParams struct {
+	AssignedCardID string
+	AlbumID        string
+	UserID         string
+}
+
+func (q *Queries) UpdateAlbumParticipantAssignedCard(ctx context.Context, arg UpdateAlbumParticipantAssignedCardParams) (AlbumParticipant, error) {
+	row := q.db.QueryRowContext(ctx, updateAlbumParticipantAssignedCard, arg.AssignedCardID, arg.AlbumID, arg.UserID)
+	var i AlbumParticipant
+	err := row.Scan(
+		&i.AlbumID,
+		&i.UserID,
+		&i.AssignedCardID,
+		&i.JoinedAt,
+		&i.Secret,
+	)
+	return i, err
+}
+
 const updateAlbumParticipantSecret = `-- name: UpdateAlbumParticipantSecret :one
 UPDATE album_participant
 SET secret = ?
